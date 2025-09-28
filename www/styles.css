@@ -1135,3 +1135,240 @@ p {
         scroll-behavior: auto;
     }
 }
+
+/* ===== BUSINESS CONTEXT INTEGRATION STYLES ===== */
+
+/* Business Context Navigation */
+.nav-separator {
+    color: var(--gray);
+    margin: 0 var(--spacing-sm);
+    font-weight: 300;
+}
+
+.business-link, .enterprise-link {
+    color: var(--primary) !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.business-link:hover, .enterprise-link:hover {
+    color: var(--primary-dark) !important;
+}
+
+.founder-link {
+    color: var(--secondary) !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.founder-link:hover {
+    color: #059669 !important;
+}
+
+/* Founder Credibility Section */
+.founder-credibility {
+    background: rgba(102, 126, 234, 0.1);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-xl) 0;
+    text-align: left;
+}
+
+.founder-credibility p {
+    color: var(--dark);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.founder-credibility .founder-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.founder-credibility .founder-link:hover {
+    text-decoration: underline;
+}
+
+/* Authority Metrics */
+.authority-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-md);
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-xl);
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: var(--radius-lg);
+}
+
+.metric {
+    text-align: center;
+    padding: var(--spacing-md);
+    background: var(--white);
+    border-radius: var(--radius-md);
+    border: 2px solid var(--primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.metric strong {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--primary);
+    font-weight: 800;
+    margin-bottom: var(--spacing-xs);
+}
+
+.metric span {
+    font-size: 0.875rem;
+    color: var(--gray);
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+/* Business Context Bridges */
+.business-context-callout {
+    background: var(--gradient-primary);
+    color: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-xl) 0;
+    animation: slideDown 0.5s ease-out;
+}
+
+.business-context-callout h3 {
+    color: var(--white);
+    margin-bottom: var(--spacing-md);
+}
+
+.business-context-callout ul {
+    list-style: none;
+    padding: 0;
+}
+
+.business-context-callout li {
+    margin: var(--spacing-sm) 0;
+    padding-left: var(--spacing-md);
+    position: relative;
+}
+
+.business-context-callout li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #fbbf24;
+    font-weight: bold;
+}
+
+.business-context-callout a {
+    color: #fbbf24;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.business-context-callout a:hover {
+    text-decoration: underline;
+}
+
+/* Business Bridge Callouts */
+.business-bridge {
+    background: #f0f9ff;
+    border-left: 4px solid #0ea5e9;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.business-bridge a {
+    color: #0ea5e9;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.business-bridge a:hover {
+    text-decoration: underline;
+}
+
+/* Enhanced Footer Styling */
+.footer-bottom p {
+    margin-bottom: var(--spacing-sm);
+}
+
+.footer-bottom p:last-child {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Animations for Business Context Elements */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design for Business Context Elements */
+@media (max-width: 768px) {
+    .nav-separator {
+        display: none;
+    }
+
+    .authority-metrics {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+    }
+
+    .metric {
+        padding: var(--spacing-sm);
+    }
+
+    .metric strong {
+        font-size: 1.25rem;
+    }
+
+    .founder-credibility {
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) 0;
+    }
+
+    .business-context-callout {
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .authority-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .metric strong {
+        font-size: 1.125rem;
+    }
+
+    .metric span {
+        font-size: 0.8rem;
+    }
+}
