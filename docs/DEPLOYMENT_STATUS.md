@@ -41,12 +41,14 @@
 
 ### File Structure:
 ```
-├── index.html          # Main landing page (✅ Complete)
-├── styles.css          # Comprehensive styling (✅ Complete)
-├── script.js           # Interactive functionality (✅ Complete)
-├── README.md           # Updated project documentation (✅ Complete)
-├── *.md               # Content and development files (✅ Complete)
-└── images/             # Image assets (📋 Pending optimization)
+├── www/                # Website files (✅ Complete)
+│   ├── index.html      # Main landing page (✅ Complete)
+│   ├── styles.css      # Comprehensive styling (✅ Complete)
+│   ├── script.js       # Interactive functionality (✅ Complete)
+│   └── images/         # Image assets (📋 Pending optimization)
+├── docs/               # Documentation files (✅ Complete)
+│   └── *.md           # Content and development files (✅ Complete)
+└── README.md          # Updated project documentation (✅ Complete)
 ```
 
 ### Production Readiness:

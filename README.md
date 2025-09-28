@@ -28,11 +28,14 @@ This site is built with modern web technologies optimized for developer experien
 ### File Structure
 
 ```
-├── index.html          # Main landing page
-├── styles.css          # Comprehensive CSS with custom properties
-├── script.js           # Interactive functionality and accessibility
-├── images/             # Optimized images and icons
-└── *.md               # Documentation and content files
+├── www/                # Website files
+│   ├── index.html      # Main landing page
+│   ├── styles.css      # Comprehensive CSS with custom properties
+│   ├── script.js       # Interactive functionality and accessibility
+│   └── images/         # Optimized images and icons
+├── docs/               # Documentation and content files
+│   ├── *.md           # Development guides and content
+└── README.md          # Project documentation
 ```
 
 ## 🛠️ Development
@@ -61,12 +64,12 @@ This site is built with modern web technologies optimized for developer experien
 
 ### Content Updates
 
-The site content is organized in markdown files:
+The site content is organized in markdown files in the `docs/` folder:
 
-- `WEBSITE_CONTENT.md` - Main messaging and copy
-- `FEATURES_CONTENT.md` - Detailed feature descriptions
-- `TECHNICAL_CONTENT.md` - Code examples and technical details
-- `CLAUDE_CONTEXT.md` - Development guidelines and design system
+- `docs/WEBSITE_CONTENT.md` - Main messaging and copy
+- `docs/FEATURES_CONTENT.md` - Detailed feature descriptions
+- `docs/TECHNICAL_CONTENT.md` - Code examples and technical details
+- `docs/CLAUDE_CONTEXT.md` - Development guidelines and design system
 
 ### Making Changes
 

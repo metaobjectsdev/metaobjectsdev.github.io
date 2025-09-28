@@ -43,7 +43,7 @@ images/
 ## 🔧 File Structure
 
 ```
-images/
+www/images/
 ├── favicon-32x32.png           # Browser favicon
 ├── favicon-16x16.png           # Small favicon
 ├── apple-touch-icon.png        # iOS icon (180x180)
@@ -128,10 +128,10 @@ Light Gray:      #f3f4f6  /* Background, subtle elements */
 
 ### Logo Implementation (Update from current inline SVG)
 ```html
-<!-- Navigation Logo -->
+<!-- Navigation Logo (relative to www/index.html) -->
 <img src="images/logos/metaobjects-logo.svg" alt="MetaObjects" width="120" height="32">
 
-<!-- Footer Logo -->
+<!-- Footer Logo (relative to www/index.html) -->
 <img src="images/logos/metaobjects-logo.svg" alt="MetaObjects" width="100" height="27">
 ```
 
