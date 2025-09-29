@@ -43,7 +43,21 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <img src="images/mo-logo-only.png" alt="MetaObjects Logo" />
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+                    <path d="M8 12h16v8H8z" fill="white" opacity="0.9"/>
+                    <path d="M10 14h12v4H10z" fill="url(#gradient2)"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea"/>
+                            <stop offset="100%" style="stop-color:#764ba2"/>
+                        </linearGradient>
+                        <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#2563eb"/>
+                            <stop offset="100%" style="stop-color:#1e40af"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
                 MetaObjects
             </a>
             <ul class="nav-links">
@@ -521,7 +535,21 @@ productMeta.setFieldValue(product, "price", 29.99);</code></pre>
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="footer-logo">
-                <img src="images/mo-logo-only.png" alt="MetaObjects Logo" />
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="32" height="32" rx="8" fill="url(#footerGradient)"/>
+                            <path d="M8 12h16v8H8z" fill="white" opacity="0.9"/>
+                            <path d="M10 14h12v4H10z" fill="url(#footerGradient2)"/>
+                            <defs>
+                                <linearGradient id="footerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                                <linearGradient id="footerGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#2563eb"/>
+                                    <stop offset="100%" style="stop-color:#1e40af"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
                         MetaObjects
                     </div>
                     <p>Open-source enterprise architecture framework for metadata-driven development.</p>
