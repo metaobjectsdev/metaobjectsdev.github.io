@@ -1373,3 +1373,9 @@ p {
         font-size: 0.8rem;
     }
 }
+
+.footer-logo img {
+    height: 32px;
+    width: 32px;
+    object-fit: contain;
+}
