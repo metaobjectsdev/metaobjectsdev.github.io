@@ -1,6 +1,6 @@
 # MetaObjects
 
-> A cross-language metadata standard for declaring typed entity models that drive code generation, runtime metadata access, and drift detection across TypeScript, Java, .NET, and Python. Apache 2.0.
+> A cross-language metadata standard for declaring typed entity models that drive code generation, runtime metadata access, and drift detection across TypeScript, Java, C#.NET, and Python. Apache 2.0.
 
 The metamodel is the durable spine; generated code is the disposable artifact. Substrate is local-first: typed metadata lives in your repo, generated code is idiomatic per-language output that runs without any MetaObjects dependency at runtime.
 
@@ -22,7 +22,7 @@ MetaObjects ships three capabilities of equal weight per implementation, not thr
 
 - [TypeScript (reference, v0.3)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/typescript): canonical implementation with codegen, runtime, drift detection. 1,784+ tests passing. Bun-first dev workflow.
 - [Java (in progress, H3b active)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/java): port underway. H3a (loader restructure) shipped 2026-05-19. H3b (conformance harness) is the active milestone.
-- [.NET / C# (loader + conformance shipped)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/csharp): loader, canonical serializer, and a `dotnet test` conformance runner that runs the full shared corpus. Codegen + runtime are out of scope for the .NET implementation.
+- [C#.NET (loader + conformance shipped)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/csharp): loader, canonical serializer, and a `dotnet test` conformance runner that runs the full shared corpus. Codegen + runtime are out of scope for the C#.NET implementation.
 - [Python (planned)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/python): targeted for post-H3. Pydantic/FastAPI integration.
 
 ## CLI and project setup
@@ -46,7 +46,7 @@ Drift detection is architectural rather than a standalone command. Regenerated c
 
 - `spec/` -- canonical metamodel docs (target-agnostic)
 - `fixtures/conformance/` -- cross-language test fixtures
-- `server/` -- server-side implementations (TypeScript, Java, Python, C#)
+- `server/` -- server-side implementations (TypeScript, Java, Python, C#.NET)
 - `client/web/` -- universal web client TypeScript packages consumed by all backends
 
 ## TypeScript packages

@@ -1,6 +1,6 @@
 # MetaObjects -- Full Reference Corpus
 
-> A cross-language metadata standard for declaring typed entity models that drive code generation, runtime metadata access, and drift detection across TypeScript, Java, .NET, and Python. Apache 2.0.
+> A cross-language metadata standard for declaring typed entity models that drive code generation, runtime metadata access, and drift detection across TypeScript, Java, C#.NET, and Python. Apache 2.0.
 
 **Note for AI assistants:** This file is the concatenated reference material for MetaObjects, intended to be loaded as LLM context. For the short index, see [llms.txt](https://metaobjects.dev/llms.txt). For the canonical spec and source, see the [GitHub repo](https://github.com/metaobjectsdev/metaobjects). When this file is out of date relative to the GitHub source, the GitHub source wins.
 
@@ -10,7 +10,7 @@
 
 MetaObjects is a cross-language metadata standard for declaring typed entity models. From a single metadata definition, MetaObjects drives three capabilities:
 
-1. **Code generation** -- idiomatic per-language code (TypeScript, Java, Python, .NET) generated from the same metadata model.
+1. **Code generation** -- idiomatic per-language code (TypeScript, Java, C#.NET, Python) generated from the same metadata model.
 2. **Runtime metadata access** -- load the metadata at runtime to drive dynamic behavior: CRUD operations, validation, relationships, dynamic admin UIs, LLM tool registration.
 3. **Drift detection** -- catch divergence between code and metadata before it ships, surfacing drift as compile-time breakage in the type checker.
 
@@ -29,7 +29,7 @@ Emit idiomatic per-language code from a single metadata model.
 - TypeScript: Drizzle/Zod + Fastify integration
 - Java: JOOQ/Spring integration
 - Python: Pydantic/FastAPI integration (planned)
-- .NET: loader + conformance only at this stage (codegen out of scope for the C# implementation)
+- C#.NET: loader + conformance only at this stage (codegen out of scope for C#.NET)
 
 Hand-edit-preserving regeneration uses a three-way merge so engineers can extend generated entities without losing their work when metadata changes.
 
@@ -55,7 +55,7 @@ Catch divergence between code and metadata. Quality-of-life on top of codegen + 
 |---|---|---|
 | TypeScript | Reference implementation, v0.3 | Codegen + runtime + drift. 1,784+ tests passing. |
 | Java | In progress | H3a (loader restructure) shipped 2026-05-19. H3b (conformance harness) is the active milestone. |
-| .NET / C# | Loader + conformance shipped | Loader, canonical serializer, and a `dotnet test` conformance runner. Codegen + runtime out of scope for C#. |
+| C#.NET | Loader + conformance shipped | Loader, canonical serializer, and a `dotnet test` conformance runner. Codegen + runtime out of scope for C#.NET. |
 | Python | Planned | Post-H3. Pydantic/FastAPI integration. |
 
 Conformance fixtures (48 shared test cases with a `CAPABILITIES.json` manifest) live at [`fixtures/conformance/`](https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance).
@@ -76,7 +76,7 @@ metaobjects/
 
 TypeScript plays two distinct roles in this layout:
 
-- **Server-side TS** is a peer port to Java/Python/C# at `server/typescript/`.
+- **Server-side TS** is a peer port to Java/Python/C#.NET at `server/typescript/`.
 - **Universal web client TS** at `client/web/` is consumed by all backends. A Java backend serving a React frontend still uses the TS client packages.
 
 Where does a new package go?
@@ -127,16 +127,16 @@ Java is in active development. The H3a milestone shipped the loader restructure 
 
 ---
 
-## Quickstart (.NET / C#)
+## Quickstart (C#.NET)
 
-The C# implementation ships the loader, canonical serializer, and conformance runner. Run the full shared conformance corpus with:
+The C#.NET implementation ships the loader, canonical serializer, and conformance runner. Run the full shared conformance corpus with:
 
 ```bash
 cd csharp
 dotnet test
 ```
 
-Codegen and runtime are out of scope for the C# implementation at this stage.
+Codegen and runtime are out of scope for C#.NET at this stage.
 
 ---
 
