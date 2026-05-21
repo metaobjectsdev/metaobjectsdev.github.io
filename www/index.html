@@ -168,23 +168,42 @@ $ meta export --out ./snapshot.json</code></pre>
     <!-- Quickstart pointers -->
     <section class="quickstart-pointers">
       <h2 class="section-label">Quickstart</h2>
-      <div class="quickstart-grid">
-        <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/typescript#getting-started" class="quickstart-card">
-          <span class="qs-lang">TypeScript</span>
-          <span class="qs-arrow">→</span>
-        </a>
-        <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/java" class="quickstart-card">
-          <span class="qs-lang">Java</span>
-          <span class="qs-arrow">→</span>
-        </a>
-        <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/csharp" class="quickstart-card">
-          <span class="qs-lang">.NET</span>
-          <span class="qs-arrow">→</span>
-        </a>
-        <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/python" class="quickstart-card quickstart-card--planned">
-          <span class="qs-lang">Python</span>
-          <span class="qs-status">planned</span>
-        </a>
+      <p class="qs-intro">MetaObjects ships per deployment target. Server-side implementations are peer ports across Java, TypeScript, .NET, and (planned) Python. The web client packages are universal — a Java backend serving React still uses the same TypeScript client.</p>
+
+      <div class="qs-group">
+        <h3 class="qs-group-title">Server-side</h3>
+        <div class="quickstart-grid">
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/typescript" class="quickstart-card">
+            <span class="qs-lang">TypeScript</span>
+            <span class="qs-arrow">→</span>
+          </a>
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/java" class="quickstart-card">
+            <span class="qs-lang">Java</span>
+            <span class="qs-arrow">→</span>
+          </a>
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/csharp" class="quickstart-card">
+            <span class="qs-lang">.NET</span>
+            <span class="qs-arrow">→</span>
+          </a>
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/python" class="quickstart-card quickstart-card--planned">
+            <span class="qs-lang">Python</span>
+            <span class="qs-status">planned</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="qs-group">
+        <h3 class="qs-group-title">Web client (consumed by every backend)</h3>
+        <div class="quickstart-grid quickstart-grid--client">
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/client/web/packages/runtime-web" class="quickstart-card">
+            <span class="qs-lang">@metaobjects/runtime-web</span>
+            <span class="qs-arrow">→</span>
+          </a>
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/client/web/packages/react" class="quickstart-card">
+            <span class="qs-lang">@metaobjects/react</span>
+            <span class="qs-arrow">→</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>

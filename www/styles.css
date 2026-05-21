@@ -351,10 +351,29 @@ h1, h2, h3 {
 .ai-future a { color: var(--white); text-decoration-color: var(--accent-gold); }
 
 /* ============================================================ Quickstart pointers */
+.qs-intro {
+  font-size: 1.0625rem;
+  color: var(--dark-gray);
+  margin: 0 0 1.5rem;
+  max-width: var(--reading-width);
+}
+.qs-group { margin-bottom: 1.75rem; }
+.qs-group:last-child { margin-bottom: 0; }
+.qs-group-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--medium-gray);
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.01em;
+}
 .quickstart-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.875rem;
+}
+.quickstart-grid--client {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 540px;
 }
 .quickstart-card {
   display: flex;
