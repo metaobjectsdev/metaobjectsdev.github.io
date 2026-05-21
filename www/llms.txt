@@ -1,0 +1,59 @@
+# MetaObjects
+
+> A cross-language metadata standard for declaring typed entity models that drive code generation, runtime metadata access, and drift detection across TypeScript, Java, .NET, and Python. Apache 2.0.
+
+The metamodel is the durable spine; generated code is the disposable artifact. Substrate is local-first: typed metadata lives in your repo, generated code is idiomatic per-language output that runs without any MetaObjects dependency at runtime.
+
+## Spec and standard
+
+- [Specification (canonical, target-agnostic)](https://github.com/metaobjectsdev/metaobjects/tree/main/spec): the normative metadata schema and semantics that every implementation must conform to.
+- [Conformance fixtures](https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance): 45 shared cross-language test cases with a CAPABILITIES.json manifest. The truth source for what "MetaObjects-conformant" means in code.
+- [Roadmap](https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md): current + planned work across all implementations.
+
+## The three pillars
+
+MetaObjects ships three capabilities of equal weight per implementation, not three separate products:
+
+- **Codegen** — emit idiomatic per-language code from a single metadata model. Drizzle/Zod + Fastify for TypeScript, JOOQ/Spring for Java, Pydantic/FastAPI for Python. Hand-edit-preserving regeneration via three-way merge.
+- **Runtime metadata** — load metadata at runtime and drive behavior dynamically: CRUD, validation, relationships, dynamic admin UIs, LLM tool registration. Kysely (TS), SQLAlchemy Core (Python), modernized JDBC/jOOQ (Java).
+- **Drift detection** — catch divergence between generated code and metadata before it ships. Surfaces drift as compile-time breakage in the type checker, not as a production incident.
+
+## Implementations
+
+- [TypeScript (reference, v0.3)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/typescript): canonical implementation with codegen, runtime, drift detection. 1,784+ tests passing. Bun-first dev workflow.
+- [Java (in progress, H3b active)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/java): port underway. H3a (loader restructure) shipped 2026-05-19. H3b (conformance harness) is the active milestone.
+- [.NET / C# (loader + conformance shipped)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/csharp): loader, canonical serializer, and a `dotnet test` conformance runner that runs the full shared corpus. Codegen + runtime are out of scope for the .NET implementation.
+- [Python (planned)](https://github.com/metaobjectsdev/metaobjects/tree/main/server/python): targeted for post-H3. Pydantic/FastAPI integration.
+
+## CLI and project setup
+
+- CLI binary name: `meta`
+- Project config file: `metaobjects.config.ts`
+- Project marker directory: `.metaobjects/`
+- Install (TypeScript reference): `bun install @metaobjects/cli` (or `npm install @metaobjects/cli`)
+
+## Monorepo layout
+
+- `spec/` — canonical metamodel docs (target-agnostic)
+- `fixtures/conformance/` — cross-language test fixtures
+- `server/` — server-side implementations (TypeScript, Java, Python, C#)
+- `client/web/` — universal web client TypeScript packages consumed by all backends
+
+## TypeScript packages
+
+- `@metaobjects/metadata` — metamodel loader, types, constants
+- `@metaobjects/codegen-ts` — TS codegen engine
+- `@metaobjects/runtime-ts` — Node-side runtime (Kysely, Drizzle, Fastify helpers)
+- `@metaobjects/migrate-ts` — migration tooling
+- `@metaobjects/sdk` — workspace memory, path helpers
+- `@metaobjects/cli` — CLI (binary `meta`): `init`, `gen`, `migrate`
+
+## Author and context
+
+- Created and maintained by [Doug Mealing](https://dougmealing.com). Background and the architectural narrative live there.
+- The "why metadata is the spine AI was missing" essay is at [I thought AI killed MetaObjects. Then AI drift made it essential.](https://dougmealing.com/writing/metaobjects-ai-drift/)
+- Commercial inquiries and consulting engagements: [metaobjects.com](https://metaobjects.com)
+
+## Optional full corpus
+
+- [llms-full.txt](/llms-full.txt) — full Markdown dump of spec + quickstart material concatenated for direct LLM context.
