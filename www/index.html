@@ -110,25 +110,44 @@
     <!-- 30-second example -->
     <section class="example">
       <h2 class="section-label">30-second example</h2>
-      <p class="example-intro">Define a typed entity in metadata. Generate idiomatic code in any supported language. Run the same metadata at runtime. Catch drift before it ships.</p>
-      <pre class="example-code"><code><span class="comment"># subscriber.meta.yaml</span>
+      <p class="example-intro">A typed entity in metadata, a project config that picks the generators, and the three CLI commands you actually run. Drift detection is architectural — regenerated code breaks dependent logic at compile time, and <code>meta migrate</code> diffs metadata against the live database.</p>
+
+      <pre class="example-code"><code><span class="comment"># metaobjects/subscriber.meta.yaml — the entity definition</span>
 <span class="keyword">metadata.root</span>:
   <span class="key">package</span>: acme
   <span class="key">children</span>:
     - <span class="keyword">object.entity</span>:
         <span class="key">name</span>: Subscriber
         <span class="key">children</span>:
-          - <span class="keyword">field.long</span>:   { <span class="key">name</span>: id }
-          - <span class="keyword">field.string</span>: { <span class="key">name</span>: email }
-          - <span class="keyword">field.string</span>: { <span class="key">name</span>: createdAt, <span class="string">"@autoSet"</span>: onCreate }
+          - <span class="keyword">field.long</span>:    { <span class="key">name</span>: id }
+          - <span class="keyword">field.string</span>:  { <span class="key">name</span>: email }
+          - <span class="keyword">field.string</span>:  { <span class="key">name</span>: createdAt, <span class="string">"@autoSet"</span>: onCreate }
           - <span class="keyword">identity.primary</span>: { <span class="string">"@fields"</span>: id }</code></pre>
-      <pre class="example-code"><code><span class="comment"># Generate idiomatic code per language</span>
-$ meta gen --target=typescript
-$ meta gen --target=java
 
-<span class="comment"># Detect drift between code and metadata</span>
-$ meta check</code></pre>
-      <p class="example-note">Conformance fixtures show the schema in JSON form: <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">fixtures/conformance/</a>. YAML and JSON are equivalent — pick whichever your stack prefers.</p>
+      <pre class="example-code"><code><span class="comment">// metaobjects.config.ts — picks generators + DB target</span>
+<span class="keyword">import</span> { defineConfig } <span class="keyword">from</span> <span class="string">"@metaobjects/cli"</span>;
+<span class="keyword">import</span> { entityFile, queriesFile, routesFile, barrel }
+  <span class="keyword">from</span> <span class="string">"@metaobjects/codegen-ts/generators"</span>;
+
+<span class="keyword">export default</span> defineConfig({
+  outDir:   <span class="string">"./src/db"</span>,
+  dialect:  <span class="string">"sqlite"</span>,
+  generators: [entityFile(), queriesFile(), routesFile(), barrel()],
+});</code></pre>
+
+      <pre class="example-code"><code><span class="comment"># Scaffold metaobjects/ + .metaobjects/ + metaobjects.config.ts</span>
+$ meta init
+
+<span class="comment"># Generate code (entities, queries, routes, barrel) per config</span>
+$ meta gen
+
+<span class="comment"># Diff metadata vs live DB and emit migration SQL files</span>
+$ meta migrate --db file:./dev.db --slug add-subscriber
+
+<span class="comment"># Flatten loaded metadata to one canonical JSON artifact</span>
+$ meta export --out ./snapshot.json</code></pre>
+
+      <p class="example-note">Conformance fixtures (JSON form): <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">fixtures/conformance/</a>. YAML and JSON are equivalent — pick whichever your stack prefers.</p>
     </section>
 
     <!-- For AI assistants -->

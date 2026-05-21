@@ -150,36 +150,64 @@ Planned post-H3. See [`server/python/`](https://github.com/metaobjectsdev/metaob
 
 ## Example: defining metadata
 
-```ts
-// metaobjects.config.ts
-import { defineMetadata } from '@metaobjects/metadata';
+Entity files live under `metaobjects/` in your project. The format below is YAML; JSON is equivalent (the conformance fixtures use JSON).
 
-export default defineMetadata({
-  entities: {
-    Order: {
-      fields: {
-        id:         { type: 'uuid', primaryKey: true },
-        customerId: { type: 'uuid', required: true },
-        amount:     { type: 'decimal', scale: 2 },
-        status:     { type: 'enum', values: ['pending', 'paid', 'shipped'] },
-      },
-    },
-  },
+```yaml
+# metaobjects/subscriber.meta.yaml
+metadata.root:
+  package: acme
+  children:
+    - object.entity:
+        name: Subscriber
+        children:
+          - field.long:    { name: id }
+          - field.string:  { name: email }
+          - field.string:  { name: createdAt, "@autoSet": onCreate }
+          - identity.primary: { "@fields": id }
+```
+
+The project config (`metaobjects.config.ts`) wires up the generators and target settings:
+
+```ts
+import { defineConfig } from "@metaobjects/cli";
+import {
+  entityFile,
+  queriesFile,
+  routesFile,
+  // formFile,   // opt-in: emit React form components
+  barrel,
+} from "@metaobjects/codegen-ts/generators";
+
+export default defineConfig({
+  outDir:    "./src/db",
+  extStyle:  "none",
+  dbImport:  "../db",
+  dialect:   "sqlite",
+  apiPrefix: "",
+  generators: [entityFile(), queriesFile(), routesFile(), barrel()],
 });
 ```
 
-Generate code across supported languages:
+Run the CLI:
 
 ```bash
-$ meta gen --target=typescript
-$ meta gen --target=java
+# Scaffold metaobjects/, .metaobjects/, metaobjects.config.ts
+$ meta init
+
+# Generate code (entities + queries + routes + barrel per config)
+$ meta gen
+
+# Optional positional filter
+$ meta gen Subscriber Order --dry-run
+
+# Diff metadata vs live DB and emit migration SQL files
+$ meta migrate --db file:./dev.db --slug add-subscriber
+
+# Flatten loaded metadata to a canonical JSON snapshot
+$ meta export --out ./snapshot.json
 ```
 
-Drift check against existing code:
-
-```bash
-$ meta check
-```
+Drift detection is architectural rather than a standalone command. The compile-time breakage of regenerated code surfaces metadata-to-code drift in the type checker; `meta migrate` surfaces metadata-to-database drift through the generated SQL. Future commands (`meta audit`, `meta ingest`) extend this.
 
 ---
 

@@ -28,9 +28,19 @@ MetaObjects ships three capabilities of equal weight per implementation, not thr
 ## CLI and project setup
 
 - CLI binary name: `meta`
-- Project config file: `metaobjects.config.ts`
+- Project config file: `metaobjects.config.ts` (configures `outDir`, `dialect`, `dbImport`, `extStyle`, `apiPrefix`, and the `generators` array)
 - Project marker directory: `.metaobjects/`
 - Install (TypeScript reference): `bun install @metaobjects/cli` (or `npm install @metaobjects/cli`)
+
+### Commands
+
+- `meta init` — scaffold `metaobjects/`, `.metaobjects/`, and `metaobjects.config.ts` (use `--refresh-docs` after CLI upgrades to refresh `.metaobjects/AGENTS.md` and `CLAUDE.md`)
+- `meta gen [<entity>...]` — codegen TS targets from entities defined under `metaobjects/`. Supports `--dry-run`. Generators (`entityFile()`, `queriesFile()`, `routesFile()`, `formFile()`, `barrel()`) come from `@metaobjects/codegen-ts/generators` and are wired in `metaobjects.config.ts`.
+- `meta export [--out <file>]` — flatten loaded metadata to one canonical JSON artifact.
+- `meta migrate --db <url> --slug <name>` — diff metadata vs the live DB and emit migration SQL files under `.metaobjects/migrations`. Supports SQLite (`file:`, `libsql:`) and Postgres (`postgres:`, `postgresql:`). `--dry-run` prints SQL to stdout. Destructive changes require `--allow <csv>`. Ambiguous renames: `--on-ambiguous abort|rename|drop-add` (default `abort`).
+- `meta install-hooks` — register the MCP server + Claude Code hooks (ships in a later sub-project; tracked in the roadmap).
+
+Drift detection is architectural rather than a standalone command. Regenerated code breaks dependent logic at compile time when metadata changes; `meta migrate` surfaces drift between metadata and the live database. Future commands (`meta audit`, `meta ingest`) extend this.
 
 ## Monorepo layout
 
