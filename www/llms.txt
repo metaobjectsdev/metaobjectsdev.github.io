@@ -7,16 +7,16 @@ The metamodel is the durable spine; generated code is the disposable artifact. S
 ## Spec and standard
 
 - [Specification (canonical, target-agnostic)](https://github.com/metaobjectsdev/metaobjects/tree/main/spec): the normative metadata schema and semantics that every implementation must conform to.
-- [Conformance fixtures](https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance): 45 shared cross-language test cases with a CAPABILITIES.json manifest. The truth source for what "MetaObjects-conformant" means in code.
+- [Conformance fixtures](https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance): 48 shared cross-language test cases with a CAPABILITIES.json manifest. The truth source for what "MetaObjects-conformant" means in code.
 - [Roadmap](https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md): current + planned work across all implementations.
 
 ## The three pillars
 
 MetaObjects ships three capabilities of equal weight per implementation, not three separate products:
 
-- **Codegen** — emit idiomatic per-language code from a single metadata model. Drizzle/Zod + Fastify for TypeScript, JOOQ/Spring for Java, Pydantic/FastAPI for Python. Hand-edit-preserving regeneration via three-way merge.
-- **Runtime metadata** — load metadata at runtime and drive behavior dynamically: CRUD, validation, relationships, dynamic admin UIs, LLM tool registration. Kysely (TS), SQLAlchemy Core (Python), modernized JDBC/jOOQ (Java).
-- **Drift detection** — catch divergence between generated code and metadata before it ships. Surfaces drift as compile-time breakage in the type checker, not as a production incident.
+- **Codegen** -- emit idiomatic per-language code from a single metadata model. Drizzle/Zod + Fastify for TypeScript, JOOQ/Spring for Java, Pydantic/FastAPI for Python. Hand-edit-preserving regeneration via three-way merge.
+- **Runtime metadata** -- load metadata at runtime and drive behavior dynamically: CRUD, validation, relationships, dynamic admin UIs, LLM tool registration. Kysely (TS), SQLAlchemy Core (Python), modernized JDBC/jOOQ (Java).
+- **Drift detection** -- catch divergence between generated code and metadata before it ships. Surfaces drift as compile-time breakage in the type checker, not as a production incident.
 
 ## Implementations
 
@@ -34,29 +34,29 @@ MetaObjects ships three capabilities of equal weight per implementation, not thr
 
 ### Commands
 
-- `meta init` — scaffold `metaobjects/`, `.metaobjects/`, and `metaobjects.config.ts` (use `--refresh-docs` after CLI upgrades to refresh `.metaobjects/AGENTS.md` and `CLAUDE.md`)
-- `meta gen [<entity>...]` — codegen TS targets from entities defined under `metaobjects/`. Supports `--dry-run`. Generators (`entityFile()`, `queriesFile()`, `routesFile()`, `formFile()`, `barrel()`) come from `@metaobjects/codegen-ts/generators` and are wired in `metaobjects.config.ts`.
-- `meta export [--out <file>]` — flatten loaded metadata to one canonical JSON artifact.
-- `meta migrate --db <url> --slug <name>` — diff metadata vs the live DB and emit migration SQL files under `.metaobjects/migrations`. Supports SQLite (`file:`, `libsql:`) and Postgres (`postgres:`, `postgresql:`). `--dry-run` prints SQL to stdout. Destructive changes require `--allow <csv>`. Ambiguous renames: `--on-ambiguous abort|rename|drop-add` (default `abort`).
-- `meta install-hooks` — register the MCP server + Claude Code hooks (ships in a later sub-project; tracked in the roadmap).
+- `meta init` -- scaffold `metaobjects/`, `.metaobjects/`, and `metaobjects.config.ts` (use `--refresh-docs` after CLI upgrades to refresh `.metaobjects/AGENTS.md` and `CLAUDE.md`)
+- `meta gen [<entity>...]` -- codegen TS targets from entities defined under `metaobjects/`. Supports `--dry-run`. Generators (`entityFile()`, `queriesFile()`, `routesFile()`, `formFile()`, `barrel()`) come from `@metaobjects/codegen-ts/generators` and are wired in `metaobjects.config.ts`.
+- `meta export [--out <file>]` -- flatten loaded metadata to one canonical JSON artifact.
+- `meta migrate --db <url> --slug <name>` -- diff metadata vs the live DB and emit migration SQL files under `.metaobjects/migrations`. Supports SQLite (`file:`, `libsql:`) and Postgres (`postgres:`, `postgresql:`). `--dry-run` prints SQL to stdout. Destructive changes require `--allow <csv>`. Ambiguous renames: `--on-ambiguous abort|rename|drop-add` (default `abort`).
+- `meta install-hooks` -- register the MCP server + Claude Code hooks (ships in a later sub-project; tracked in the roadmap).
 
 Drift detection is architectural rather than a standalone command. Regenerated code breaks dependent logic at compile time when metadata changes; `meta migrate` surfaces drift between metadata and the live database. Future commands (`meta audit`, `meta ingest`) extend this.
 
 ## Monorepo layout
 
-- `spec/` — canonical metamodel docs (target-agnostic)
-- `fixtures/conformance/` — cross-language test fixtures
-- `server/` — server-side implementations (TypeScript, Java, Python, C#)
-- `client/web/` — universal web client TypeScript packages consumed by all backends
+- `spec/` -- canonical metamodel docs (target-agnostic)
+- `fixtures/conformance/` -- cross-language test fixtures
+- `server/` -- server-side implementations (TypeScript, Java, Python, C#)
+- `client/web/` -- universal web client TypeScript packages consumed by all backends
 
 ## TypeScript packages
 
-- `@metaobjects/metadata` — metamodel loader, types, constants
-- `@metaobjects/codegen-ts` — TS codegen engine
-- `@metaobjects/runtime-ts` — Node-side runtime (Kysely, Drizzle, Fastify helpers)
-- `@metaobjects/migrate-ts` — migration tooling
-- `@metaobjects/sdk` — workspace memory, path helpers
-- `@metaobjects/cli` — CLI (binary `meta`): `init`, `gen`, `migrate`
+- `@metaobjects/metadata` -- metamodel loader, types, constants
+- `@metaobjects/codegen-ts` -- TS codegen engine
+- `@metaobjects/runtime-ts` -- Node-side runtime (Kysely, Drizzle, Fastify helpers)
+- `@metaobjects/migrate-ts` -- migration tooling
+- `@metaobjects/sdk` -- workspace memory, path helpers
+- `@metaobjects/cli` -- CLI (binary `meta`): `init`, `gen`, `migrate`
 
 ## Author and context
 
@@ -66,4 +66,4 @@ Drift detection is architectural rather than a standalone command. Regenerated c
 
 ## Optional full corpus
 
-- [llms-full.txt](/llms-full.txt) — full Markdown dump of spec + quickstart material concatenated for direct LLM context.
+- [llms-full.txt](/llms-full.txt) -- full Markdown dump of spec + quickstart material concatenated for direct LLM context.
