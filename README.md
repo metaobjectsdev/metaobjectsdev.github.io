@@ -1,122 +1,47 @@
-# MetaObjects Developer Site
+# metaobjects.dev
 
-The official developer website for MetaObjects - an enterprise architecture framework for metadata-driven development.
+Open-source project site for the **MetaObjects** metadata standard. Deployed at <https://metaobjects.dev/>.
 
-## 🚀 About MetaObjects
+This repo is the static site only. The canonical source code, specification, and conformance fixtures live in [`metaobjectsdev/metaobjects`](https://github.com/metaobjectsdev/metaobjects).
 
-MetaObjects is an open-source enterprise architecture framework that revolutionizes software development through metadata-driven approaches. Define once, deploy everywhere across Java, TypeScript, C#, Python, and more.
+## Why this repo is small on purpose
 
-### Key Features
+In the AI-coding era, the role of a project documentation site has narrowed. Developers learn libraries through AI assistants (Claude, Cursor, Copilot, Windsurf) that load context from the actual source repository, the spec, and `llms.txt`. A 200-page SDK-style docs site is no longer the right artifact.
 
-- **Universal Metadata Architecture**: Single definition generates consistent implementations across all programming languages
-- **Runtime System Adaptation**: Zero-downtime changes and hot reload capabilities
-- **Intelligent Code Generation**: Production-ready code with validation, serialization, and documentation
-- **Enterprise Governance**: Built-in compliance, security, and audit capabilities
-- **Cross-Language Validation**: Consistent validation rules across all services and languages
-- **Metadata Overlay System**: Extend without modifying core schemas
+This site exists to do three things:
 
-## 🏗️ Site Architecture
+1. **Be a credible front door for humans** — a short landing that says what MetaObjects is, what status each implementation is in, and where to go for the spec.
+2. **Serve AI assistants well** — ship a maintained [`llms.txt`](https://metaobjects.dev/llms.txt) index and [`llms-full.txt`](https://metaobjects.dev/llms-full.txt) corpus so coding agents have an authoritative, version-pinned context source.
+3. **Point at the real material** — link directly into the [`metaobjects` monorepo](https://github.com/metaobjectsdev/metaobjects) for spec, quickstarts, code, and conformance fixtures. The monorepo is the truth; this site is the signpost.
 
-This site is built with modern web technologies optimized for developer experience:
-
-- **Pure HTML/CSS/JavaScript**: No framework dependencies, fast loading
-- **Responsive Design**: Mobile-first approach with breakpoints for all devices
-- **Accessibility**: WCAG 2.1 compliant with keyboard navigation support
-- **Performance**: Optimized for Core Web Vitals
-- **SEO**: Comprehensive meta tags and structured data
-
-### File Structure
+## Structure
 
 ```
-├── www/                # Website files
-│   ├── index.html      # Main landing page
-│   ├── styles.css      # Comprehensive CSS with custom properties
-│   ├── script.js       # Interactive functionality and accessibility
-│   └── images/         # Optimized images and icons
-├── docs/               # Documentation and content files
-│   ├── *.md           # Development guides and content
-└── README.md          # Project documentation
+metaobjects.dev/
+├── .github/workflows/    # GitHub Pages deploy
+├── www/                  # site root (deployed)
+│   ├── CNAME             # metaobjects.dev
+│   ├── images/           # logos
+│   ├── index.html        # minimal landing page
+│   ├── styles.css        # navy + gold brand
+│   ├── llms.txt          # AI assistant index (Answer.AI convention)
+│   ├── llms-full.txt     # full Markdown corpus for LLM context
+│   └── archive/          # prior site versions (preserved, not deployed at root)
+├── docs/
+│   └── archive/          # prior content-strategy docs (preserved)
+└── README.md
 ```
 
-## 🛠️ Development
+## Deploy
 
-### Local Development
+GitHub Pages, custom domain `metaobjects.dev` (CNAME in `www/CNAME`). Workflow in `.github/workflows/` builds on push to `main` and deploys the contents of `www/`.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-org/metaobjects.dev.git
-   cd metaobjects.dev
-   ```
+> **Note on HTTPS:** the GitHub Pages certificate for `metaobjects.dev` was in a `bad_authz` ACME state as of 2026-05-21. To re-trigger HTTPS provisioning, toggle the **Enforce HTTPS** checkbox in repo Settings → Pages off and on, or remove + re-add the custom domain.
 
-2. Serve locally (using any static server):
-   ```bash
-   # Using Python
-   python -m http.server 8000
+## Brand consistency
 
-   # Using Node.js
-   npx serve .
+Navy `#0F1B3C` / gold `#D4AF37` palette, Inter + JetBrains Mono. Consistent with [dougmealing.com](https://dougmealing.com) and [metaobjects.com](https://metaobjects.com).
 
-   # Using PHP
-   php -S localhost:8000
-   ```
+## License
 
-3. Open `http://localhost:8000` in your browser
-
-### Content Updates
-
-The site content is organized in markdown files in the `docs/` folder:
-
-- `docs/WEBSITE_CONTENT.md` - Main messaging and copy
-- `docs/FEATURES_CONTENT.md` - Detailed feature descriptions
-- `docs/TECHNICAL_CONTENT.md` - Code examples and technical details
-- `docs/CLAUDE_CONTEXT.md` - Development guidelines and design system
-
-### Making Changes
-
-1. Update the relevant markdown files
-2. Modify HTML/CSS/JS as needed
-3. Test locally across different devices
-4. Commit and push changes
-
-## 🚢 Deployment
-
-This site is configured for GitHub Pages deployment:
-
-- **Production URL**: `https://metaobjects.dev`
-- **Auto-deployment**: Pushes to `main` branch trigger deployment
-- **Custom Domain**: Configured via CNAME file
-
-## 📊 Performance
-
-The site is optimized for performance with:
-
-- Minimal JavaScript footprint
-- Optimized images and assets
-- CSS custom properties for consistent theming
-- Efficient event handling with throttling/debouncing
-
-## ♿ Accessibility
-
-Accessibility features include:
-
-- Semantic HTML structure
-- ARIA labels and roles
-- Keyboard navigation support
-- Screen reader compatibility
-- High contrast mode support
-- Reduced motion preferences
-
-## 🔗 Related Links
-
-- **Main Project**: [MetaObjects Core](https://github.com/Draagon/draagon-metaobjects)
-- **Documentation**: [GitHub Docs](https://github.com/Draagon/draagon-metaobjects/blob/main/README.md)
-- **License**: [Apache 2.0](https://github.com/Draagon/draagon-metaobjects/blob/main/LICENSE)
-- **Community**: [GitHub Discussions](https://github.com/Draagon/draagon-metaobjects/discussions)
-
-## 📄 License
-
-This website is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
-
----
-
-Built with ❤️ by Doug Mealing LLC for the MetaObjects open source community.
+Site source: Apache License 2.0 (same as the underlying MetaObjects project).
