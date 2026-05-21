@@ -351,12 +351,6 @@ h1, h2, h3 {
 .ai-future a { color: var(--white); text-decoration-color: var(--accent-gold); }
 
 /* ============================================================ Quickstart pointers */
-.qs-intro {
-  font-size: 1.0625rem;
-  color: var(--dark-gray);
-  margin: 0 0 1.5rem;
-  max-width: var(--reading-width);
-}
 .qs-group { margin-bottom: 1.75rem; }
 .qs-group:last-child { margin-bottom: 0; }
 .qs-group-title {
@@ -365,6 +359,12 @@ h1, h2, h3 {
   color: var(--medium-gray);
   margin: 0 0 0.75rem;
   letter-spacing: 0.01em;
+}
+.qs-footnote {
+  font-size: 0.85rem;
+  color: var(--medium-gray);
+  margin: 0.75rem 0 0;
+  font-style: italic;
 }
 .quickstart-grid {
   display: grid;
@@ -397,8 +397,9 @@ h1, h2, h3 {
   color: var(--accent-gold);
 }
 .quickstart-card--planned { opacity: 0.6; }
-.qs-arrow { color: var(--accent-gold); font-weight: 700; }
-.qs-status { font-size: 0.78rem; font-weight: 600; color: var(--medium-gray); text-transform: uppercase; letter-spacing: 0.08em; }
+.qs-lang { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qs-arrow { color: var(--accent-gold); font-weight: 700; flex-shrink: 0; margin-left: 0.5rem; }
+.qs-status { font-size: 0.78rem; font-weight: 600; color: var(--medium-gray); text-transform: uppercase; letter-spacing: 0.08em; flex-shrink: 0; margin-left: 0.5rem; }
 
 @media (max-width: 800px) { .quickstart-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .quickstart-grid { grid-template-columns: 1fr; } }

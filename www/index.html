@@ -168,7 +168,6 @@ $ meta export --out ./snapshot.json</code></pre>
     <!-- Quickstart pointers -->
     <section class="quickstart-pointers">
       <h2 class="section-label">Quickstart</h2>
-      <p class="qs-intro">MetaObjects ships per deployment target. Server-side implementations are peer ports across Java, TypeScript, .NET, and (planned) Python. The web client packages are universal — a Java backend serving React still uses the same TypeScript client.</p>
 
       <div class="qs-group">
         <h3 class="qs-group-title">Server-side</h3>
@@ -193,17 +192,18 @@ $ meta export --out ./snapshot.json</code></pre>
       </div>
 
       <div class="qs-group">
-        <h3 class="qs-group-title">Web client (consumed by every backend)</h3>
+        <h3 class="qs-group-title">Client-side</h3>
         <div class="quickstart-grid quickstart-grid--client">
           <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/client/web/packages/runtime-web" class="quickstart-card">
-            <span class="qs-lang">@metaobjects/runtime-web</span>
+            <span class="qs-lang">runtime-web</span>
             <span class="qs-arrow">→</span>
           </a>
           <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/client/web/packages/react" class="quickstart-card">
-            <span class="qs-lang">@metaobjects/react</span>
+            <span class="qs-lang">React</span>
             <span class="qs-arrow">→</span>
           </a>
         </div>
+        <p class="qs-footnote">Universal across backends -- a Java server serving React uses the same TypeScript packages.</p>
       </div>
     </section>
   </main>
