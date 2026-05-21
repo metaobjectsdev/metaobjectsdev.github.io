@@ -254,7 +254,9 @@ h1, h2, h3 {
   letter-spacing: 0.04em;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
+  white-space: nowrap;
 }
+.impl-table tbody td:nth-child(2) { white-space: nowrap; }
 .status-stable { background: rgba(46, 160, 67, 0.15); color: #1f6f31; }
 .status-active { background: rgba(212, 175, 55, 0.18); color: #8a6a16; }
 .status-partial { background: rgba(30, 58, 138, 0.12); color: var(--royal-blue); }
@@ -289,6 +291,7 @@ h1, h2, h3 {
 .example-code code { background: transparent; color: var(--code-fg); padding: 0; font-size: inherit; }
 .example-code .comment { color: #7d8cad; }
 .example-code .keyword { color: #d4a35b; font-weight: 500; }
+.example-code .key { color: #8fb8e6; }
 .example-code .string { color: #97c895; }
 .example-note { font-size: 0.92rem; color: var(--medium-gray); margin-top: 0.875rem; }
 
