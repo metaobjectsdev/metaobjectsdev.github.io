@@ -8,19 +8,20 @@
 
 ## What MetaObjects is
 
-MetaObjects is a cross-language metadata standard for declaring typed entity models. From a single metadata definition, MetaObjects drives three capabilities:
+MetaObjects is a cross-language metadata standard for declaring typed entity models. From a single metadata definition, MetaObjects drives four capabilities (the fourth landing in 7.0.0):
 
 1. **Code generation** -- idiomatic per-language code (TypeScript, Java, C#.NET, Python) generated from the same metadata model.
 2. **Runtime metadata access** -- load the metadata at runtime to drive dynamic behavior: CRUD operations, validation, relationships, dynamic admin UIs, LLM tool registration.
 3. **Drift detection** -- catch divergence between code and metadata before it ships, surfacing drift as compile-time breakage in the type checker.
+4. **Prompt construction** (landing in 7.0.0) -- treat LLM prompts as governed metadata: a typed payload (a projection), external provider-resolved prompt text, byte-identical cross-language render, and build-time prompt-to-payload drift detection.
 
 The metamodel is the **durable spine**; generated code is the **disposable artifact**. Substrate is local-first: typed metadata lives in your repo, generated code is idiomatic per-language output that runs **without any MetaObjects dependency at runtime**. If `@metaobjects/*` packages disappeared tomorrow, your generated code keeps working.
 
 ---
 
-## The three pillars
+## The four pillars
 
-All three pillars ship per language and are weighted equally. They are not three separate products; they are three views on the same metadata.
+The pillars are weighted equally and are not separate products; they are views on the same metadata. Three ship per language today; a fourth — prompt construction — is committed for 7.0.0.
 
 ### Codegen
 
@@ -46,6 +47,10 @@ Runtime use cases include CRUD scaffolding, validation rules, relationship trave
 ### Drift detection
 
 Catch divergence between code and metadata. Quality-of-life on top of codegen + runtime: when the underlying metadata changes, regenerated entities change with it, and any business logic written against the old shape breaks at compile time.
+
+### Prompt construction (landing in 7.0.0)
+
+The prompt is code too. The fourth pillar applies the same three disciplines to the artifacts that drive the AI itself. A prompt's input payload is declared as a typed projection (the same machinery used for DB views — the abstraction proving itself). The prompt text is never inline: it is external and resolved by a runtime-configured provider (filesystem, RDB, or NoSQL), addressed by a backend- and locale-agnostic logical reference. A logic-less Mustache render engine turns `(payload + provider-resolved text) → final prompt string`, byte-identical across TypeScript, Java, Python, and C#.NET — gated by the same conformance corpus that enforces metadata parity. A build-time `verify` step proves every prompt variable resolves to a real field on its payload, catching prompt-to-payload drift and payload bloat before they ship. Designed in the FR-004 spec; depends on the FR-003 projection substrate.
 
 ---
 

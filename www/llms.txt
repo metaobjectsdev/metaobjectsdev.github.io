@@ -10,13 +10,14 @@ The metamodel is the durable spine; generated code is the disposable artifact. S
 - [Conformance fixtures](https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance): 48 shared cross-language test cases with a CAPABILITIES.json manifest. The truth source for what "MetaObjects-conformant" means in code.
 - [Roadmap](https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md): current + planned work across all implementations.
 
-## The three pillars
+## The four pillars
 
-MetaObjects ships three capabilities of equal weight per implementation, not three separate products:
+MetaObjects pillars are capabilities of equal weight per implementation, not separate products. Three ship today; a fourth — prompt construction — is committed for 7.0.0:
 
 - **Codegen** -- emit idiomatic per-language code from a single metadata model. Drizzle/Zod + Fastify for TypeScript, JOOQ/Spring for Java, Pydantic/FastAPI for Python. Hand-edit-preserving regeneration via three-way merge.
 - **Runtime metadata** -- load metadata at runtime and drive behavior dynamically: CRUD, validation, relationships, dynamic admin UIs, LLM tool registration. Kysely (TS), SQLAlchemy Core (Python), modernized JDBC/jOOQ (Java).
 - **Drift detection** -- catch divergence between generated code and metadata before it ships. Surfaces drift as compile-time breakage in the type checker, not as a production incident.
+- **Prompt construction** (landing in 7.0.0) -- treat LLM prompts as governed metadata: a typed payload declared as a projection, external provider-resolved prompt text, a logic-less Mustache render engine producing byte-identical output across languages, and build-time prompt-to-payload drift detection (catching payload bloat and renamed-field breakage before they ship). The same three disciplines, applied to the artifacts that drive the AI itself.
 
 ## Implementations
 
@@ -62,6 +63,7 @@ Drift detection is architectural rather than a standalone command. Regenerated c
 
 - Created and maintained by [Doug Mealing](https://dougmealing.com). Background and the architectural narrative live there.
 - The "why metadata is the spine AI was missing" essay is at [I thought AI killed MetaObjects. Then AI drift made it essential.](https://dougmealing.com/writing/metaobjects-ai-drift/)
+- On the fourth pillar — why prompts are code too: [The prompt is code — and yours is drifting too.](https://dougmealing.com/writing/the-prompt-is-code/)
 - Commercial inquiries and consulting engagements: [metaobjects.com](https://metaobjects.com)
 
 ## Optional full corpus
