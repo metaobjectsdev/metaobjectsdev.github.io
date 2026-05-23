@@ -67,7 +67,7 @@
         </article>
         <article class="pillar">
           <h3>Prompt construction <span class="status status-planned">7.0.0</span></h3>
-          <p>The prompt is code too. Declare a prompt's payload as a typed projection, keep its text external and provider-resolved, and render it byte-identically across languages — with build-time drift detection between a prompt and the data it consumes. The same three disciplines, reaching into the artifacts that drive the AI itself.</p>
+          <p>The prompt is code too — not a string scattered across services. Declare its payload as a typed projection, keep the text external and provider-resolved, and render it deterministically: snapshot-testable, cache-stable (no stray whitespace silently breaking your prompt-cache hits), and drift-checked at build time so a renamed field can't quietly degrade a prompt. Conformance-gated across every language port.</p>
         </article>
       </div>
     </section>
