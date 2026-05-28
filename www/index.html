@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MetaObjects — Cross-language metadata standard for codegen, runtime, and drift detection</title>
-  <meta name="description" content="A cross-language metadata standard. Define typed entities once; generate idiomatic code in TypeScript, Java, C#.NET, and Python. Runtime metadata. Drift detection. Apache 2.0.">
+  <title>MetaObjects — Cross-language metadata standard for codegen, runtime, drift detection, and prompt construction</title>
+  <meta name="description" content="Define typed entities once. Generate idiomatic code in TypeScript, Java, Kotlin, C#.NET, and Python. Runtime metadata. Drift detection. Conformance-gated. Apache 2.0. 7.0.0 live on Maven Central and npm.">
 
   <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
 
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/styles.css">
 
   <meta property="og:title" content="MetaObjects — Cross-language metadata standard">
-  <meta property="og:description" content="Codegen, runtime metadata, and drift detection across TypeScript, Java, C#.NET, and Python. Apache 2.0.">
+  <meta property="og:description" content="Codegen, runtime metadata, drift detection, and prompt construction across TypeScript, Java, Kotlin, C#.NET, and Python. 7.0.0 on Maven Central and npm. Apache 2.0.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://metaobjects.dev/">
   <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
@@ -38,10 +38,10 @@
   <main>
     <!-- Hero -->
     <section class="hero">
-      <p class="hero-eyebrow">Cross-language metadata standard · Apache 2.0</p>
-      <h1>The metadata layer for AI-first development.</h1>
+      <p class="hero-eyebrow">Cross-language metadata standard · Apache 2.0 · 7.0.0 on Maven Central + npm</p>
+      <h1>Make schema drift a compile-time error.</h1>
       <p class="hero-lede">
-        Define typed entities once. Generate idiomatic code across TypeScript, Java, C#.NET, and Python. Use the same metadata at runtime. Catch drift in the type checker. The metamodel is the durable spine; generated code is the disposable artifact.
+        AI coding agents regenerate thousands of lines a day. Without a shared spine they produce inconsistent boilerplate at every prompt — and the drift surfaces as a production incident, not a compile error. MetaObjects is the spine: define typed entities once, generate idiomatic code across <strong>TypeScript, Java, Kotlin, C#.NET, and Python</strong>, and every generated stack breaks the type checker the moment the metadata moves underneath it.
       </p>
       <div class="hero-ctas">
         <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="btn btn-primary">Read the spec →</a>
@@ -49,32 +49,84 @@
       </div>
     </section>
 
-    <!-- Four pillars -->
+    <!-- Four pillars — all shipping -->
     <section class="pillars">
-      <h2 class="section-label">Four pillars</h2>
+      <h2 class="section-label">Four pillars. All shipping.</h2>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>Emit idiomatic per-language code from a single metadata model — Drizzle/Zod + Fastify for TS, JOOQ/Spring for Java, Pydantic/FastAPI for Python. Hand-edit-preserving regeneration via three-way merge.</p>
+          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + JPA</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET + Postgres DDL</strong> (C#), <strong>Pydantic + FastAPI + SQLAlchemy</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
-          <p>Load metadata at runtime and drive behavior dynamically — CRUD, validation, relationships, dynamic admin UIs, LLM tool registration. Less code in the repo; less surface area for AI to drift on.</p>
+          <p>Load metadata at runtime and drive behavior dynamically — CRUD, validation, relationships, dynamic admin UIs, LLM tool registration. Less code in the repo; less surface area for AI agents to drift on.</p>
         </article>
         <article class="pillar">
           <h3>Drift detection</h3>
-          <p>Catch divergence between code and metadata before it ships. Compile-time breakage in the type checker when schemas change underneath the logic that depends on them.</p>
+          <p><code>meta verify</code> validates every generated artifact against the metadata at build time. Renaming a field in one place breaks the type checker everywhere it's used — across services, across languages, across the human-and-AI-generated boundary.</p>
         </article>
         <article class="pillar">
-          <h3>Prompt construction <span class="status status-planned">7.0.0</span></h3>
-          <p>The prompt is code too — not a string scattered across services. Declare its payload as a typed projection, keep the text external and provider-resolved, and render it deterministically: snapshot-testable, cache-stable (no stray whitespace silently breaking your prompt-cache hits), and drift-checked at build time so a renamed field can't quietly degrade a prompt. Conformance-gated across every language port.</p>
+          <h3>Prompt construction</h3>
+          <p>The prompt is code too — not a string scattered across services. Declare a typed payload as a projection, keep the text external and provider-resolved, render deterministically: snapshot-testable, cache-stable (no stray whitespace silently breaking exact-prefix prompt-cache hits), drift-checked at build time so a renamed field can't quietly degrade a prompt. Plus typed <code>template.output</code> parsers — Zod / Pydantic / Jackson / kotlinx.serialization / System.Text.Json across the ports.</p>
         </article>
       </div>
     </section>
 
+    <!-- Drift table — the #1 AI-era reason to adopt -->
+    <section class="drift">
+      <h2 class="section-label">The #1 reason in the AI era: drift becomes impossible.</h2>
+      <p class="drift-intro">
+        AI coding agents regenerate thousands of lines a day. A field rename in one file misses three others — types compile, runtime breaks at the boundary, hours to chase. A required field added to an entity is forgotten in the migration, the validator, the form. A prompt template references <code>{{userName}}</code> while the payload type carries <code>user.name</code>. Without a shared spine, every prompt accelerates the entropy. MetaObjects inverts the source of truth: generated code is owned by the codegen, not by humans or agents.
+      </p>
+      <table class="drift-table">
+        <thead>
+          <tr>
+            <th>Drift mode</th>
+            <th>Without MetaObjects</th>
+            <th>With MetaObjects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Rename <code>created_at</code> → <code>createdAt</code> in the schema; miss the validator + form binding + API doc + tests</td>
+            <td>Types compile. Runtime breaks at the boundary. Hours to chase.</td>
+            <td>Edit one YAML field, regen. Six files update consistently. Drift is structurally impossible.</td>
+          </tr>
+          <tr>
+            <td>Add a new entity (table + validator + types + queries + routes + barrel = 6 files)</td>
+            <td>AI misses one. App half-works.</td>
+            <td>One YAML drop + <code>meta gen</code>.</td>
+          </tr>
+          <tr>
+            <td>Prompt template references a field the payload type doesn't carry</td>
+            <td>Silent runtime failure in production.</td>
+            <td><code>meta verify</code> catches at build time. CI fails before merge.</td>
+          </tr>
+          <tr>
+            <td>Required field added to entity; forgotten in migration / validator / form</td>
+            <td>Production NULL error.</td>
+            <td>CHECK constraint + Zod refinement + form validation regenerate from one declaration.</td>
+          </tr>
+          <tr>
+            <td>Enum transition hand-coded as string literals across 5 files; agent invents <code>"completed"</code> instead of <code>"complete"</code></td>
+            <td>Silent string mismatch. Workflow stalls.</td>
+            <td><code>field.enum @values</code> narrows the literal type. Compile error on first wrong character.</td>
+          </tr>
+          <tr>
+            <td>TS service renames a column; the Java consumer's POJO mapping silently goes stale</td>
+            <td>Boundary drifts. Cross-service schema mismatch in production.</td>
+            <td>Same metadata regenerates both stacks. Conformance corpus guarantees they agree byte-for-byte.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="drift-payoff">
+        The win compounds with scale. For a 5k-line app, MetaObjects is overkill. For a 50k-line codebase maintained by humans-plus-agents, drift is the dominant cost of change — and MetaObjects pays back the setup cost within the first month.
+      </p>
+    </section>
+
     <!-- Implementations matrix -->
     <section class="implementations">
-      <h2 class="section-label">Implementations</h2>
+      <h2 class="section-label">Five ports. All shipping at 7.0.0.</h2>
       <table class="impl-table">
         <thead>
           <tr>
@@ -86,28 +138,33 @@
         <tbody>
           <tr>
             <td><strong>TypeScript</strong></td>
-            <td><span class="status status-stable">v0.3 reference</span></td>
-            <td>Codegen + runtime + drift detection. 1,784+ tests passing. Bun-first dev workflow.</td>
+            <td><span class="status status-stable">reference</span></td>
+            <td>npm <code>@metaobjectsdev/*@7.0.0-rc</code>. Drizzle + Zod + Fastify + Hono codegen, Kysely runtime, <code>meta migrate</code> for Postgres / SQLite / Cloudflare D1. 2,500+ tests across the workspace.</td>
           </tr>
           <tr>
             <td><strong>Java</strong></td>
-            <td><span class="status status-active">In progress</span></td>
-            <td>H3a (loader restructure) shipped 2026-05-19. H3b (conformance harness) active.</td>
+            <td><span class="status status-stable">7.0.0 on Central</span></td>
+            <td><code>com.metaobjects:metaobjects-*:7.0.0</code> on Maven Central. Spring REST + DTO + Repository + filter-allowlist codegen via <code>codegen-spring</code>; OMDB persistence engine with diff-and-converge <code>meta migrate</code>; render + payload + verify + output-parser codegen.</td>
+          </tr>
+          <tr>
+            <td><strong>Kotlin</strong></td>
+            <td><span class="status status-stable">7.0.0 on Central</span></td>
+            <td><code>com.metaobjects:metaobjects-codegen-kotlin:7.0.0</code> + <code>metadata-ktx</code> Kotlin facade. KotlinPoet codegen: Exposed Tables, Spring controllers, payload VOs, output parsers, stored-proc helpers. Persistence-conformance against Testcontainers Postgres.</td>
           </tr>
           <tr>
             <td><strong>C#.NET</strong></td>
-            <td><span class="status status-partial">Loader shipped</span></td>
-            <td>Loader, canonical serializer, and a <code>dotnet test</code> conformance runner that runs the full shared corpus. Codegen + runtime out of scope.</td>
+            <td><span class="status status-stable">full-stack</span></td>
+            <td>EF Core entities + <code>AppDbContext</code> + ASP.NET minimal-API routes + Postgres DDL (full-CREATE + incremental introspect/diff/migrate via <code>meta migrate --from-db</code>). Render engine + payload-VO codegen + <code>verify</code> ship. <code>meta</code> CLI is the entry point.</td>
           </tr>
           <tr>
             <td><strong>Python</strong></td>
-            <td><span class="status status-planned">Planned</span></td>
-            <td>Targeted for post-H3. Pydantic/FastAPI integration.</td>
+            <td><span class="status status-stable">full-stack</span></td>
+            <td>Loader + canonical serializer + render + verify + codegen (Pydantic + FastAPI + SQLAlchemy) + ObjectManager runtime. All five cross-port conformance corpora green.</td>
           </tr>
         </tbody>
       </table>
       <p class="impl-note">
-        Conformance fixtures live at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance"><code>fixtures/conformance/</code></a> -- 48 shared test cases that every implementation runs against the same expectations.
+        Five shared conformance corpora at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures"><code>fixtures/</code></a> — metamodel (~90 fixtures), render, persistence (12/12 against Testcontainers Postgres), API contract (20/20 cross-port), YAML — validate every implementation byte-identically against shared expectations.
       </p>
     </section>
 
@@ -129,13 +186,13 @@
           - <span class="keyword">identity.primary</span>: { <span class="string">"@fields"</span>: id }</code></pre>
 
       <pre class="example-code"><code><span class="comment">// metaobjects.config.ts — picks generators + DB target</span>
-<span class="keyword">import</span> { defineConfig } <span class="keyword">from</span> <span class="string">"@metaobjects/cli"</span>;
+<span class="keyword">import</span> { defineConfig } <span class="keyword">from</span> <span class="string">"@metaobjectsdev/cli"</span>;
 <span class="keyword">import</span> { entityFile, queriesFile, routesFile, barrel }
-  <span class="keyword">from</span> <span class="string">"@metaobjects/codegen-ts/generators"</span>;
+  <span class="keyword">from</span> <span class="string">"@metaobjectsdev/codegen-ts/generators"</span>;
 
 <span class="keyword">export default</span> defineConfig({
   outDir:   <span class="string">"./src/db"</span>,
-  dialect:  <span class="string">"sqlite"</span>,
+  dialect:  <span class="string">"sqlite"</span>,            <span class="comment">// or "postgres" / "d1"</span>
   generators: [entityFile(), queriesFile(), routesFile(), barrel()],
 });</code></pre>
 
@@ -154,17 +211,20 @@ $ meta export --out ./snapshot.json</code></pre>
       <p class="example-note">Conformance fixtures (JSON form): <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">fixtures/conformance/</a>. YAML and JSON are equivalent — pick whichever your stack prefers.</p>
     </section>
 
-    <!-- For AI assistants -->
+    <!-- For AI agents -->
     <section class="ai" id="ai">
       <div class="ai-inner">
-        <h2 class="section-label section-label-on-dark">For AI assistants</h2>
-        <p class="ai-lede">Using Claude, Cursor, Copilot, or Windsurf? Point them at this site's <code>llms.txt</code> for an index of the spec, quickstarts, and reference material — or to <code>llms-full.txt</code> for the full Markdown corpus.</p>
+        <h2 class="section-label section-label-on-dark">Built so AI agents work at the metadata layer.</h2>
+        <p class="ai-lede">
+          Every contract is grep-friendly (named constants, never magic strings). Generated code is idiomatic per-language, not framework-magic. An <code>llms.txt</code> index ships at the root so any agent fluent in the convention can index the full standard in seconds. The substrate is designed so <strong>Claude Code, Cursor, GitHub Copilot, and Windsurf</strong> edit metadata files — and the codegen handles every language behind them.
+        </p>
         <ul class="ai-links">
           <li><a href="/llms.txt"><code>/llms.txt</code></a> — short index following the Answer.AI <code>llms.txt</code> convention</li>
           <li><a href="/llms-full.txt"><code>/llms-full.txt</code></a> — full Markdown dump of spec + quickstart material</li>
+          <li><a href="https://github.com/metaobjectsdev/metaobjects/blob/main/CLAUDE.md"><code>CLAUDE.md</code> in the repo</a> — agent instructions for working in the metaobjects codebase itself</li>
         </ul>
         <p class="ai-future">
-          <strong>MetaObjects MCP server — coming.</strong> A Model Context Protocol server exposing the spec, conformance fixtures, and codegen tools as agent-callable functions. Track progress in the <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">roadmap</a>.
+          <strong>Why Claude Code in particular.</strong> Anthropic's official CLI was the day-zero driver for the standard's design choices. The metamodel vocabulary is small enough to fit in a context window; the conformance contract is enforced as compile-time errors rather than runtime drift; and the generated code is the same idiomatic per-language output a senior engineer would write by hand, so an agent's review pass converges fast. A first-party MCP server exposing the spec, conformance fixtures, and codegen tools as agent-callable functions is on the <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">roadmap</a>.
         </p>
       </div>
     </section>
@@ -184,13 +244,17 @@ $ meta export --out ./snapshot.json</code></pre>
             <span class="qs-lang">Java</span>
             <span class="qs-arrow">→</span>
           </a>
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/java/codegen-kotlin" class="quickstart-card">
+            <span class="qs-lang">Kotlin</span>
+            <span class="qs-arrow">→</span>
+          </a>
           <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/csharp" class="quickstart-card">
             <span class="qs-lang">C#.NET</span>
             <span class="qs-arrow">→</span>
           </a>
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/python" class="quickstart-card quickstart-card--planned">
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/python" class="quickstart-card">
             <span class="qs-lang">Python</span>
-            <span class="qs-status">planned</span>
+            <span class="qs-arrow">→</span>
           </a>
         </div>
       </div>
