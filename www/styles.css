@@ -273,6 +273,140 @@ h1, h2, h3 {
   .impl-table td { padding: 0.75rem 0.5rem; }
 }
 
+/* ============================================================ Drift table */
+.drift {
+  max-width: var(--content-width);
+  margin: 5rem auto 0;
+  padding: 0 1.5rem;
+}
+.drift-intro,
+.drift-payoff {
+  color: var(--dark-gray);
+  font-size: 1.0625rem;
+  margin: 0 0 1.5rem;
+  max-width: var(--reading-width);
+  line-height: 1.65;
+}
+.drift-payoff {
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.25rem;
+  background: rgba(212, 175, 55, 0.10);
+  border-left: 3px solid var(--accent-gold, #d4af37);
+}
+.drift-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+  margin: 0;
+}
+.drift-table thead th {
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--medium-gray);
+  padding: 0 1rem 0.625rem;
+  border-bottom: 2px solid var(--rule);
+}
+.drift-table tbody td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--dark-gray);
+  line-height: 1.55;
+}
+.drift-table tbody tr:last-child td { border-bottom: none; }
+.drift-table td:first-child { color: var(--primary-blue); font-weight: 500; }
+.drift-table td:nth-child(2) { color: #b04344; }
+.drift-table td:nth-child(3) { color: #1f6f31; }
+@media (max-width: 800px) {
+  .drift-table { font-size: 0.88rem; }
+  .drift-table td { padding: 0.75rem 0.5rem; }
+}
+
+/* ============================================================ Compare / capability matrix */
+.compare {
+  max-width: var(--content-width);
+  margin: 5rem auto 0;
+  padding: 0 1.5rem;
+}
+.compare-intro,
+.compare-note {
+  color: var(--dark-gray);
+  font-size: 1.0625rem;
+  margin: 0 0 1.5rem;
+  max-width: var(--reading-width);
+  line-height: 1.65;
+}
+.compare-note {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: rgba(30, 58, 138, 0.06);
+  border-left: 3px solid var(--royal-blue, #1e3a8a);
+}
+.compare-subhead {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 3rem 0 0.5rem;
+  color: var(--primary-blue);
+}
+.compare-table,
+.capability-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1rem;
+  font-size: 0.94rem;
+}
+.compare-table thead th,
+.capability-matrix thead th {
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--medium-gray);
+  padding: 0 1rem 0.625rem;
+  border-bottom: 2px solid var(--rule);
+}
+.compare-table tbody td,
+.capability-matrix tbody td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--dark-gray);
+  line-height: 1.55;
+}
+.compare-table tbody tr:last-child td,
+.capability-matrix tbody tr:last-child td { border-bottom: none; }
+.compare-table td:first-child,
+.capability-matrix td:first-child {
+  color: var(--primary-blue);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.compare-table a { color: var(--royal-blue); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.compare-table a:hover { color: var(--primary-blue); }
+
+/* Capability cells: yes / partial / no */
+.capability-matrix td.yes      { color: #1f6f31; font-weight: 500; }
+.capability-matrix td.partial  { color: #8a6a16; }
+.capability-matrix td.no       { color: var(--medium-gray); }
+.capability-matrix td.yes::before     { content: "✓ "; opacity: 0.6; }
+.capability-matrix td.partial::before { content: "◐ "; opacity: 0.6; }
+.capability-matrix td.no::before      { content: "— "; opacity: 0.6; }
+
+/* AI-suitability row group highlight */
+.capability-matrix tr.ai-row { background: rgba(212, 175, 55, 0.08); }
+.capability-matrix tr.ai-row td:first-child { color: var(--accent-gold-dark, #8a6a16); }
+
+@media (max-width: 800px) {
+  .compare-table,
+  .capability-matrix { font-size: 0.86rem; }
+  .compare-table td,
+  .capability-matrix td { padding: 0.75rem 0.5rem; }
+}
+
 /* ============================================================ Example */
 .example-intro { color: var(--dark-gray); font-size: 1.0625rem; margin: 0 0 1.25rem; max-width: var(--reading-width); }
 .example-code {

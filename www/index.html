@@ -352,6 +352,98 @@ $ meta migrate --db file:./dev.db --slug add-subscriber</code></pre>
       <p class="example-note">Conformance fixtures (JSON form): <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">fixtures/conformance/</a>. YAML and JSON are equivalent — pick whichever your stack prefers.</p>
     </section>
 
+    <!-- Compare: per-language alternatives -->
+    <section class="compare" id="compare">
+      <h2 class="section-label">How MetaObjects compares.</h2>
+      <p class="compare-intro">
+        For a single-language project that doesn't talk to LLMs at scale, the popular per-language ORMs are excellent and likely enough. MetaObjects adds value when (a) your codebase is touched by AI agents at volume, (b) you ship in more than one language, or (c) you have typed prompts and tool-calls that need governance. Honest comparison, by language:
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th>Popular alternatives</th>
+            <th>What they do well</th>
+            <th>What MetaObjects adds</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>TypeScript</strong></td>
+            <td><a href="https://prisma.io">Prisma</a>, <a href="https://orm.drizzle.team">Drizzle</a>, <a href="https://typeorm.io">TypeORM</a>, <a href="https://kysely.dev">Kysely</a></td>
+            <td>Mature schema → migration loops. Excellent type-safe SQL ergonomics (Drizzle, Kysely). Mature ecosystem.</td>
+            <td>Same Drizzle + Zod output, plus four other languages from the same source. Plus typed prompt rendering, output parsers, tool-call envelopes, and <code>meta verify</code> drift gates.</td>
+          </tr>
+          <tr>
+            <td><strong>Java</strong></td>
+            <td><a href="https://hibernate.org">Hibernate / JPA</a>, <a href="https://jooq.org">jOOQ</a>, <a href="https://spring.io/projects/spring-data-jpa">Spring Data JPA</a></td>
+            <td>Industry-standard ORM (Hibernate). Type-safe SQL with code-first generation (jOOQ). Repository abstractions (Spring Data).</td>
+            <td>The same JPA-ready entities, plus the controller/DTO/repository layer, plus four other languages from the same source. Runtime reflection-free codegen is friendlier to GraalVM native-image and to AI grep.</td>
+          </tr>
+          <tr>
+            <td><strong>Kotlin</strong></td>
+            <td><a href="https://github.com/JetBrains/Exposed">Exposed</a>, <a href="https://ktor.io">Ktor</a> + jOOQ, <a href="https://github.com/Kotlin/kotlinx.serialization">kotlinx.serialization</a></td>
+            <td>Idiomatic Kotlin SQL DSL (Exposed). Solid web stack (Ktor). First-class coroutines.</td>
+            <td>KotlinPoet-generated <code>@Serializable</code> data classes + Exposed Tables from the same metamodel that drives the Java / TS / Python / C# stacks. Same Kotlin idioms; cross-port lockstep.</td>
+          </tr>
+          <tr>
+            <td><strong>C#.NET</strong></td>
+            <td><a href="https://learn.microsoft.com/en-us/ef/core/">EF Core</a>, <a href="https://www.learndapper.com/">Dapper</a>, <a href="https://nhibernate.info/">NHibernate</a></td>
+            <td>Microsoft-supported, deeply integrated with ASP.NET (EF Core). Lightweight micro-ORM speed (Dapper).</td>
+            <td>EF Core entities + <code>AppDbContext</code> + ASP.NET routes from the metamodel. Plus the cross-port REST API contract — your C# server agrees with the TS / Java / Kotlin / Python services on filter operators, pagination envelopes, and 404 shapes.</td>
+          </tr>
+          <tr>
+            <td><strong>Python</strong></td>
+            <td><a href="https://www.sqlalchemy.org/">SQLAlchemy</a>, <a href="https://docs.djangoproject.com/en/stable/topics/db/models/">Django ORM</a>, <a href="https://docs.pydantic.dev/">Pydantic</a> + <a href="https://fastapi.tiangolo.com/">FastAPI</a>, <a href="https://sqlmodel.tiangolo.com/">SQLModel</a></td>
+            <td>Mature ORM (SQLAlchemy). Batteries-included framework (Django). Excellent validation (Pydantic).</td>
+            <td>SQLAlchemy declarative models + Pydantic schemas + FastAPI routers from the same metamodel that drives every other port. Same Pythonic outputs; same drift guarantees.</td>
+          </tr>
+          <tr>
+            <td><strong>Schema-only IDLs</strong></td>
+            <td><a href="https://www.openapis.org/">OpenAPI</a>, <a href="https://smithy.io">Smithy</a>, <a href="https://grpc.io">gRPC / protobuf</a></td>
+            <td>Strong API-shape governance. Wide client/server tooling. Industry-standard.</td>
+            <td>Describes the <em>whole stack</em>, not just the API shape: persistence + render + tool-calls + UI bindings + validation, all from one declaration. IDLs give you type stubs; MetaObjects gives you the table, the validator, the route, the prompt template, and the migration.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="compare-subhead">Capability matrix — including AI-agent suitability.</h3>
+      <p class="compare-intro">Where it matters: the right-hand four columns are the AI-coding-agent dimensions. They were the design driver, not an afterthought.</p>
+
+      <table class="capability-matrix">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>MetaObjects</th>
+            <th>Prisma / Drizzle</th>
+            <th>JPA / EF Core / SQLAlchemy</th>
+            <th>OpenAPI / Smithy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Idiomatic per-language codegen</td>            <td class="yes">5 languages</td>      <td class="yes">TS only</td>             <td class="yes">single-lang</td>      <td class="yes">type stubs only</td></tr>
+          <tr><td>Cross-language source of truth</td>           <td class="yes">five ports, byte-identical</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="partial">API shape only</td></tr>
+          <tr><td>Schema migrations</td>                         <td class="yes">diff + emit + apply</td>           <td class="yes">yes</td>                <td class="yes">yes</td>              <td class="no">no</td></tr>
+          <tr><td>Typed validation at the wire boundary</td>     <td class="yes">Zod / Pydantic / Hibernate / DataAnnotations / kotlinx</td> <td class="partial">runtime only</td>   <td class="partial">annotations</td>  <td class="partial">schema-only</td></tr>
+          <tr><td>Runtime metadata (drive behavior dynamically)</td> <td class="yes">all 5 ports</td>                <td class="no">no</td>                  <td class="partial">reflection</td>   <td class="no">no</td></tr>
+          <tr><td>Drift detection (build-time)</td>              <td class="yes"><code>meta verify</code></td>      <td class="partial">migration diff</td> <td class="partial">migration diff</td><td class="no">no</td></tr>
+          <tr><td>Typed prompt construction + render</td>        <td class="yes">5 ports, conformance-gated</td>    <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
+          <tr><td><code>template.output</code> parser-on-receipt</td> <td class="yes">5 ports (Zod / Pydantic / Jackson / kotlinx / STJ)</td> <td class="no">no</td> <td class="no">no</td> <td class="no">no</td></tr>
+          <tr><td>LLM tool-call envelopes (<code>template.toolcall</code>)</td> <td class="yes">cross-port</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
+          <tr><td>Hand-edit-preserving regen</td>                <td class="yes">3-way merge</td>                    <td class="partial">user-edits adjacent</td> <td class="partial">scaffolding only</td> <td class="partial">codegen reruns</td></tr>
+          <tr class="ai-row"><td>Machine-readable metadata (grep-friendly)</td> <td class="yes">YAML/JSON, named constants</td> <td class="partial">DSL or schema.prisma</td> <td class="no">annotations / decorators</td> <td class="yes">YAML/JSON</td></tr>
+          <tr class="ai-row"><td>Generated code is plain (no proxy/decorator magic)</td> <td class="yes">idiomatic native</td> <td class="yes">idiomatic</td>         <td class="no">proxy/runtime magic</td><td class="yes">type stubs</td></tr>
+          <tr class="ai-row"><td>Deterministic regen (same in → same out)</td> <td class="yes">conformance-gated</td><td class="yes">yes</td>                <td class="yes">yes</td>              <td class="yes">yes</td></tr>
+          <tr class="ai-row"><td>Small surface area for agent context window</td><td class="yes">11 base types + extensions</td> <td class="partial">single-lang ORM API</td> <td class="no">large framework surface</td><td class="yes">small spec</td></tr>
+        </tbody>
+      </table>
+
+      <p class="compare-note">
+        <strong>The honest read:</strong> for a 5k-line TS app with no LLM integration, Drizzle is probably enough. For a 50k-line codebase maintained by humans-plus-agents, drift is the dominant cost of change — and MetaObjects' build-time drift gate alone justifies the setup. For a multi-port team (TS + Java, or TS + Python, or all five), no other system in this matrix does cross-language metadata sharing at all.
+      </p>
+    </section>
+
     <!-- For AI agents -->
     <section class="ai" id="ai">
       <div class="ai-inner">
