@@ -168,45 +168,186 @@
       </p>
     </section>
 
-    <!-- 30-second example -->
-    <section class="example">
-      <h2 class="section-label">30-second example</h2>
-      <p class="example-intro">A typed entity in metadata, a project config that picks the generators, and the three CLI commands you actually run. Drift detection is architectural — regenerated code breaks dependent logic at compile time, and <code>meta migrate</code> diffs metadata against the live database.</p>
+    <!-- Canonical example: one schema → five languages -->
+    <section class="example" id="example">
+      <h2 class="section-label">From one schema, five languages.</h2>
+      <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output is idiomatic for that language — Drizzle + Zod for TypeScript, JPA + Spring records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET records for C#, SQLAlchemy + Pydantic for Python. Same metadata; five idiomatic outputs; conformance-gated to byte-identical canonical form.</p>
 
-      <pre class="example-code"><code><span class="comment"># metaobjects/subscriber.meta.yaml — the entity definition</span>
+      <p class="example-section-label">The source: one YAML file in <code>metaobjects/</code></p>
+      <pre class="example-code"><code><span class="comment"># metaobjects/meta.subscriber.yaml</span>
 <span class="keyword">metadata.root</span>:
   <span class="key">package</span>: acme
   <span class="key">children</span>:
     - <span class="keyword">object.entity</span>:
         <span class="key">name</span>: Subscriber
         <span class="key">children</span>:
-          - <span class="keyword">field.long</span>:    { <span class="key">name</span>: id }
-          - <span class="keyword">field.string</span>:  { <span class="key">name</span>: email }
-          - <span class="keyword">field.string</span>:  { <span class="key">name</span>: createdAt, <span class="string">"@autoSet"</span>: onCreate }
-          - <span class="keyword">identity.primary</span>: { <span class="string">"@fields"</span>: id }</code></pre>
+          - <span class="keyword">source.rdb</span>:      { <span class="string">"@table"</span>: subscribers }
+          - <span class="keyword">field.long</span>:      { <span class="key">name</span>: id }
+          - <span class="keyword">field.string</span>:    { <span class="key">name</span>: email, <span class="string">"@maxLength"</span>: 320, <span class="string">"@required"</span>: true }
+          - <span class="keyword">field.string</span>:    { <span class="key">name</span>: name }
+          - <span class="keyword">field.enum</span>:
+              <span class="key">name</span>: status
+              <span class="string">"@values"</span>: [active, paused, cancelled]
+              <span class="string">"@required"</span>: true
+          - <span class="keyword">field.timestamp</span>: { <span class="key">name</span>: createdAt, <span class="string">"@autoSet"</span>: onCreate }
+          - <span class="keyword">identity.primary</span>: { <span class="string">"@fields"</span>: [id], <span class="string">"@generation"</span>: increment }</code></pre>
 
-      <pre class="example-code"><code><span class="comment">// metaobjects.config.ts — picks generators + DB target</span>
-<span class="keyword">import</span> { defineConfig } <span class="keyword">from</span> <span class="string">"@metaobjectsdev/cli"</span>;
-<span class="keyword">import</span> { entityFile, queriesFile, routesFile, barrel }
-  <span class="keyword">from</span> <span class="string">"@metaobjectsdev/codegen-ts/generators"</span>;
+      <p class="example-section-label">TypeScript — Drizzle + Zod from <code>codegen-ts</code></p>
+      <pre class="example-code"><code><span class="comment">// generated/Subscriber.ts</span>
+<span class="keyword">import</span> { sqliteTable, integer, text } <span class="keyword">from</span> <span class="string">"drizzle-orm/sqlite-core"</span>;
+<span class="keyword">import</span> { z } <span class="keyword">from</span> <span class="string">"zod"</span>;
 
-<span class="keyword">export default</span> defineConfig({
-  outDir:   <span class="string">"./src/db"</span>,
-  dialect:  <span class="string">"sqlite"</span>,            <span class="comment">// or "postgres" / "d1"</span>
-  generators: [entityFile(), queriesFile(), routesFile(), barrel()],
-});</code></pre>
+<span class="keyword">export const</span> subscribers = sqliteTable(<span class="string">"subscribers"</span>, {
+  id:        integer(<span class="string">"id"</span>).primaryKey({ autoIncrement: <span class="keyword">true</span> }),
+  email:     text(<span class="string">"email"</span>, { length: 320 }).notNull(),
+  name:      text(<span class="string">"name"</span>),
+  status:    text(<span class="string">"status"</span>, { enum: [<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>] <span class="keyword">as const</span> }).notNull(),
+  createdAt: text(<span class="string">"created_at"</span>).notNull(),
+});
 
+<span class="keyword">export const</span> SubscriberInsertSchema = z.object({
+  email:  z.string().max(320),
+  name:   z.string().optional(),
+  status: z.enum([<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>]),
+});
+
+<span class="keyword">export type</span> Subscriber = <span class="keyword">typeof</span> subscribers.$inferSelect;
+<span class="keyword">export type</span> SubscriberInsert = z.infer&lt;<span class="keyword">typeof</span> SubscriberInsertSchema&gt;;</code></pre>
+
+      <p class="example-section-label">Java — Spring + JPA record from <code>codegen-spring</code></p>
+      <pre class="example-code"><code><span class="comment">// generated/SubscriberDto.java</span>
+<span class="keyword">package</span> acme;
+
+<span class="keyword">public record</span> SubscriberDto(
+    Long id,
+    String email,
+    String name,
+    SubscriberStatus status,
+    java.time.Instant createdAt
+) {}
+
+<span class="keyword">public enum</span> SubscriberStatus { ACTIVE, PAUSED, CANCELLED }
+
+<span class="comment">// generated/SubscriberController.java (excerpt)</span>
+@RestController
+@RequestMapping(<span class="string">"/api/subscribers"</span>)
+<span class="keyword">public class</span> SubscriberController {
+    @GetMapping(<span class="string">"/{id}"</span>)
+    <span class="keyword">public</span> SubscriberDto findById(@PathVariable Long id) { <span class="comment">/* ... */</span> }
+
+    @GetMapping
+    <span class="keyword">public</span> Page&lt;SubscriberDto&gt; list(@RequestParam Map&lt;String, String&gt; filter,
+                                    Pageable pageable) { <span class="comment">/* ... */</span> }
+
+    @PostMapping <span class="keyword">public</span> SubscriberDto create(@RequestBody SubscriberDto dto) { <span class="comment">/* ... */</span> }
+    @PutMapping(<span class="string">"/{id}"</span>) <span class="keyword">public</span> SubscriberDto update(...) { <span class="comment">/* ... */</span> }
+    @DeleteMapping(<span class="string">"/{id}"</span>) <span class="keyword">public void</span> delete(@PathVariable Long id) { <span class="comment">/* ... */</span> }
+}</code></pre>
+
+      <p class="example-section-label">Kotlin — Exposed + KotlinPoet data class from <code>codegen-kotlin</code></p>
+      <pre class="example-code"><code><span class="comment">// generated/Subscriber.kt</span>
+<span class="keyword">package</span> acme
+
+<span class="keyword">import</span> java.time.Instant
+<span class="keyword">import</span> kotlinx.serialization.Serializable
+
+@Serializable
+<span class="keyword">public data class</span> Subscriber(
+  <span class="keyword">public val</span> id: Long? = <span class="keyword">null</span>,
+  <span class="keyword">public val</span> email: String,
+  <span class="keyword">public val</span> name: String? = <span class="keyword">null</span>,
+  <span class="keyword">public val</span> status: SubscriberStatus,
+  <span class="keyword">public val</span> createdAt: Instant? = <span class="keyword">null</span>,
+)
+
+@Serializable
+<span class="keyword">public enum class</span> SubscriberStatus { ACTIVE, PAUSED, CANCELLED }
+
+<span class="comment">// generated/SubscriberTable.kt</span>
+<span class="keyword">object</span> SubscriberTable : Table(<span class="string">"subscribers"</span>) {
+    <span class="keyword">val</span> id        = long(<span class="string">"id"</span>).autoIncrement()
+    <span class="keyword">val</span> email     = varchar(<span class="string">"email"</span>, 320)
+    <span class="keyword">val</span> name      = varchar(<span class="string">"name"</span>, 255).nullable()
+    <span class="keyword">val</span> status    = enumerationByName(<span class="string">"status"</span>, 20, SubscriberStatus::class)
+    <span class="keyword">val</span> createdAt = timestamp(<span class="string">"created_at"</span>).nullable()
+
+    <span class="keyword">override val</span> primaryKey = PrimaryKey(id)
+}</code></pre>
+
+      <p class="example-section-label">C#.NET — EF Core + ASP.NET from <code>MetaObjects.Codegen</code></p>
+      <pre class="example-code"><code><span class="comment">// generated/Subscriber.cs</span>
+<span class="keyword">namespace</span> Acme;
+
+<span class="keyword">public partial class</span> Subscriber {
+    <span class="keyword">public long</span> Id { <span class="keyword">get; set;</span> }
+    <span class="keyword">public string</span> Email { <span class="keyword">get; set;</span> } = <span class="keyword">null!</span>;
+    <span class="keyword">public string?</span> Name { <span class="keyword">get; set;</span> }
+    <span class="keyword">public</span> SubscriberStatus Status { <span class="keyword">get; set;</span> }
+    <span class="keyword">public</span> DateTimeOffset CreatedAt { <span class="keyword">get; set;</span> }
+}
+
+<span class="keyword">public enum</span> SubscriberStatus { Active, Paused, Cancelled }
+
+<span class="comment">// generated/AppDbContext.cs (excerpt)</span>
+<span class="keyword">public partial class</span> AppDbContext : DbContext {
+    <span class="keyword">public</span> DbSet&lt;Subscriber&gt; Subscribers =&gt; Set&lt;Subscriber&gt;();
+
+    <span class="keyword">protected override void</span> OnModelCreating(ModelBuilder b) {
+        b.Entity&lt;Subscriber&gt;(e =&gt; {
+            e.HasKey(s =&gt; s.Id);
+            e.Property(s =&gt; s.Email).IsRequired().HasMaxLength(320);
+            e.Property(s =&gt; s.Status).HasConversion&lt;<span class="keyword">string</span>&gt;();
+        });
+    }
+}</code></pre>
+
+      <p class="example-section-label">Python — SQLAlchemy + Pydantic + FastAPI from <code>metaobjects.codegen</code></p>
+      <pre class="example-code"><code><span class="comment"># generated/subscriber.py</span>
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> enum <span class="keyword">import</span> Enum
+<span class="keyword">from</span> typing <span class="keyword">import</span> Optional
+<span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field
+<span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> String
+<span class="keyword">from</span> sqlalchemy.orm <span class="keyword">import</span> Mapped, mapped_column
+<span class="keyword">from</span> .base <span class="keyword">import</span> Base
+
+<span class="keyword">class</span> SubscriberStatus(str, Enum):
+    ACTIVE = <span class="string">"active"</span>
+    PAUSED = <span class="string">"paused"</span>
+    CANCELLED = <span class="string">"cancelled"</span>
+
+<span class="keyword">class</span> Subscriber(Base):
+    __tablename__ = <span class="string">"subscribers"</span>
+    id:         Mapped[<span class="keyword">int</span>] = mapped_column(primary_key=<span class="keyword">True</span>, autoincrement=<span class="keyword">True</span>)
+    email:      Mapped[<span class="keyword">str</span>] = mapped_column(String(320))
+    name:       Mapped[Optional[<span class="keyword">str</span>]]
+    status:     Mapped[SubscriberStatus]
+    created_at: Mapped[datetime]
+
+<span class="keyword">class</span> SubscriberInsert(BaseModel):
+    email:  <span class="keyword">str</span> = Field(max_length=320)
+    name:   Optional[<span class="keyword">str</span>] = <span class="keyword">None</span>
+    status: SubscriberStatus</code></pre>
+
+      <p class="example-section-label">Plus a migration — dialect-aware (Postgres / SQLite / Cloudflare D1)</p>
+      <pre class="example-code"><code><span class="comment">-- migrations/0001_create_subscribers.up.sql (SQLite dialect)</span>
+<span class="keyword">CREATE TABLE</span> subscribers (
+  id         INTEGER <span class="keyword">PRIMARY KEY AUTOINCREMENT</span>,
+  email      <span class="keyword">VARCHAR</span>(320) <span class="keyword">NOT NULL</span>,
+  name       TEXT,
+  status     <span class="keyword">VARCHAR</span>(20)  <span class="keyword">NOT NULL CHECK</span> (status <span class="keyword">IN</span> (<span class="string">'active'</span>, <span class="string">'paused'</span>, <span class="string">'cancelled'</span>)),
+  created_at TIMESTAMP   <span class="keyword">NOT NULL</span>
+);</code></pre>
+
+      <p class="example-section-label">And the three CLI commands you actually run</p>
       <pre class="example-code"><code><span class="comment"># Scaffold metaobjects/ + .metaobjects/ + metaobjects.config.ts</span>
 $ meta init
 
-<span class="comment"># Generate code (entities, queries, routes, barrel) per config</span>
+<span class="comment"># Generate code (entities, validators, queries, routes, payload VOs, output parsers)</span>
 $ meta gen
 
-<span class="comment"># Diff metadata vs live DB and emit migration SQL files</span>
-$ meta migrate --db file:./dev.db --slug add-subscriber
-
-<span class="comment"># Flatten loaded metadata to one canonical JSON artifact</span>
-$ meta export --out ./snapshot.json</code></pre>
+<span class="comment"># Diff metadata vs live DB; emit migration SQL (up + down)</span>
+$ meta migrate --db file:./dev.db --slug add-subscriber</code></pre>
 
       <p class="example-note">Conformance fixtures (JSON form): <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">fixtures/conformance/</a>. YAML and JSON are equivalent — pick whichever your stack prefers.</p>
     </section>
