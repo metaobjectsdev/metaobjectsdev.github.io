@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MetaObjects — Cross-language metadata standard for codegen, runtime, drift detection, and prompt construction</title>
-  <meta name="description" content="Define typed entities once. Generate idiomatic code in TypeScript, Java, Kotlin, C#.NET, and Python. Runtime metadata. Drift detection. Conformance-gated. Apache 2.0. 7.0.0 live on Maven Central and npm.">
+  <meta name="description" content="Define typed entities once. Generate idiomatic code in TypeScript, Java, Kotlin, C#.NET, and Python. Runtime metadata. Drift detection. Conformance-gated. Apache 2.0. Installable in all five languages — npm, Maven Central, NuGet, and PyPI.">
 
   <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
 
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/styles.css">
 
   <meta property="og:title" content="MetaObjects — Cross-language metadata standard">
-  <meta property="og:description" content="Codegen, runtime metadata, drift detection, and prompt construction across TypeScript, Java, Kotlin, C#.NET, and Python. 7.0.0 on Maven Central and npm. Apache 2.0.">
+  <meta property="og:description" content="Codegen, runtime metadata, drift detection, and prompt construction across TypeScript, Java, Kotlin, C#.NET, and Python. Installable in all five — npm, Maven Central, NuGet, PyPI. Apache 2.0.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://metaobjects.dev/">
   <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
@@ -38,7 +38,7 @@
   <main>
     <!-- Hero -->
     <section class="hero">
-      <p class="hero-eyebrow">Cross-language metadata standard · Apache 2.0 · 7.0.0 on Maven Central + npm</p>
+      <p class="hero-eyebrow">Cross-language metadata standard · Apache 2.0 · Installable in 5 languages</p>
       <h1>Make schema drift a compile-time error.</h1>
       <p class="hero-lede">
         AI coding agents regenerate thousands of lines a day. Without a shared spine they produce inconsistent boilerplate at every prompt — and the drift surfaces as a production incident, not a compile error. MetaObjects is the spine: define typed entities once, generate idiomatic code across <strong>TypeScript, Java, Kotlin, C#.NET, and Python</strong>, and every generated stack breaks the type checker the moment the metadata moves underneath it.
@@ -126,7 +126,7 @@
 
     <!-- Implementations matrix -->
     <section class="implementations">
-      <h2 class="section-label">Five ports. All shipping at 7.0.0.</h2>
+      <h2 class="section-label">Five ports. All installable today.</h2>
       <table class="impl-table">
         <thead>
           <tr>
@@ -138,28 +138,28 @@
         <tbody>
           <tr>
             <td><strong>TypeScript</strong></td>
-            <td><span class="status status-stable">reference</span></td>
-            <td>npm <code>@metaobjectsdev/*@7.0.0-rc</code>. Drizzle + Zod + Fastify + Hono codegen, Kysely runtime, <code>meta migrate</code> for Postgres / SQLite / Cloudflare D1. 2,500+ tests across the workspace.</td>
+            <td><span class="status status-stable">npm 0.9.0 · reference</span></td>
+            <td>npm <code>@metaobjectsdev/*@0.9.0</code> (the reference implementation). Drizzle + Zod + Fastify + Hono codegen, Kysely runtime, and <code>meta migrate</code> for Postgres / SQLite / Cloudflare D1 — the TS toolchain owns schema migrations. 2,500+ tests across the workspace.</td>
           </tr>
           <tr>
             <td><strong>Java</strong></td>
-            <td><span class="status status-stable">7.0.0 on Central</span></td>
-            <td><code>com.metaobjects:metaobjects-*:7.0.0</code> on Maven Central. Spring REST + DTO + Repository + filter-allowlist codegen via <code>codegen-spring</code>; OMDB persistence engine with diff-and-converge <code>meta migrate</code>; render + payload + verify + output-parser codegen.</td>
+            <td><span class="status status-stable">Maven Central 7.2.0</span></td>
+            <td><code>com.metaobjects:metaobjects-*:7.2.0</code> on Maven Central. Spring REST + DTO + Repository + filter-allowlist codegen via <code>codegen-spring</code>; OMDB runtime persistence (CRUD / query / typed jsonb / Spring-tx); render + payload + verify + output-parser codegen.</td>
           </tr>
           <tr>
             <td><strong>Kotlin</strong></td>
-            <td><span class="status status-stable">7.0.0 on Central</span></td>
-            <td><code>com.metaobjects:metaobjects-codegen-kotlin:7.0.0</code> + <code>metadata-ktx</code> Kotlin facade. KotlinPoet codegen: Exposed Tables, Spring controllers, payload VOs, output parsers, stored-proc helpers. Persistence-conformance against Testcontainers Postgres.</td>
+            <td><span class="status status-stable">Maven Central 7.2.0</span></td>
+            <td><code>com.metaobjects:metaobjects-codegen-kotlin:7.2.0</code> + <code>metadata-ktx</code> Kotlin facade. KotlinPoet codegen: Exposed Tables, Spring controllers, payload VOs, output parsers, stored-proc helpers. Persistence-conformance against Testcontainers Postgres.</td>
           </tr>
           <tr>
             <td><strong>C#.NET</strong></td>
-            <td><span class="status status-stable">full-stack</span></td>
-            <td>EF Core entities + <code>AppDbContext</code> + ASP.NET minimal-API routes + Postgres DDL (full-CREATE + incremental introspect/diff/migrate via <code>meta migrate --from-db</code>). Render engine + payload-VO codegen + <code>verify</code> ship. <code>meta</code> CLI is the entry point.</td>
+            <td><span class="status status-stable">NuGet 0.9.0</span></td>
+            <td>NuGet <code>MetaObjects</code> / <code>MetaObjects.Render</code> / <code>MetaObjects.Codegen</code> + the <code>dotnet meta</code> tool (<code>MetaObjects.Cli</code>), all <code>0.9.0</code>. EF Core entities + <code>AppDbContext</code> + ASP.NET minimal-API routes codegen; render engine + payload-VO codegen + <code>verify</code>. (Schema migrations are TS-owned.)</td>
           </tr>
           <tr>
             <td><strong>Python</strong></td>
-            <td><span class="status status-stable">full-stack</span></td>
-            <td>Loader + canonical serializer + render + verify + codegen (Pydantic + FastAPI + SQLAlchemy) + ObjectManager runtime. All five cross-port conformance corpora green.</td>
+            <td><span class="status status-stable">PyPI 0.9.0</span></td>
+            <td>PyPI <code>metaobjects</code> <code>0.9.0</code> + the <code>metaobjects</code> CLI. Loader + canonical serializer + render + verify + codegen (Pydantic + FastAPI + SQLAlchemy) + ObjectManager runtime. All five cross-port conformance corpora green.</td>
           </tr>
         </tbody>
       </table>
