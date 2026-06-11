@@ -562,3 +562,6 @@ h1, h2, h3 {
 @media (max-width: 700px) {
   .site-footer-inner { flex-direction: column; align-items: flex-start; text-align: left; }
 }
+
+.pillar-read { margin-top: 0.6rem; font-size: 0.88rem; }
+.pillar-read a { font-weight: 600; }

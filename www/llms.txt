@@ -115,6 +115,7 @@ Release procedure documented at [docs/RELEASING-java.md](https://github.com/meta
 - Created and maintained by [Doug Mealing](https://dougmealing.com). Background and the architectural narrative live there.
 - The "why metadata is the spine AI was missing" essay: [I thought AI killed MetaObjects. Then AI drift made it essential.](https://dougmealing.com/writing/metaobjects-ai-drift/)
 - On the fourth pillar — why prompts are code too: [The prompt is code — and yours is drifting too.](https://dougmealing.com/writing/the-prompt-is-code/)
+- The prompt-construction landscape (2026), with the OpenAI managed-prompt shutdown as the framing: [Prompts are code now — even OpenAI says so.](/articles/prompts-are-code.html)
 - Commercial inquiries and consulting engagements: [metaobjects.com](https://metaobjects.com)
 
 ## Optional full corpus
