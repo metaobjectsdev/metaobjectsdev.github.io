@@ -134,6 +134,8 @@
 
       <p>This is the problem <a href="/">MetaObjects</a> was built around. It's an open-source (Apache 2.0) metadata standard: you declare your data model once, in plain YAML in your repo, and it generates idiomatic code in TypeScript, C#, Java, Kotlin, and Python — entities, schema, API routes, <em>and prompts</em>, all from the same model.</p>
 
+      <p>(It grew out of a mess of my own — a few thousand lines of <code>StringBuilder</code> driving the characters in an LLM game. For the origin story, and the <em>data + text + render</em> decomposition that became the fix, the longer essay is <a href="https://dougmealing.com/writing/the-prompt-is-code/">The prompt is code — and yours is drifting too</a>.)</p>
+
       <p>A prompt declares its input as a typed payload — a projection of the same entities that drive your database and API:</p>
 
       <pre><code><span class="tok-cmt"># prompt = typed payload + external text</span>
