@@ -363,6 +363,75 @@ $ meta migrate --db file:./dev.db --slug add-subscriber</code></pre>
       <p class="example-note">Conformance fixtures (JSON form): <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">fixtures/conformance/</a>. YAML and JSON are equivalent — pick whichever your stack prefers.</p>
     </section>
 
+    <!-- The metamodel goes deep: field-children, validators, views, currency, projections -->
+    <section class="example" id="deep">
+      <h2 class="section-label">The metamodel goes deep.</h2>
+      <p class="example-intro">Fields aren't just columns. They carry <strong>validators</strong>, <strong>views</strong>, and <strong>currency formatting</strong> as child metadata. Entities derive read-only <strong>projections</strong> — passthrough fields and aggregates over relationships — that generate as database <em>views</em>, not tables. Everything below is real <code>meta gen</code> output, conformance-gated, not hand-wired annotations.</p>
+
+      <p class="example-section-label">The source: rich child metadata on fields + a derived projection</p>
+      <pre class="example-code"><code><span class="comment"># metaobjects/meta.blog.yaml</span>
+<span class="keyword">metadata.root</span>:
+  <span class="key">package</span>: blog
+  <span class="key">children</span>:
+    - <span class="keyword">object.entity</span>:
+        <span class="key">name</span>: Author
+        <span class="key">children</span>:
+          - <span class="keyword">field.string</span>:
+              <span class="key">name</span>: email
+              <span class="string">"@required"</span>: true
+              <span class="key">children</span>:                                       <span class="comment"># child metadata on a field</span>
+                - <span class="keyword">validator.required</span>: { <span class="key">name</span>: req }
+                - <span class="keyword">validator.regex</span>:    { <span class="key">name</span>: emailFmt, <span class="string">"@pattern"</span>: <span class="string">"^[^@]+@[^@]+$"</span> }
+          - <span class="keyword">field.string</span>:
+              <span class="key">name</span>: bio
+              <span class="key">children</span>:
+                - <span class="keyword">validator.length</span>: { <span class="key">name</span>: bioLen, <span class="string">"@min"</span>: 0, <span class="string">"@max"</span>: 500 }
+          - <span class="keyword">relationship.composition</span>: { <span class="key">name</span>: posts, <span class="string">"@objectRef"</span>: Post, <span class="string">"@cardinality"</span>: many }
+          - <span class="keyword">identity.primary</span>: { <span class="string">"@fields"</span>: [id], <span class="string">"@generation"</span>: increment }   <span class="comment"># name optional → defaults to "primary"</span>
+    - <span class="keyword">object.entity</span>:
+        <span class="key">name</span>: Post
+        <span class="key">children</span>:
+          - <span class="keyword">field.currency</span>:
+              <span class="key">name</span>: price
+              <span class="string">"@currency"</span>: USD
+              <span class="key">children</span>:
+                - <span class="keyword">view.currency</span>: { <span class="key">name</span>: money, <span class="string">"@locale"</span>: en-US }   <span class="comment"># Intl formatting, integer minor units</span>
+          <span class="comment"># … id, title, authorId, identity.reference (FK to Author) …</span>
+    - <span class="keyword">object.projection</span>:                                  <span class="comment"># derived, read-only</span>
+        <span class="key">name</span>: AuthorSummary
+        <span class="key">children</span>:
+          - <span class="keyword">source.rdb</span>: { <span class="string">"@kind"</span>: view, <span class="string">"@view"</span>: v_author_summary }
+          - <span class="keyword">field.long</span>: { <span class="key">name</span>: id, <span class="key">extends</span>: blog::Author.id,
+                        <span class="key">children</span>: [ { <span class="keyword">origin.passthrough</span>: { <span class="string">"@from"</span>: Author.id } } ] }
+          - <span class="keyword">field.int</span>:  { <span class="key">name</span>: postCount,
+                        <span class="key">children</span>: [ { <span class="keyword">origin.aggregate</span>: { <span class="string">"@agg"</span>: count, <span class="string">"@of"</span>: Post.id, <span class="string">"@via"</span>: Author.posts } } ] }
+          - <span class="keyword">identity.primary</span>: { <span class="key">extends</span>: blog::Author.primary, <span class="string">"@fields"</span>: [id] }</code></pre>
+
+      <p class="example-section-label">Field validators → Zod refinements <code>(generated/Author.ts)</code></p>
+      <pre class="example-code"><code><span class="comment">// validator.required + validator.regex + validator.length, straight from the field children</span>
+<span class="keyword">export const</span> AuthorInsertSchema = z.object({
+  email: z.string().min(<span class="string">1</span>).regex(<span class="keyword">new</span> RegExp(<span class="string">"^[^@]+@[^@]+$"</span>)),
+  bio:   z.string().min(<span class="string">0</span>).max(<span class="string">500</span>).optional(),
+});</code></pre>
+
+      <p class="example-section-label">Currency view → typed formatting metadata <code>(generated/Post.ts)</code></p>
+      <pre class="example-code"><code><span class="comment">// field.currency stores integer minor units; view.currency carries the Intl config</span>
+price: {
+  name: <span class="string">"price"</span>, label: <span class="string">"Price"</span>,
+  view: <span class="string">"currency"</span>, currency: <span class="string">"USD"</span>, locale: <span class="string">"en-US"</span>,
+},</code></pre>
+
+      <p class="example-section-label">Projection → a read-only database view, not a table <code>(generated/AuthorSummary.ts)</code></p>
+      <pre class="example-code"><code><span class="comment">// No Insert/Update schema — a projection is read-only by construction.</span>
+<span class="keyword">export const</span> authorSummaryView = sqliteView(<span class="string">"v_author_summary"</span>, {}).existing();
+<span class="keyword">export const</span> AuthorSummarySchema = z.object({
+  id:        z.number().int(),
+  postCount: z.number().int(),   <span class="comment">// COUNT(Post.id) via the Author→posts relationship</span>
+});</code></pre>
+
+      <p class="example-note">Run it yourself: this exact model loads and generates a full typed stack in the TypeScript reference implementation with zero errors and zero warnings — and every construct it uses (projections, origins, currency views, field-level validators) is <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">conformance-gated across all five ports</a>.</p>
+    </section>
+
     <!-- Compare: per-language alternatives -->
     <section class="compare" id="compare">
       <h2 class="section-label">How MetaObjects compares.</h2>
