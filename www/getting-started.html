@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting started — MetaObjects</title>
+  <meta name="description" content="Install the CLI, scaffold the agent context, pick your language, author a typed model, and generate idiomatic code — entity, typed data-access, and REST routes. Build it by talking to Claude Code, or by hand. Every command and output here is real.">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .gs-steps { counter-reset: step; max-width: 880px; }
+    .gs-step { position: relative; padding: 0 0 2.4rem 3.4rem; border-left: 2px solid var(--rule); margin-left: 1.1rem; }
+    .gs-step:last-child { border-left-color: transparent; }
+    .gs-step::before { counter-increment: step; content: counter(step); position: absolute; left: -1.15rem; top: -0.2rem;
+      width: 2.3rem; height: 2.3rem; border-radius: 50%; background: var(--primary-blue); color: #fff;
+      display: grid; place-items: center; font-weight: 700; font-family: var(--font-mono); }
+    .gs-step h3 { margin: 0 0 .5rem; color: var(--primary-blue); }
+    .gs-step p { margin: 0 0 .7rem; color: var(--dark-gray); }
+    pre.gs-code { background: var(--code-bg); color: var(--code-fg); border-radius: 10px; padding: 1rem 1.2rem;
+      overflow-x: auto; font-family: var(--font-mono); font-size: .88rem; line-height: 1.55; margin: 0 0 .6rem; white-space: pre; }
+    pre.gs-code .c { color: #8b9ab5; } pre.gs-code .s { color: #a7f3d0; } pre.gs-code .k { color: var(--light-gold); }
+    pre.gs-code .n { color: #6ee7b7; } /* "NEW" */ pre.gs-code .p { color: #cbd5e1; }
+    .gs-say { background: rgba(30,58,138,0.06); border-left: 3px solid var(--royal-blue); border-radius: 0 8px 8px 0;
+      padding: .7rem 1rem; margin: .2rem 0 .6rem; font-style: italic; color: var(--primary-blue); }
+    .gs-say::before { content: "You → Claude Code: "; font-style: normal; font-weight: 700; color: var(--medium-gray); }
+    .gs-table { border-collapse: collapse; width: 100%; max-width: 880px; font-size: .92rem; margin: .4rem 0 .8rem; }
+    .gs-table th, .gs-table td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    .gs-table th { color: var(--primary-blue); font-weight: 700; }
+    .gs-table td code { font-size: .85rem; }
+    .gs-note { max-width: 880px; color: var(--medium-gray); font-size: .92rem; }
+    .gs-next { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1rem; }
+    .real { display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+      color: var(--primary-blue); background: rgba(212,175,55,.18); border-radius: 6px; padding: 1px 7px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="brand"><img src="/images/mo-logo-only.png" alt="" class="brand-mark"><span class="brand-name">MetaObjects</span></a>
+    <nav>
+      <a href="/" class="nav-link">Home</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects" class="nav-link">GitHub</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="nav-link nav-cta">Spec</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="hero-eyebrow">Getting started · build it with Claude Code, or by hand</p>
+      <h1>One typed model → idiomatic code, in your language.</h1>
+      <p class="hero-lede">Scaffold once, then <strong>tell Claude Code what you want</strong> — <em>"build the REST API
+        for tasks,"</em> <em>"add a priority field and update everything."</em> Because <code>meta&nbsp;init</code> installs
+        the MetaObjects skills, it knows the model is the source of truth: it edits the model and <strong>regenerates the
+        code</strong> — it never hand-writes the boilerplate. Every command and output below is real
+        <span class="real">verified</span>, run against <code>@metaobjectsdev/cli</code>.</p>
+    </section>
+
+    <section>
+      <h2 class="section-label">1 · Install &amp; scaffold</h2>
+      <div class="gs-steps">
+        <div class="gs-step">
+          <h3>Set up the project and the agent context</h3>
+          <p>Add the TypeScript CLI and scaffold the workspace. <code>meta init</code> also teaches your coding agent how to use MetaObjects:</p>
+          <pre class="gs-code">npm i <span class="s">@metaobjectsdev/cli</span>
+npx meta init</pre>
+          <p>That writes a small, legible tree — <strong>your models go in <code>metaobjects/</code></strong>:</p>
+          <pre class="gs-code"><span class="c">your-project/</span>
+├── metaobjects/                 <span class="c"># ← your models live here (.yaml or .json)</span>
+│   └── meta.common.json         <span class="c">#   starter file (shared abstracts)</span>
+├── metaobjects.config.ts        <span class="c"># ← targets: dialect + what to generate</span>
+├── CLAUDE.md                    <span class="c"># wired to auto-load the context below</span>
+├── .metaobjects/                <span class="c"># tool state + agent docs (AGENTS.md, CLAUDE.md)</span>
+└── .claude/skills/              <span class="c"># five skills your agent now has:</span>
+    ├── metaobjects-authoring/   <span class="c">#   write &amp; edit models</span>
+    ├── metaobjects-codegen/     <span class="c">#   run codegen</span>
+    ├── metaobjects-runtime-ui/  <span class="c">#   wire up runtime + UI</span>
+    ├── metaobjects-prompts/     <span class="c">#   typed LLM prompts</span>
+    └── metaobjects-verify/      <span class="c">#   drift checks</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-label">2 · Then just tell it what you want</h2>
+      <p class="gs-note">This is the part that feels like magic. You describe outcomes; Claude Code knows the
+        MetaObjects way — <strong>change the model, regenerate</strong> — because the codegen skill it loaded says so
+        (<em>"pattern-derivable-from-metadata = regenerate"</em>). You never ask it to hand-write a route or a table.</p>
+      <div class="gs-steps">
+        <div class="gs-step">
+          <h3>Author the model</h3>
+          <p class="gs-say">Model a Task — a title (required, max 120), a status of open / active / done, and a due date.</p>
+          <p>→ Claude writes <code>metaobjects/meta.tasks.yaml</code> using the <code>metaobjects-authoring</code> skill. You review a few readable lines.</p>
+        </div>
+        <div class="gs-step">
+          <h3>Build the API — later, on demand</h3>
+          <p class="gs-say">Now expose a REST API for tasks.</p>
+          <p>→ It knows REST routes are <em>derived</em> from the model, so it runs <code>meta gen</code>. The entity,
+            typed data-access, and <code>/tasks</code> endpoints are generated — <strong>not one route hand-written.</strong></p>
+        </div>
+        <div class="gs-step">
+          <h3>Change the model — the API follows</h3>
+          <p class="gs-say">Add a priority field, and make each Task belong to a Project. Then update everything.</p>
+          <p>→ It edits the model and re-runs <code>meta gen</code>. The schema, validation, data-access, and API all
+            regenerate to match — and your hand-written logic in <code>*.extra.ts</code> is preserved. If anything no
+            longer fits, it breaks at compile time, pointing at the exact line.</p>
+        </div>
+      </div>
+      <p class="gs-note">The rest of this page is what's happening underneath — useful if you'd rather drive it by hand,
+        or just want to see it.</p>
+    </section>
+
+    <section>
+      <h2 class="section-label">3 · Pick your language</h2>
+      <p class="gs-note">The model is language-neutral — the same <code>metaobjects/</code> drives every port. You pick the
+        toolchain for the language you ship. This guide uses TypeScript; swap the row for yours:</p>
+      <table class="gs-table">
+        <thead><tr><th>Language</th><th>Install</th><th>Generate</th></tr></thead>
+        <tbody>
+          <tr><td><strong>TypeScript</strong> (this guide)</td><td><code>npm i @metaobjectsdev/cli</code></td><td><code>meta gen</code></td></tr>
+          <tr><td>C# / .NET</td><td><code>dotnet add package MetaObjects</code></td><td><code>dotnet meta gen</code></td></tr>
+          <tr><td>Java / Kotlin</td><td><code>com.metaobjects</code> (Maven Central)</td><td><code>mvn metaobjects:generate</code></td></tr>
+          <tr><td>Python</td><td><code>pip install metaobjects</code></td><td><code>metaobjects gen</code></td></tr>
+        </tbody>
+      </table>
+      <p class="gs-note">For TypeScript, <code>metaobjects.config.ts</code> chooses <em>what</em> you generate — the SQL
+        <code>dialect</code> and which <code>generators</code> run:</p>
+      <pre class="gs-code"><span class="c">// metaobjects.config.ts</span>
+export default defineConfig({
+  outDir:  <span class="s">"src/generated"</span>,
+  dialect: <span class="s">"sqlite"</span>,        <span class="c">// sqlite | postgres | d1</span>
+  generators: [
+    entityFile(),               <span class="c">// Drizzle table + Zod schemas + typed constants</span>
+    queriesFile(),              <span class="c">// typed data-access (findById, list, create…)</span>
+    routesFile(),               <span class="c">// REST endpoints (Fastify)</span>
+    <span class="c">// formFile(),              // opt-in: React form components</span>
+    barrel(),
+  ],
+});</pre>
+    </section>
+
+    <section>
+      <h2 class="section-label">4 · Author a model</h2>
+      <p class="gs-note">Whether the agent writes it or you do, a model is just a small file in <code>metaobjects/</code>.
+        Here's the one from above — <code>metaobjects/meta.tasks.yaml</code>:</p>
+      <pre class="gs-code"><span class="c"># metaobjects/meta.tasks.yaml — the source of truth (.json works too)</span>
+metadata:
+  package: app
+  children:
+    - <span class="k">object.entity</span>:
+        name: Task
+        children:
+          - <span class="k">source.rdb</span>:       { table: tasks }
+          - <span class="k">field.long</span>:       { name: id }
+          - <span class="k">field.string</span>:     { name: title, required: true, maxLength: 120 }
+          - <span class="k">field.enum</span>:       { name: status, values: [<span class="s">open</span>, <span class="s">active</span>, <span class="s">done</span>] }
+          - <span class="k">field.timestamp</span>:  { name: createdAt, required: true }
+          - <span class="k">identity.primary</span>: { fields: [id], generation: increment }</pre>
+    </section>
+
+    <section>
+      <h2 class="section-label">5 · Generate</h2>
+      <pre class="gs-code">$ npx meta gen
+meta gen — sqlite, src/generated
+
+  <span class="n">NEW</span>        src/generated/Task.ts
+  <span class="n">NEW</span>        src/generated/Task.queries.ts
+  <span class="n">NEW</span>        src/generated/Task.routes.ts
+  <span class="n">NEW</span>        src/generated/index.ts
+
+  4 written</pre>
+      <p class="gs-note">That's a real run. You get three things per entity (plus a barrel):</p>
+      <ul class="gs-note">
+        <li><code>Task.ts</code> — the <strong>entity</strong>: a Drizzle table, Zod insert/update schemas, a typed
+          <code>Task</code> constants object (fields, labels, validation rules), and filter/sort allowlists.</li>
+        <li><code>Task.queries.ts</code> — <strong>typed data-access</strong>: <code>findTaskById(db, id)</code>,
+          <code>listTasks(db, opts)</code>, create/update/delete.</li>
+        <li><code>Task.routes.ts</code> — <strong>REST</strong>: <code>mountCrudRoutes()</code> wires the 5 standard endpoints.</li>
+      </ul>
+      <pre class="gs-code"><span class="c">// src/generated/Task.ts  (excerpt — real output)</span>
+export const tasks = sqliteTable("tasks", {
+  id:        integer("id").primaryKey({ autoIncrement: true }),
+  title:     text("title").notNull(),
+  status:    text("status", { enum: ["open", "active", "done"] }),
+  createdAt: text("created_at").notNull(),
+}, (t) =&gt; [ check("chk_tasks_status", sql<span class="s">`status IN ('open','active','done')`</span>) ]);
+
+export const TaskInsertSchema = z.object({
+  title:  z.string().min(1).max(120),
+  status: z.enum(["open", "active", "done"]).optional(),
+  createdAt: z.string(),
+});</pre>
+    </section>
+
+    <section>
+      <h2 class="section-label">6 · Use it — and add your own logic</h2>
+      <p class="gs-note">Import the generated code into your app. <strong>It runs with no MetaObjects dependency</strong> —
+        Drizzle, Zod, and Fastify only:</p>
+      <pre class="gs-code">import Fastify from <span class="s">"fastify"</span>;
+import { taskRoutes } from <span class="s">"./generated/Task.routes"</span>;
+
+const app = Fastify();
+app.register(taskRoutes);   <span class="c">// GET/POST/PATCH/DELETE /tasks, validated</span>
+await app.listen({ port: 3000 });</pre>
+      <p class="gs-note">The custom business logic that makes the app yours? You write it — against the generated, typed
+        code. Each file points at a <code>*.extra.ts</code> seam for additional queries, auth, and handlers that
+        codegen preserves on regen. Change the model, re-run <code>meta gen</code>, and anything that no longer fits
+        breaks at compile time — pointing you at the exact line.</p>
+    </section>
+
+    <section>
+      <h2 class="section-label">7 · Keep it honest</h2>
+      <p class="gs-note">As the model evolves, <code>meta verify</code> fails the build the moment generated code,
+        schema, or prompt templates drift from it:</p>
+      <pre class="gs-code">npx meta verify              <span class="c"># --templates (default): prompt-template drift</span>
+npx meta verify --codegen    <span class="c"># generated code vs the model</span>
+npx meta verify --db         <span class="c"># live database schema vs the model</span></pre>
+      <p class="gs-note">Using a different assistant than Claude Code? Point it at
+        <a href="/llms.txt">metaobjects.dev/llms.txt</a> for version-pinned context.</p>
+    </section>
+
+    <section>
+      <h2 class="section-label">Go deeper</h2>
+      <div class="gs-next">
+        <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="btn btn-primary">Read the spec →</a>
+        <a href="https://github.com/metaobjectsdev/metaobjects" class="btn btn-secondary">Browse the monorepo</a>
+        <a href="/llms.txt" class="btn btn-secondary">llms.txt (for AI)</a>
+      </div>
+      <p class="impl-note" style="margin-top:1.2rem">The monorepo is the source of truth — full quickstarts, the spec, and
+        the cross-language conformance fixtures live there. This page is the on-ramp.</p>
+    </section>
+  </main>
+</body>
+</html>
