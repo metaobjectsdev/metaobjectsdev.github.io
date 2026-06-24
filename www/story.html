@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>25 years private. Now open. — The MetaObjects story | MetaObjects</title>
+  <meta name="description" content="MetaObjects was built in 2001 and run privately for 25 years across secure messaging, payments, online gaming, and pharmaceutical-regulatory systems. Set aside in 2022, it's back now — open-sourced and rebuilt AI-first.">
+
+  <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles.css">
+
+  <meta property="og:title" content="25 years private. Now open. — The MetaObjects story">
+  <meta property="og:description" content="Built in 2001, run privately for 25 years across real production systems, set aside in 2022, and now open-sourced and rebuilt AI-first.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://metaobjects.dev/story.html">
+  <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://metaobjects.dev/story.html">
+
+  <style>
+    /* Story prose styles — scoped, mirrors the article page; do not touch shared landing styles */
+    .article { max-width: var(--reading-width); margin: 0 auto; padding: 3.5rem 1.5rem 4rem; }
+    .article-eyebrow { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--medium-gray); margin: 0 0 0.75rem; }
+    .article h1 { font-size: 2.4rem; line-height: 1.15; color: var(--primary-blue);
+      margin: 0 0 1rem; letter-spacing: -0.02em; }
+    .article-meta { font-size: 0.92rem; color: var(--medium-gray); margin: 0 0 2.5rem;
+      padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); }
+    .article-meta a { font-weight: 600; }
+    .article p { margin: 0 0 1.25rem; }
+    .article strong { color: var(--primary-blue); }
+    .article blockquote { margin: 1.6rem 0; padding: 0.4rem 0 0.4rem 1.4rem;
+      border-left: 3px solid var(--accent-gold); color: var(--dark-gray);
+      font-size: 1.12rem; font-style: italic; }
+    .article-cta { background: var(--light-gray); border: 1px solid var(--rule);
+      border-radius: 10px; padding: 1.5rem 1.75rem; margin: 2.75rem 0 0;
+      display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .article-cta p { margin: 0; flex: 1 1 100%; font-size: 0.98rem; color: var(--dark-gray); }
+    .article-back { display: inline-block; margin-bottom: 2rem; font-family: var(--font-mono);
+      font-size: 0.85rem; }
+    @media (max-width: 600px) { .article h1 { font-size: 1.8rem; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="brand">
+      <img src="/images/mo-logo-only.png" alt="" class="brand-mark">
+      <span class="brand-name">MetaObjects</span>
+    </a>
+    <nav>
+      <a href="/getting-started.html" class="nav-link">Get started</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects" class="nav-link">GitHub</a>
+      <a href="/#ai" class="nav-link">For AI</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="nav-link nav-cta">Spec</a>
+    </nav>
+  </header>
+
+  <main>
+    <article class="article">
+      <a href="/" class="article-back">← metaobjects.dev</a>
+
+      <p class="article-eyebrow">The story</p>
+      <h1>25 years private. Now open.</h1>
+      <p class="article-meta">By <a href="https://dougmealing.com">Doug Mealing</a> · 2001–2026</p>
+
+      <p>I built MetaObjects in 2001 because the same plumbing repeated on every project — persistence, DAOs, DTOs, form bindings, validation, the MVC wiring. The ORMs that would later take part of that off our plates didn't exist yet. So I built one thing that read a single metadata model and generated the whole stack around it: define the entity once, let the generators produce the layers.</p>
+
+      <p>I never marketed it. For 25 years it was my unfair advantage — how I shipped fast and kept systems consistent as they grew. The same substrate shipped a Salesforce-integrated secure-messaging platform, a credit-card processing gateway, and a high-uptime online poker system. It ran <strong>pharmaceutical regulatory software</strong> at enterprise scale, customized per customer by overlaying metadata — no code changes. One approach became a <strong>US patent</strong>. It just quietly did its job.</p>
+
+      <p>By 2022 I set it aside. I was running engineering organizations — architecture, M&amp;A diligence, building leaders — not shipping or refactoring code, which was the whole point of the tool. And low-code platforms like Boomi and OutSystems looked like they'd productized the idea. They had — except for the part where you <strong>own your runtime</strong>. MetaObjects always generated code you own, with zero dependency on it. Throw the platform away and your code keeps running.</p>
+
+      <p>Then AI arrived, and I watched it generate beautiful code that <strong>drifted</strong>: locally perfect inside each prompt, globally inconsistent across the system. Different field names for the same concept. Types that diverged at every boundary. Plausible APIs that didn't quite exist. The vendors didn't fix it. That's when I realized I'd been looking at the wrong problem in 2022. The job was never <em>generating</em> code — it was keeping it <strong>coherent as a system grows</strong>. Metadata is that missing spine, and AI turns out to be a far better consumer of metadata than humans ever were.</p>
+
+      <p>So I'm bringing MetaObjects back — AI-first, open source — for the first time in 25 years. And here's the honest version of how I build now: I ship software fast, with heavy AI assistance, across a whole family of products. That's exactly the situation that wrecks consistency. <strong>MetaObjects is the spine that stops it</strong> — define the model once, generate every layer from it, and let drift break the build. My other products run on it. It isn't a thesis I'm pitching you; it's what I ship on.</p>
+
+      <div class="article-cta">
+        <p>The full origin story — 25 years, the production systems, the AI-drift turning point — lives on my site.</p>
+        <a href="https://dougmealing.com/writing/metaobjects-ai-drift/" class="btn btn-secondary">Read the full origin essay →</a>
+        <a href="/getting-started.html" class="btn btn-primary">Get started →</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>
+        <strong>MetaObjects</strong> · <a href="https://github.com/metaobjectsdev/metaobjects">GitHub</a> · <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/LICENSE">Apache 2.0</a> · <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">Roadmap</a> · <a href="/llms.txt">llms.txt</a>
+      </p>
+      <p class="site-footer-meta">
+        Commercial inquiries: <a href="https://metaobjects.com">metaobjects.com</a> · Created by <a href="https://dougmealing.com">Doug Mealing</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
