@@ -1,0 +1,126 @@
+WEBVTT
+
+1
+00:00:00.500 --> 00:00:04.335
+Most teams don't start from scratch — they have an app already.
+
+2
+00:00:04.335 --> 00:00:07.926
+Good news: you don't have to rewrite it to use MetaObjects.
+
+3
+00:00:07.926 --> 00:00:09.630
+You adopt it, incrementally.
+
+4
+00:00:09.630 --> 00:00:10.300
+Here's how.
+
+5
+00:00:11.700 --> 00:00:16.466
+This is a real app — real tables, a real database, none of it built by MetaObjects.
+
+6
+00:00:16.466 --> 00:00:22.208
+We're going to point MetaObjects at one table, and get typed code for it, without touching the rest.
+
+7
+00:00:23.608 --> 00:00:26.815
+There's no magic import — and honestly, that's fine.
+
+8
+00:00:26.815 --> 00:00:29.591
+You describe one existing entity in metadata.
+
+9
+00:00:29.591 --> 00:00:39.090
+And you don't write it from scratch: hand your schema to Claude Code, which already knows the workflow from meta init, and it drafts the metadata for you.
+
+10
+00:00:39.090 --> 00:00:44.888
+Adopting an existing app is a judgment call, not a one-click button — so start with one table.
+
+11
+00:00:46.288 --> 00:00:50.407
+Here's that one table described — matching the columns you already have.
+
+12
+00:00:50.407 --> 00:00:55.842
+The source points at your existing customers table, and fullName maps to your full name column.
+
+13
+00:00:55.842 --> 00:01:02.879
+And look at the email field: validators live right on it, as child metadata — a required check and an email-format pattern.
+
+14
+00:01:02.879 --> 00:01:07.227
+That's validation you get to layer on, that the raw database never enforced.
+
+15
+00:01:08.627 --> 00:01:09.603
+Then meta gen.
+
+16
+00:01:09.603 --> 00:01:17.827
+You get a typed entity, queries, and routes for your existing table — generated alongside your app, not instead of it.
+
+17
+00:01:19.227 --> 00:01:26.359
+And the generated code maps your real schema — Drizzle and Zod for your customers table, with fullName wired to full name.
+
+18
+00:01:26.359 --> 00:01:32.672
+And the validators you layered on come through too: the email format check is right there in the Zod schema.
+
+19
+00:01:32.672 --> 00:01:35.069
+Typed, idiomatic, ready to use right now.
+
+20
+00:01:36.469 --> 00:01:40.232
+Run verify against your live database, and it tells you exactly where you stand.
+
+21
+00:01:40.232 --> 00:01:41.550
+Customers matches the model.
+
+22
+00:01:41.550 --> 00:01:45.549
+Orders isn't modeled yet — so that's your next table to adopt, whenever you're ready.
+
+23
+00:01:46.949 --> 00:01:48.605
+This is low-risk by design.
+
+24
+00:01:48.605 --> 00:01:54.373
+The generated code runs with no MetaObjects dependency, so adopting it commits you to nothing.
+
+25
+00:01:54.373 --> 00:02:02.594
+You take one table at a time, the rest of your app is untouched, and you keep your escape hatches for anything metadata can't express.
+
+26
+00:02:03.994 --> 00:02:09.393
+That's adoption: describe one table, generate, adopt — no big rewrite, no magic.
+
+27
+00:02:09.393 --> 00:02:16.345
+Then, table by table, the model becomes the spine, and meta verify keeps it honest as you grow into it.
+
+28
+00:02:17.745 --> 00:02:20.295
+You don't have to start over to start.
+
+29
+00:02:20.295 --> 00:02:23.381
+Run meta init, describe a table, and meta gen.
+
+30
+00:02:23.381 --> 00:02:27.407
+That's the MetaObjects series — more at metaobjects dot dev.
+
+31
+00:02:27.407 --> 00:02:28.749
+Thanks for watching.
+

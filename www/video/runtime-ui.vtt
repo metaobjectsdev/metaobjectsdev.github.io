@@ -1,0 +1,162 @@
+WEBVTT
+
+1
+00:00:00.500 --> 00:00:02.851
+MetaObjects generates your code.
+
+2
+00:00:02.851 --> 00:00:04.541
+But it doesn't have to.
+
+3
+00:00:04.541 --> 00:00:11.153
+The same model can drive your app live, at runtime — and that's a different kind of power.
+
+4
+00:00:11.153 --> 00:00:12.989
+This is runtime metadata.
+
+5
+00:00:14.389 --> 00:00:20.647
+One generic function built this grid — the columns, the headers, the cell types — straight from the live model.
+
+6
+00:00:20.647 --> 00:00:21.718
+No code generation.
+
+7
+00:00:21.718 --> 00:00:25.214
+And the same function does it for any object you've described.
+
+8
+00:00:25.214 --> 00:00:26.116
+Let me show you.
+
+9
+00:00:27.516 --> 00:00:29.527
+There are two ways to use one model.
+
+10
+00:00:29.527 --> 00:00:33.327
+Generate code from it — a photograph, perfect until something moves.
+
+11
+00:00:33.327 --> 00:00:37.406
+Or load the model at runtime and drive behavior directly — the live feed.
+
+12
+00:00:37.406 --> 00:00:38.524
+Most teams use both.
+
+13
+00:00:39.924 --> 00:00:41.536
+So here's the model itself.
+
+14
+00:00:41.536 --> 00:00:48.222
+Look closely — the validators live right on the fields, and the grid layout sits beside them, all just metadata.
+
+15
+00:00:48.222 --> 00:00:54.133
+This one file is what the runtime reads; everything you're about to see is driven straight from it.
+
+16
+00:00:55.533 --> 00:00:56.902
+Here's the live one.
+
+17
+00:00:56.902 --> 00:01:03.130
+Build grid loads your model and walks it — fields, views, types — and returns your columns.
+
+18
+00:01:03.130 --> 00:01:06.895
+Notice what's not here: no object name, no field names.
+
+19
+00:01:06.895 --> 00:01:12.028
+The same call works for Task, for Project, and for anything else you model.
+
+20
+00:01:13.428 --> 00:01:16.460
+That's the whole thing — a few generic lines.
+
+21
+00:01:16.460 --> 00:01:20.706
+The rows carry their own model, so it asks each one what it is.
+
+22
+00:01:20.706 --> 00:01:25.558
+Task, Project, Invoice — one function renders them all, with no codegen.
+
+23
+00:01:26.958 --> 00:01:28.500
+And it's not just grids.
+
+24
+00:01:28.500 --> 00:01:31.071
+Validation runs from the live model too.
+
+25
+00:01:31.071 --> 00:01:38.591
+No generated validator — the required, length, and pattern rules come straight from the metadata, checked at runtime.
+
+26
+00:01:39.991 --> 00:01:53.761
+Load the model, and it drives a whole lot: dynamic CRUD, validation, relationships, server-driven grids and forms, your entities as LLM tools, prompt rendering and tolerant extraction — none of it regenerated.
+
+27
+00:01:55.161 --> 00:01:58.546
+So when do you generate, and when do you drive it live?
+
+28
+00:01:58.546 --> 00:02:02.853
+Generate for build-time artifacts — typed, committed, dependency-free.
+
+29
+00:02:02.853 --> 00:02:11.468
+Drive it live when codegen can't reach: a shipped app you can't redeploy, an agent that connects tomorrow, behavior that changes on the fly.
+
+30
+00:02:11.468 --> 00:02:13.315
+A photograph can't reach them.
+
+31
+00:02:13.315 --> 00:02:14.361
+A live model can.
+
+32
+00:02:15.761 --> 00:02:16.908
+That's the idea.
+
+33
+00:02:16.908 --> 00:02:22.141
+Codegen is a photograph of your model; runtime metadata is the live feed.
+
+34
+00:02:22.141 --> 00:02:26.514
+Same model — generate the code, or drive it live, often both.
+
+35
+00:02:26.514 --> 00:02:29.310
+Change the model, and behavior follows.
+
+36
+00:02:29.310 --> 00:02:32.393
+Nothing to regenerate, nothing to redeploy.
+
+37
+00:02:33.793 --> 00:02:35.894
+Drive your app from the model.
+
+38
+00:02:35.894 --> 00:02:38.556
+Build grid ships in runtime-web today.
+
+39
+00:02:38.556 --> 00:02:43.390
+This is part of the MetaObjects series — more at metaobjects dot dev.
+
+40
+00:02:43.390 --> 00:02:44.791
+Thanks for watching.
+

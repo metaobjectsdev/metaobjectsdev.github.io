@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Videos — MetaObjects</title>
+  <meta name="description" content="Watch the MetaObjects video series: the introduction, plus getting started, adopting an existing app, drift detection, and runtime-driven UI.">
+
+  <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles.css">
+
+  <meta property="og:title" content="MetaObjects — Video series">
+  <meta property="og:description" content="The introduction plus getting started, adopt an existing app, drift detection, and runtime-driven UI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://metaobjects.dev/videos.html">
+  <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
+
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt — AI assistant index">
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="brand">
+      <img src="/images/mo-logo-only.png" alt="" class="brand-mark">
+      <span class="brand-name">MetaObjects</span>
+    </a>
+    <nav>
+      <a href="/getting-started.html" class="nav-link">Get started</a>
+      <a href="/story.html" class="nav-link">Story</a>
+      <a href="/videos.html" class="nav-link">Videos</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects" class="nav-link">GitHub</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="nav-link nav-cta">Spec</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" style="padding-bottom:1rem;">
+      <p class="hero-eyebrow">The video series</p>
+      <h1>See MetaObjects in motion.</h1>
+      <p class="hero-lede" style="max-width:720px;">
+        Start with the introduction for the whole idea, then the short feature videos — each one shows a single capability end to end, from one model.
+      </p>
+    </section>
+
+    <!-- Introduction -->
+    <section class="video-section" id="introduction" style="max-width:900px;margin:0 auto;padding:1.5rem 1.5rem 0;">
+      <h2 class="section-label">Introduction — one model, the whole app</h2>
+      <p style="color:#8b9ab5;max-width:720px;">
+        The problem MetaObjects solves, what it actually is, and how the codegen and runtime halves work together — about eight minutes.
+      </p>
+      <figure style="margin:0;">
+        <video controls preload="metadata" playsinline
+               poster="/video/introduction-poster.png"
+               width="1280" height="720"
+               aria-label="Introduction to MetaObjects: one model your database, API, UI, and AI all share."
+               style="width:100%;max-width:860px;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.08);margin:1rem auto 0;display:block;">
+          <!-- mp4 served from metaobjects.com (Cloudflare): GitHub Pages' deploy
+               backend rejects large mp4s. Poster + captions stay same-origin so
+               the <track> needs no CORS. -->
+          <source src="https://metaobjects.com/video/introduction.mp4" type="video/mp4">
+          <track kind="captions" src="/video/introduction.vtt" srclang="en" label="English" default>
+          Your browser doesn't support embedded video — <a href="https://metaobjects.com/video/introduction.mp4">download the introduction</a>.
+        </video>
+      </figure>
+    </section>
+
+    <!-- Getting started -->
+    <section class="video-section" id="getting-started" style="max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 0;">
+      <h2 class="section-label">Getting started — build a typed app from one model</h2>
+      <p style="color:#8b9ab5;max-width:720px;">
+        Watch Claude Code build a working task tracker on MetaObjects: one model becomes the database, validation, a CRUD API, forms, hooks, and a grid — and it can't silently drift.
+      </p>
+      <figure style="margin:0;">
+        <video controls preload="metadata" playsinline
+               poster="/video/getting-started-poster.png"
+               width="1280" height="720"
+               aria-label="Getting started: Claude Code builds a task tracker on MetaObjects from a single model."
+               style="width:100%;max-width:860px;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.08);margin:1rem auto 0;display:block;">
+          <source src="https://metaobjects.com/video/getting-started.mp4" type="video/mp4">
+          <track kind="captions" src="/video/getting-started.vtt" srclang="en" label="English" default>
+          Your browser doesn't support embedded video — <a href="https://metaobjects.com/video/getting-started.mp4">download the getting-started video</a>.
+        </video>
+      </figure>
+    </section>
+
+    <!-- Adopt existing -->
+    <section class="video-section" id="adopt-existing" style="max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 0;">
+      <h2 class="section-label">Adopt an existing app — one table at a time</h2>
+      <p style="color:#8b9ab5;max-width:720px;">
+        You don't have to start over to start. Point MetaObjects at one table of a real app, get typed code for it, and leave the rest untouched.
+      </p>
+      <figure style="margin:0;">
+        <video controls preload="metadata" playsinline
+               poster="/video/adopt-existing-poster.png"
+               width="1280" height="720"
+               aria-label="Adopt an existing app: describe one existing table in metadata and generate typed code without a rewrite."
+               style="width:100%;max-width:860px;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.08);margin:1rem auto 0;display:block;">
+          <source src="https://metaobjects.com/video/adopt-existing.mp4" type="video/mp4">
+          <track kind="captions" src="/video/adopt-existing.vtt" srclang="en" label="English" default>
+          Your browser doesn't support embedded video — <a href="https://metaobjects.com/video/adopt-existing.mp4">download the adopt-existing video</a>.
+        </video>
+      </figure>
+    </section>
+
+    <!-- Drift detection -->
+    <section class="video-section" id="drift-detection" style="max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 0;">
+      <h2 class="section-label">Drift detection — make drift a compile error</h2>
+      <p style="color:#8b9ab5;max-width:720px;">
+        <code>meta verify</code> checks that your code, your prompts, and your database schema still agree with the model — any mismatch fails the build.
+      </p>
+      <figure style="margin:0;">
+        <video controls preload="metadata" playsinline
+               poster="/video/drift-detection-poster.png"
+               width="1280" height="720"
+               aria-label="Drift detection: meta verify checks code, prompts, and schema against one model and fails the build on any mismatch."
+               style="width:100%;max-width:860px;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.08);margin:1rem auto 0;display:block;">
+          <source src="https://metaobjects.com/video/drift-detection.mp4" type="video/mp4">
+          <track kind="captions" src="/video/drift-detection.vtt" srclang="en" label="English" default>
+          Your browser doesn't support embedded video — <a href="https://metaobjects.com/video/drift-detection.mp4">download the drift-detection video</a>.
+        </video>
+      </figure>
+    </section>
+
+    <!-- Runtime UI -->
+    <section class="video-section" id="runtime-ui" style="max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 0;">
+      <h2 class="section-label">Runtime metadata — drive the UI live</h2>
+      <p style="color:#8b9ab5;max-width:720px;">
+        The same model can drive your app live, at runtime. One generic function builds a grid for any object you've described — no code generation.
+      </p>
+      <figure style="margin:0;">
+        <video controls preload="metadata" playsinline
+               poster="/video/runtime-ui-poster.png"
+               width="1280" height="720"
+               aria-label="Runtime metadata: one generic buildGrid function renders a grid for any modeled object, live, with no codegen."
+               style="width:100%;max-width:860px;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.08);margin:1rem auto 0;display:block;">
+          <source src="https://metaobjects.com/video/runtime-ui.mp4" type="video/mp4">
+          <track kind="captions" src="/video/runtime-ui.vtt" srclang="en" label="English" default>
+          Your browser doesn't support embedded video — <a href="https://metaobjects.com/video/runtime-ui.mp4">download the runtime-UI video</a>.
+        </video>
+      </figure>
+    </section>
+
+    <section style="text-align:center;padding:3rem 1.5rem 1rem;">
+      <a href="/getting-started.html" class="btn btn-primary">Get started →</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>
+        <strong>MetaObjects</strong> · <a href="https://github.com/metaobjectsdev/metaobjects">GitHub</a> · <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/LICENSE">Apache 2.0</a> · <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">Roadmap</a> · <a href="/llms.txt">llms.txt</a>
+      </p>
+      <p class="site-footer-meta">
+        Commercial inquiries: <a href="https://metaobjects.com">metaobjects.com</a> · Created by <a href="https://dougmealing.com">Doug Mealing</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
