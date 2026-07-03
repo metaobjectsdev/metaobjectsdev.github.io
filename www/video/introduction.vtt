@@ -99,192 +99,192 @@ In the runtime, your metadata is made of MetaData classes — and MetaObject, th
 00:02:17.955 --> 00:02:19.967
 That's where the name comes from.
 
-00:02:19.967 --> 00:02:21.602
+00:02:19.967 --> 00:02:21.686
 And this isn't abstract.
 
-00:02:21.602 --> 00:02:34.003
+00:02:21.686 --> 00:02:34.720
 From that one model you get real artifacts — your domain objects, your database schema, your API with validation and filters, your UI forms and grids, the typed I/O for your prompts.
 
-00:02:34.003 --> 00:02:36.933
+00:02:34.720 --> 00:02:37.800
 The core of every layer, in five languages.
 
-00:02:36.933 --> 00:02:38.383
+00:02:37.800 --> 00:02:39.250
 And this model is no toy.
 
-00:02:38.383 --> 00:02:43.080
+00:02:39.250 --> 00:02:43.947
 It's a metamodel that's been evolving for twenty years, and it's built to extend.
 
-00:02:43.080 --> 00:02:54.273
+00:02:43.947 --> 00:02:55.140
 You start from abstract, core models that give you consistent behavior; your concrete entities extend those; and downstream you can overlay — augment and enhance the model — without forking it.
 
-00:02:54.273 --> 00:02:56.071
+00:02:55.140 --> 00:02:56.938
 Need something it doesn't ship?
 
-00:02:56.071 --> 00:02:58.333
+00:02:56.938 --> 00:02:59.200
 Register your own types and attributes.
 
-00:02:58.333 --> 00:03:00.785
+00:02:59.200 --> 00:03:01.652
 Now scale that across an enterprise.
 
-00:03:00.785 --> 00:03:04.260
+00:03:01.652 --> 00:03:05.127
 One app builds on a shared concrete model directly.
 
-00:03:04.260 --> 00:03:10.731
+00:03:05.127 --> 00:03:11.598
 Another team expands it — adds more objects — into a second model, and more apps build on that.
 
-00:03:10.731 --> 00:03:14.887
+00:03:11.598 --> 00:03:15.754
 Many apps, many languages, all sharing one lineage of models.
 
-00:03:14.887 --> 00:03:24.833
+00:03:15.754 --> 00:03:25.700
 That's how a large organization stays consistent across its whole ecosystem — drift designed out, not just inside one app, but across all of them.
 
-00:03:24.833 --> 00:03:31.785
+00:03:25.700 --> 00:03:32.652
 Now, two of those pieces are really two ways to ship the same model — generate the code, or drive it live.
 
-00:03:31.785 --> 00:03:33.622
+00:03:32.652 --> 00:03:34.489
 Let's start with generating.
 
-00:03:33.622 --> 00:03:51.200
+00:03:34.489 --> 00:03:52.067
 From that same model, MetaObjects emits idiomatic code in every language, and every line traces back to the metadata: the field's maxLength becomes the column length and a validation rule; your enum values become a database CHECK; the unique identity becomes an index.
 
-00:03:51.200 --> 00:03:53.413
+00:03:52.067 --> 00:03:54.280
 The same model generates your DTOs.
 
-00:03:53.413 --> 00:04:02.200
+00:03:54.280 --> 00:04:03.067
 Because this one is an object dot value — no identity, no table — you get a typed payload your code fills in, with a schema to validate it.
 
-00:04:02.200 --> 00:04:11.824
+00:04:03.067 --> 00:04:12.691
 And your read-only views: an object dot projection over a database view becomes read-only code — queries, but no inserts or updates.
 
-00:04:11.824 --> 00:04:17.000
+00:04:12.691 --> 00:04:17.867
 Entities, value objects, projections — every shape, from the one model.
 
-00:04:17.000 --> 00:04:21.541
+00:04:17.867 --> 00:04:22.408
 Now the two modes, side by side — same model, same metadata.
 
-00:04:21.541 --> 00:04:22.677
+00:04:22.408 --> 00:04:23.544
 First, codegen.
 
-00:04:22.677 --> 00:04:31.911
+00:04:23.544 --> 00:04:32.778
 At build time, meta gen walks the model — its fields, their views, the grid layout — and freezes your columns into a file.
 
-00:04:31.911 --> 00:04:37.133
+00:04:32.778 --> 00:04:38.000
 That file is a snapshot: when the model changes, you re-run meta gen.
 
-00:04:37.133 --> 00:04:41.564
+00:04:38.000 --> 00:04:42.431
 Now the runtime way — same diagram, same metadata, but live.
 
-00:04:41.564 --> 00:04:47.398
+00:04:42.431 --> 00:04:48.264
 buildGrid walks that same loaded model on every render and returns the columns.
 
-00:04:47.398 --> 00:04:51.902
+00:04:48.264 --> 00:04:52.769
 Nothing's frozen: change the model and the grid just follows.
 
-00:04:51.902 --> 00:04:57.367
+00:04:52.769 --> 00:04:58.233
 One model, two delivery modes — a snapshot you regenerate, or a live feed.
 
-00:04:57.367 --> 00:05:02.899
+00:04:58.233 --> 00:05:03.765
 Now, that third piece — the runtime — is the half most tools miss, and it's just as big as codegen.
 
-00:05:02.899 --> 00:05:07.481
+00:05:03.765 --> 00:05:08.347
 You load the same model into your running app and drive behavior straight from it.
 
-00:05:07.481 --> 00:05:18.824
+00:05:08.347 --> 00:05:19.691
 It's how Salesforce runs the biggest apps in the world, and how Airbnb ships UI without an app-store release — there's no codegen path to a phone that already shipped, or an agent that connects tomorrow.
 
-00:05:18.824 --> 00:05:20.500
+00:05:19.691 --> 00:05:21.367
 A live model reaches them all.
 
-00:05:20.500 --> 00:05:36.567
+00:05:21.367 --> 00:05:37.433
 And the loaded model drives a lot: dynamic CRUD, validation and relationships, server-driven admin grids that re-shape when the model changes, entities as LLM tools, prompt rendering and extraction — none of it needing a rebuild or a redeploy.
 
-00:05:36.567 --> 00:05:37.834
+00:05:37.433 --> 00:05:38.700
 Now the AI itself.
 
-00:05:37.834 --> 00:05:47.967
+00:05:38.700 --> 00:05:48.833
 The moment your app calls an LLM, you add two surfaces nothing in your stack is checking: the prompt going in, and the messy output coming back.
 
-00:05:47.967 --> 00:05:50.476
+00:05:48.833 --> 00:05:51.343
 First, the prompt — and it's part of the model.
 
-00:05:50.476 --> 00:05:58.218
+00:05:51.343 --> 00:05:59.085
 You declare a typed payload, the exact fields the prompt needs, and the text lives in an external Mustache template that references those fields.
 
-00:05:58.218 --> 00:06:05.533
+00:05:59.085 --> 00:06:06.400
 The template can only use fields that exist on the payload, so a renamed field breaks the build instead of silently degrading the prompt.
 
-00:06:05.533 --> 00:06:06.616
+00:06:06.400 --> 00:06:07.483
 Then the output.
 
-00:06:06.616 --> 00:06:11.966
+00:06:07.483 --> 00:06:12.832
 Real model output is dirty: prose wrappers, code fences, off-vocabulary values.
 
-00:06:11.966 --> 00:06:17.179
+00:06:12.832 --> 00:06:18.046
 MetaObjects generates a tolerant extract function from that same declaration.
 
-00:06:17.179 --> 00:06:22.867
+00:06:18.046 --> 00:06:23.733
 It returns typed data, with a report of exactly what it fixed — and it never throws.
 
-00:06:22.867 --> 00:06:27.297
+00:06:23.733 --> 00:06:27.380
 Now, an honest word: does MetaObjects write your whole app?
 
-00:06:27.297 --> 00:06:27.522
+00:06:27.380 --> 00:06:27.565
 No.
 
-00:06:27.522 --> 00:06:40.286
+00:06:27.565 --> 00:06:38.074
 It generates the core — entities, data access, routes, validation, forms, grids, prompt I/O — often as much as eighty percent, the boilerplate that's the same everywhere.
 
-00:06:40.286 --> 00:06:53.800
+00:06:38.074 --> 00:06:49.200
 The other twenty percent — your pricing rules, your workflows, the logic that makes the app yours — you still write, against the generated code: typed, and right there to build on.
 
-00:06:53.800 --> 00:06:55.568
-And here's the powerful part.
+00:06:49.200 --> 00:06:51.413
+And here's the part that pays off.
 
-00:06:55.568 --> 00:07:08.433
+00:06:51.413 --> 00:07:05.148
 Because your logic builds on the generated code, when you change the model and regenerate, that logic breaks exactly where the change landed — a compile error, on the precise line, not a silent runtime surprise.
 
-00:07:08.433 --> 00:07:14.774
+00:07:05.148 --> 00:07:11.918
 The AI changes the model, regenerates, and the breakage points it straight at the custom code to update.
 
-00:07:14.774 --> 00:07:18.067
+00:07:11.918 --> 00:07:15.433
 Drift stops being a bug hunt and becomes a to-do list.
 
-00:07:18.067 --> 00:07:20.940
+00:07:15.433 --> 00:07:18.306
 And one command ties the generated side together.
 
-00:07:20.940 --> 00:07:28.385
+00:07:18.306 --> 00:07:25.752
 Meta verify checks that your code, your schema, and your prompts still agree with the model, and fails the build if they don't.
 
-00:07:28.385 --> 00:07:32.900
+00:07:25.752 --> 00:07:30.266
 Verify keeps the generated code honest; the compiler keeps your logic honest.
 
-00:07:32.900 --> 00:07:36.300
+00:07:30.266 --> 00:07:33.667
 The AI writes the code — the model keeps all of it honest.
 
-00:07:36.300 --> 00:07:42.305
+00:07:33.667 --> 00:07:39.672
 And this is where the whole industry is heading: let the AI author a model, not raw code.
 
-00:07:42.305 --> 00:07:50.063
+00:07:39.672 --> 00:07:47.430
 Google's A2UI now has agents author the user interface as a declarative model — a data format, not executable code.
 
-00:07:50.063 --> 00:07:55.933
+00:07:47.430 --> 00:07:53.300
 But it's only the UI, a fixed palette — and every tool out there solves just one slice.
 
-00:07:55.933 --> 00:08:05.556
+00:07:53.300 --> 00:08:02.897
 MetaObjects spans it, shipping today — one typed, extensible, portable model for your database, API, UI, and AI.
 
-00:08:05.556 --> 00:08:06.758
+00:08:02.897 --> 00:08:04.096
 Not a roadmap.
 
-00:08:06.758 --> 00:08:08.133
+00:08:04.096 --> 00:08:05.467
 Installable now.
 
-00:08:08.133 --> 00:08:14.155
+00:08:05.467 --> 00:08:11.507
 So: drive your model live at runtime, or generate the code — in any of five languages.
 
-00:08:14.155 --> 00:08:17.866
+00:08:11.507 --> 00:08:15.229
 Go take a look — everything's at metaobjects dot dev.
 
-00:08:17.866 --> 00:08:19.267
+00:08:15.229 --> 00:08:16.634
 Thanks for watching.
 

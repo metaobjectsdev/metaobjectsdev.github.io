@@ -9,166 +9,170 @@ Let's actually build something.
 I gave Claude Code a fresh project and one instruction: build a task tracker, on MetaObjects.
 
 3
-00:00:10.038 --> 00:00:20.037
-By the end, you'll have this — a working API serving real data, plus a typed stack: database schema, validation, forms, hooks, and a grid.
+00:00:10.038 --> 00:00:19.160
+By the end, you'll have this — a working API serving real data from a typed stack: database schema, Zod validation, and CRUD routes.
 
 4
-00:00:20.037 --> 00:00:22.138
+00:00:19.160 --> 00:00:21.165
 All generated from one model.
 
 5
-00:00:22.138 --> 00:00:24.167
+00:00:21.165 --> 00:00:23.100
 Here's how, start to finish.
 
 6
-00:00:25.567 --> 00:00:32.671
+00:00:24.500 --> 00:00:31.604
 First, what we're building — a task tracker: projects, and tasks with a status and a due date.
 
 7
-00:00:32.671 --> 00:00:37.054
+00:00:31.604 --> 00:00:35.987
 All you need is Node and one package, the MetaObjects CLI.
 
 8
-00:00:37.054 --> 00:00:39.623
+00:00:35.987 --> 00:00:38.556
 Everything else, Claude Code does.
 
 9
-00:00:41.023 --> 00:00:43.672
+00:00:39.956 --> 00:00:42.605
 No models, no setup — just the ask.
 
 10
-00:00:43.672 --> 00:00:46.320
+00:00:42.605 --> 00:00:45.253
 Here's how the build actually goes.
 
 11
-00:00:47.720 --> 00:00:49.618
+00:00:46.653 --> 00:00:48.328
 Step one is always meta init.
 
 12
-00:00:49.618 --> 00:00:55.444
-It scaffolds your model directory and config — but it does something more important, too.
+00:00:48.328 --> 00:00:56.937
+It scaffolds your model directory, your config, and the code generators themselves — plain TypeScript, copied into your repo for you to own and edit.
 
 13
-00:00:56.844 --> 00:01:00.772
-It drops six skills and an AGENTS file right into your repo.
+00:00:56.937 --> 00:00:59.363
+But it does something more important, too.
 
 14
-00:01:00.772 --> 00:01:08.367
-Your agent now knows the MetaObjects workflow — author the model, generate, verify — before it writes a single line.
+00:01:00.763 --> 00:01:04.691
+It drops six skills and an AGENTS file right into your repo.
 
 15
-00:01:08.367 --> 00:01:10.593
-You're not teaching it a new tool.
+00:01:04.691 --> 00:01:12.286
+Your agent now knows the MetaObjects workflow — author the model, generate, verify — before it writes a single line.
 
 16
-00:01:10.593 --> 00:01:12.361
-Meta init already did that.
+00:01:12.286 --> 00:01:14.512
+You're not teaching it a new tool.
 
 17
-00:01:13.761 --> 00:01:16.644
-So Claude writes the model — one readable file.
+00:01:14.512 --> 00:01:16.280
+Meta init already did that.
 
 18
-00:01:16.644 --> 00:01:22.167
-A Project, a Task with a status and a due date, the relationship between them, and a grid.
+00:01:17.680 --> 00:01:20.564
+So Claude writes the model — one readable file.
 
 19
-00:01:22.167 --> 00:01:28.241
-And notice the validators sitting right on the fields — child metadata that travels with the model.
+00:01:20.564 --> 00:01:26.086
+A Project, a Task with a status and a due date, the relationship between them, and a grid.
 
 20
-00:01:28.241 --> 00:01:30.328
-That's the entire source of truth.
+00:01:26.086 --> 00:01:32.160
+And notice the validators sitting right on the fields — child metadata that travels with the model.
 
 21
-00:01:31.728 --> 00:01:33.053
-Then, meta gen.
+00:01:32.160 --> 00:01:34.247
+That's the entire source of truth.
 
 22
-00:01:33.053 --> 00:01:36.146
-From those few lines: twelve files.
+00:01:35.647 --> 00:01:36.883
+Then, meta gen.
 
 23
-00:01:36.146 --> 00:01:45.161
-Your database schema, validation, a full CRUD API, forms, hooks, and a grid — none of it hand-written.
+00:01:36.883 --> 00:01:39.684
+From those few lines: seven files.
 
 24
-00:01:46.561 --> 00:01:50.117
-And it's real, idiomatic code — Drizzle and Zod here.
+00:01:39.684 --> 00:01:46.275
+Your database schema, validation, and a full CRUD API — none of it hand-written.
 
 25
-00:01:50.117 --> 00:01:53.538
-Not boilerplate you babysit; output you regenerate.
+00:01:47.675 --> 00:01:51.231
+And it's real, idiomatic code — Drizzle and Zod here.
 
 26
-00:01:53.538 --> 00:01:57.430
-Hand-edit a file and a three-way merge keeps your changes.
+00:01:51.231 --> 00:01:54.653
+Not boilerplate you babysit; output you regenerate.
 
 27
-00:01:58.830 --> 00:02:05.756
-Wire it to a database and boot it, and it's a working app — the generated routes serving real task data over HTTP.
+00:01:54.653 --> 00:01:58.545
+Hand-edit a file and a three-way merge keeps your changes.
 
 28
-00:02:07.156 --> 00:02:10.455
-The filters are generated and enforced from the model, too.
+00:01:59.945 --> 00:02:06.871
+Wire it to a database and boot it, and it's a working app — the generated routes serving real task data over HTTP.
 
 29
-00:02:10.455 --> 00:02:13.082
-Filterable fields work; anything else is a 400.
+00:02:08.271 --> 00:02:11.569
+The filters are generated and enforced from the model, too.
 
 30
-00:02:13.082 --> 00:02:14.592
-No hand-written validation.
+00:02:11.569 --> 00:02:14.197
+Filterable fields work; anything else is a 400.
 
 31
-00:02:15.992 --> 00:02:17.562
-Now the part that matters.
+00:02:14.197 --> 00:02:15.707
+No hand-written validation.
 
 32
-00:02:17.562 --> 00:02:21.609
-To test the guarantee, an AI renamed a field in the generated code.
+00:02:17.107 --> 00:02:18.677
+Now the part that matters.
 
 33
-00:02:21.609 --> 00:02:24.870
-One meta verify caught it — exit one, the build fails.
+00:02:18.677 --> 00:02:22.723
+To test the guarantee, an AI renamed a field in the generated code.
 
 34
-00:02:24.870 --> 00:02:28.554
-Even with an agent writing the code, it can't silently drift.
+00:02:22.723 --> 00:02:25.985
+One meta verify caught it — exit one, the build fails.
 
 35
-00:02:29.954 --> 00:02:33.122
-So I asked Claude how much this actually saved.
+00:02:25.985 --> 00:02:29.669
+Even with an agent writing the code, it can't silently drift.
 
 36
-00:02:33.122 --> 00:02:42.896
-Thirty-four lines of model became over eight hundred lines of consistent, typed stack — two tables, validation, ten endpoints, forms, and a grid.
+00:02:31.069 --> 00:02:34.212
+So I asked Claude how much this actually saved.
 
 37
-00:02:42.896 --> 00:02:45.593
-I hand-wrote about thirty lines of glue.
+00:02:34.212 --> 00:02:43.108
+Twenty-some lines of model became over two hundred lines of consistent, typed stack — two tables, validation, and ten REST endpoints.
 
 38
-00:02:45.593 --> 00:02:48.896
-And the one time an AI drifted, verify caught it.
+00:02:43.108 --> 00:02:45.783
+I hand-wrote about thirty lines of glue.
 
 39
-00:02:48.896 --> 00:02:52.131
-The model is the asset; the code is regenerable.
+00:02:45.783 --> 00:02:49.060
+And the one time an AI drifted, verify caught it.
 
 40
-00:02:53.531 --> 00:02:55.154
-That's getting started.
+00:02:49.060 --> 00:02:52.270
+The model is the asset; the code is regenerable.
 
 41
-00:02:55.154 --> 00:02:59.739
-Install the CLI, run meta init, and your agent already knows how.
+00:02:53.670 --> 00:02:55.293
+That's getting started.
 
 42
-00:02:59.739 --> 00:03:02.278
-Everything's at metaobjects dot dev.
+00:02:55.293 --> 00:02:59.878
+Install the CLI, run meta init, and your agent already knows how.
 
 43
-00:03:02.278 --> 00:03:03.689
+00:02:59.878 --> 00:03:02.417
+Everything's at metaobjects dot dev.
+
+44
+00:03:02.417 --> 00:03:03.828
 Thanks for watching.
 
