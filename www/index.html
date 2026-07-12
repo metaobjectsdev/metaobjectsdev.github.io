@@ -99,7 +99,7 @@
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
-          <p>Load metadata at runtime and drive behavior dynamically — CRUD, validation, relationships, dynamic admin UIs, LLM tool registration. Less code in the repo; less surface area for AI agents to drift on.</p>
+          <p>Load metadata at runtime and drive behavior dynamically — CRUD, validation, relationships, dynamic admin UIs. (Typed tool payloads are declared today; MCP tool exposure is on the roadmap.) Less code in the repo; less surface area for AI agents to drift on.</p>
         </article>
         <article class="pillar">
           <h3>Drift detection</h3>
@@ -115,7 +115,7 @@
 
     <!-- Drift table — the #1 AI-era reason to adopt -->
     <section class="drift">
-      <h2 class="section-label">The #1 reason in the AI era: drift becomes impossible.</h2>
+      <h2 class="section-label">The #1 reason in the AI era: drift breaks the build.</h2>
       <p class="drift-intro">
         AI coding agents regenerate thousands of lines a day. A field rename in one file misses three others — types compile, runtime breaks at the boundary, hours to chase. A required field added to an entity is forgotten in the migration, the validator, the form. A prompt template references <code>{{userName}}</code> while the payload type carries <code>user.name</code>. Without a shared spine, every prompt accelerates the entropy. MetaObjects inverts the source of truth: generated code is owned by the codegen, not by humans or agents.
       </p>
@@ -131,7 +131,7 @@
           <tr>
             <td>Rename <code>created_at</code> → <code>createdAt</code> in the schema; miss the validator + form binding + API doc + tests</td>
             <td>Types compile. Runtime breaks at the boundary. Hours to chase.</td>
-            <td>Edit one YAML field, regen. Six files update consistently. Drift is structurally impossible.</td>
+            <td>Edit one YAML field, regen. Six files update consistently. Drift breaks the build.</td>
           </tr>
           <tr>
             <td>Add a new entity (table + validator + types + queries + routes + barrel = 6 files)</td>
