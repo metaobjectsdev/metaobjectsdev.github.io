@@ -1,0 +1,86 @@
+WEBVTT
+
+1
+00:00:00.500 --> 00:00:02.475
+Here's an uncomfortable question.
+
+2
+00:00:02.475 --> 00:00:04.928
+Is one shape declared twice in your repo?
+
+3
+00:00:04.928 --> 00:00:08.279
+Your git history remembers the day the copies disagreed.
+
+4
+00:00:09.679 --> 00:00:16.162
+Open your git log and read the fix commits — the ones that say sync this with that, or forgot to update.
+
+5
+00:00:16.162 --> 00:00:16.972
+That's drift.
+
+6
+00:00:16.972 --> 00:00:17.969
+Already shipped.
+
+7
+00:00:19.369 --> 00:00:26.632
+So point your coding agent at your repo — Claude Code, Cursor, Copilot, whatever you run — and paste one message.
+
+8
+00:00:26.632 --> 00:00:28.946
+Nothing installs, nothing is edited.
+
+9
+00:00:30.346 --> 00:00:37.277
+It reads your code, your migrations, and your commit log, and builds a drift ledger — every row cites a file and line, or a commit.
+
+10
+00:00:37.277 --> 00:00:37.753
+No vibes.
+
+11
+00:00:39.153 --> 00:00:48.618
+In a blinded test on a real production codebase, it found an enum constraint that drifted across a hundred and forty-six migrations — fixed only after production errors.
+
+12
+00:00:48.618 --> 00:00:52.874
+A column the database widened weeks earlier that the code didn't know about.
+
+13
+00:00:52.874 --> 00:00:55.730
+And one field that took twenty-eight edits to land.
+
+14
+00:00:57.130 --> 00:01:03.381
+And every finding names the verify gate that turns it into a build failure, not an incident.
+
+15
+00:01:03.381 --> 00:01:05.827
+Not it might drift — it already did.
+
+16
+00:01:07.227 --> 00:01:08.532
+It's built to say no.
+
+17
+00:01:08.532 --> 00:01:13.689
+Verdicts include not a fit, and every report ships a what-you-will-not-get section.
+
+18
+00:01:13.689 --> 00:01:15.801
+If yes, you get a first-week plan.
+
+19
+00:01:17.201 --> 00:01:22.044
+One U R L — metaobjects dot dev slash assess dot em-dee.
+
+20
+00:01:22.044 --> 00:01:24.552
+Worst case, your repo's fine.
+
+21
+00:01:24.552 --> 00:01:28.703
+Best case, you stop shipping the same bug twice.
+
