@@ -48,6 +48,7 @@
       </p>
       <div class="hero-ctas">
         <a href="/getting-started.html" class="btn btn-primary">Get started →</a>
+        <a href="#assess" class="btn btn-secondary">Assess your repo — no install</a>
         <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="btn btn-secondary">Read the spec</a>
         <a href="https://github.com/metaobjectsdev/metaobjects" class="btn btn-secondary">GitHub</a>
       </div>
@@ -162,6 +163,23 @@
       </table>
       <p class="drift-payoff">
         The win compounds with scale. For a 5k-line app, MetaObjects is overkill. For a 50k-line codebase maintained by humans-plus-agents, drift is the dominant cost of change — and MetaObjects pays back the setup cost within the first month.
+      </p>
+    </section>
+
+    <!-- Fit assessment — prove it on your own repo, zero install -->
+    <section class="drift" id="assess">
+      <h2 class="section-label">Don't take the table's word for it. Ask your own git history.</h2>
+      <p class="drift-intro">
+        MetaObjects ships a hosted <strong>fit &amp; migration assessment</strong>: one Markdown prompt your coding agent runs against your existing repo. <strong>Read-only, propose-only</strong> — it installs nothing, edits nothing, needs no database connection and no signup. Your agent reads the code, the migrations, and the commit log, then writes a decision-grade report whose centerpiece is a <strong>drift ledger built from your own history</strong>: the shapes you declare twice, where the copies disagree <em>today</em>, the past fixes that patched one copy and missed the other — and, per finding, the <code>verify</code> gate that would have made it a build failure instead of an incident.
+      </p>
+      <p class="example-section-label">With your repo open in your agent, send one message — read-only · no install · no signup</p>
+      <pre class="example-code"><code>Fetch https://metaobjects.dev/assess.md and run the MetaObjects
+Fit &amp; Migration Assessment against this repository.</code></pre>
+      <p class="drift-intro">
+        Works in Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI — any agent that can fetch a URL. No agent open right now? <a href="/assess.md">Read the assessment prompt</a> — it's one Markdown file; pasting it into any chat works too. The catch, stated plainly: it runs in your agent on your tokens, findings vary by model, and every claim is cited to a <code>file:line</code> or a commit precisely so you can check it. Nothing is sent to us; the report stays in your repo.
+      </p>
+      <p class="drift-payoff">
+        <strong>It's built to say no.</strong> Per-pillar verdicts include <em>NOT A FIT</em>, every promise is capped to what your language's port actually ships, and a "what you will NOT get" section is mandatory. In a blinded retro-test on a real pre-adoption production codebase, the assessment found specific, git-verified drift incidents that had already bitten — a constraint mismatch repaired only after a production violation, a schema divergence still live at assessment time — and its errors ran conservative, not inflated.
       </p>
     </section>
 
