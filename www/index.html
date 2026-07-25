@@ -96,7 +96,7 @@
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + JPA</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET + Postgres DDL</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
+          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + JPA</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
@@ -230,7 +230,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
     <!-- Canonical example: one schema → five languages -->
     <section class="example" id="example">
       <h2 class="section-label">From one schema, five languages.</h2>
-      <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output is idiomatic for that language — Drizzle + Zod for TypeScript, JPA + Spring records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET records for C#, Pydantic + FastAPI for Python. Same metadata; five idiomatic outputs; conformance-gated to byte-identical canonical form.</p>
+      <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output is idiomatic for that language — Drizzle + Zod for TypeScript, JPA + Spring records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET classes for C#, Pydantic + FastAPI for Python. Same metadata; five idiomatic outputs; conformance-gated to byte-identical canonical form.</p>
 
       <p class="example-section-label">The source: one YAML file in <code>metaobjects/</code></p>
       <pre class="example-code"><code><span class="comment"># metaobjects/meta.subscriber.yaml</span>
@@ -273,7 +273,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
 <span class="keyword">export type</span> Subscriber = <span class="keyword">typeof</span> subscribers.$inferSelect;
 <span class="keyword">export type</span> SubscriberInsert = z.infer&lt;<span class="keyword">typeof</span> SubscriberInsertSchema&gt;;</code></pre>
 
-      <p class="example-section-label">Java — Spring + JPA record from <code>codegen-spring</code></p>
+      <p class="example-section-label">Java — Spring REST + DTO record from <code>codegen-spring</code></p>
       <pre class="example-code"><code><span class="comment">// generated/SubscriberDto.java</span>
 <span class="keyword">package</span> acme;
 
@@ -283,24 +283,25 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
     String name,
     SubscriberStatus status,
     java.time.Instant createdAt
-) {}
-
-<span class="keyword">public enum</span> SubscriberStatus { ACTIVE, PAUSED, CANCELLED }
+) {
+    <span class="keyword">public enum</span> SubscriberStatus { active, paused, cancelled }
+}
 
 <span class="comment">// generated/SubscriberController.java (excerpt)</span>
 @RestController
 @RequestMapping(<span class="string">"/api/subscribers"</span>)
 <span class="keyword">public class</span> SubscriberController {
     @GetMapping(<span class="string">"/{id}"</span>)
-    <span class="keyword">public</span> SubscriberDto findById(@PathVariable Long id) { <span class="comment">/* ... */</span> }
+    <span class="keyword">public</span> ResponseEntity&lt;?&gt; get(@PathVariable Long id) { <span class="comment">/* ... */</span> }
 
-    @GetMapping
-    <span class="keyword">public</span> Page&lt;SubscriberDto&gt; list(@RequestParam Map&lt;String, String&gt; filter,
-                                    Pageable pageable) { <span class="comment">/* ... */</span> }
+    @GetMapping  <span class="comment">// cross-port envelope: limit/offset + optional withCount</span>
+    <span class="keyword">public</span> ResponseEntity&lt;?&gt; list(@RequestParam Integer limit, Integer offset,
+                                 String sort, Integer withCount) { <span class="comment">/* ... */</span> }
 
-    @PostMapping <span class="keyword">public</span> SubscriberDto create(@RequestBody SubscriberDto dto) { <span class="comment">/* ... */</span> }
-    @PutMapping(<span class="string">"/{id}"</span>) <span class="keyword">public</span> SubscriberDto update(...) { <span class="comment">/* ... */</span> }
-    @DeleteMapping(<span class="string">"/{id}"</span>) <span class="keyword">public void</span> delete(@PathVariable Long id) { <span class="comment">/* ... */</span> }
+    @PostMapping <span class="keyword">public</span> ResponseEntity&lt;?&gt; create(@RequestBody SubscriberDto dto) { <span class="comment">/* ... */</span> }
+    @RequestMapping(value = <span class="string">"/{id}"</span>, method = { PATCH, PUT })
+    <span class="keyword">public</span> ResponseEntity&lt;?&gt; update(@PathVariable Long id, @RequestBody JsonNode patch) { <span class="comment">/* ... */</span> }
+    @DeleteMapping(<span class="string">"/{id}"</span>) <span class="keyword">public</span> ResponseEntity&lt;?&gt; delete(@PathVariable Long id) { <span class="comment">/* ... */</span> }
 }</code></pre>
 
       <p class="example-section-label">Kotlin — Exposed + KotlinPoet data class from <code>codegen-kotlin</code></p>
@@ -319,43 +320,47 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
 )
 
 @Serializable
-<span class="keyword">public enum class</span> SubscriberStatus { ACTIVE, PAUSED, CANCELLED }
+<span class="keyword">public enum class</span> SubscriberStatus { active, paused, cancelled }
 
 <span class="comment">// generated/SubscriberTable.kt</span>
 <span class="keyword">object</span> SubscriberTable : Table(<span class="string">"subscribers"</span>) {
     <span class="keyword">val</span> id        = long(<span class="string">"id"</span>).autoIncrement()
     <span class="keyword">val</span> email     = varchar(<span class="string">"email"</span>, 320)
-    <span class="keyword">val</span> name      = varchar(<span class="string">"name"</span>, 255).nullable()
-    <span class="keyword">val</span> status    = enumerationByName(<span class="string">"status"</span>, 20, SubscriberStatus::class)
-    <span class="keyword">val</span> createdAt = timestamp(<span class="string">"created_at"</span>).nullable()
+    <span class="keyword">val</span> name      = text(<span class="string">"name"</span>).nullable()
+    <span class="keyword">val</span> status    = enumerationByName(<span class="string">"status"</span>, 64, SubscriberStatus::class)
+    <span class="keyword">val</span> createdAt = instantWithTimeZone(<span class="string">"created_at"</span>).nullable()
 
     <span class="keyword">override val</span> primaryKey = PrimaryKey(id)
 }</code></pre>
 
       <p class="example-section-label">C#.NET — EF Core + ASP.NET from <code>MetaObjects.Codegen</code></p>
-      <pre class="example-code"><code><span class="comment">// generated/Subscriber.cs</span>
+      <pre class="example-code"><code><span class="comment">// generated/Subscriber.g.cs</span>
+<span class="keyword">using</span> System.ComponentModel.DataAnnotations;
+<span class="keyword">using</span> System.ComponentModel.DataAnnotations.Schema;
 <span class="keyword">namespace</span> Acme;
 
-<span class="keyword">public partial class</span> Subscriber {
+[Table(<span class="string">"subscribers"</span>)]
+<span class="keyword">public class</span> Subscriber {
+    <span class="keyword">public enum</span> SubscriberStatus { active, paused, cancelled }
+
+    [Key] [Column(<span class="string">"id"</span>)]
     <span class="keyword">public long</span> Id { <span class="keyword">get; set;</span> }
-    <span class="keyword">public string</span> Email { <span class="keyword">get; set;</span> } = <span class="keyword">null!</span>;
-    <span class="keyword">public string?</span> Name { <span class="keyword">get; set;</span> }
-    <span class="keyword">public</span> SubscriberStatus Status { <span class="keyword">get; set;</span> }
-    <span class="keyword">public</span> DateTimeOffset CreatedAt { <span class="keyword">get; set;</span> }
+
+    [Column(<span class="string">"email"</span>)] [Required(AllowEmptyStrings = <span class="keyword">true</span>)] [MaxLength(320)] [MinLength(1)]
+    <span class="keyword">public string</span> Email { <span class="keyword">get; set;</span> } = <span class="keyword">default!</span>;
+
+    [Column(<span class="string">"name"</span>)]      <span class="keyword">public string?</span> Name { <span class="keyword">get; set;</span> }
+    [Column(<span class="string">"status"</span>)]    <span class="keyword">public</span> SubscriberStatus Status { <span class="keyword">get; set;</span> }
+    [Column(<span class="string">"createdAt"</span>)] <span class="keyword">public</span> DateTimeOffset? CreatedAt { <span class="keyword">get; set;</span> }
 }
 
-<span class="keyword">public enum</span> SubscriberStatus { Active, Paused, Cancelled }
-
-<span class="comment">// generated/AppDbContext.cs (excerpt)</span>
-<span class="keyword">public partial class</span> AppDbContext : DbContext {
-    <span class="keyword">public</span> DbSet&lt;Subscriber&gt; Subscribers =&gt; Set&lt;Subscriber&gt;();
+<span class="comment">// generated/AppDbContext.g.cs (excerpt)</span>
+<span class="keyword">public class</span> AppDbContext : DbContext {
+    <span class="keyword">public</span> DbSet&lt;Subscriber&gt; Subscribers { <span class="keyword">get; set;</span> } = <span class="keyword">default!</span>;
 
     <span class="keyword">protected override void</span> OnModelCreating(ModelBuilder b) {
-        b.Entity&lt;Subscriber&gt;(e =&gt; {
-            e.HasKey(s =&gt; s.Id);
-            e.Property(s =&gt; s.Email).IsRequired().HasMaxLength(320);
-            e.Property(s =&gt; s.Status).HasConversion&lt;<span class="keyword">string</span>&gt;();
-        });
+        b.Entity&lt;Subscriber&gt;().Property(x =&gt; x.Status).HasConversion&lt;<span class="keyword">string</span>&gt;();
+        b.Entity&lt;Subscriber&gt;().Property(x =&gt; x.CreatedAt).HasColumnType(<span class="string">"timestamp with time zone"</span>);
     }
 }</code></pre>
 
@@ -505,7 +510,7 @@ price: {
             <td><strong>Kotlin</strong></td>
             <td><a href="https://github.com/JetBrains/Exposed">Exposed</a>, <a href="https://ktor.io">Ktor</a> + jOOQ, <a href="https://github.com/Kotlin/kotlinx.serialization">kotlinx.serialization</a></td>
             <td>Idiomatic Kotlin SQL DSL (Exposed). Solid web stack (Ktor). First-class coroutines.</td>
-            <td>KotlinPoet-generated <code>@Serializable</code> data classes + Exposed Tables from the same metamodel that drives the Java / TS / Python / C# stacks. Same Kotlin idioms; cross-port lockstep.</td>
+            <td>KotlinPoet-generated data classes + Exposed Tables from the same metamodel that drives the Java / TS / Python / C# stacks. Same Kotlin idioms; cross-port lockstep.</td>
           </tr>
           <tr>
             <td><strong>C#.NET</strong></td>
