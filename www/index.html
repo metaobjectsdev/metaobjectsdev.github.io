@@ -223,7 +223,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         </tbody>
       </table>
       <p class="impl-note">
-        Five shared conformance corpora at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures"><code>fixtures/</code></a> — metamodel (~90 fixtures), render, persistence (12/12 against Testcontainers Postgres), API contract (20/20 cross-port), YAML — validate every implementation byte-identically against shared expectations.
+        Five shared conformance corpora at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures"><code>fixtures/</code></a> — metamodel (~90 fixtures), render, persistence (24/24 against Testcontainers Postgres), API contract (cross-port), YAML — validate every implementation byte-identically against shared expectations.
       </p>
     </section>
 
@@ -549,18 +549,18 @@ price: {
         <tbody>
           <tr><td>Idiomatic per-language codegen</td>            <td class="yes">5 languages</td>      <td class="yes">TS only</td>             <td class="yes">single-lang</td>      <td class="yes">type stubs only</td></tr>
           <tr><td>Cross-language source of truth</td>           <td class="yes">five ports, byte-identical</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="partial">API shape only</td></tr>
-          <tr><td>Schema migrations</td>                         <td class="yes">diff + emit + apply</td>           <td class="yes">yes</td>                <td class="yes">yes</td>              <td class="no">no</td></tr>
-          <tr><td>Typed validation at the wire boundary</td>     <td class="yes">Zod / Pydantic / Hibernate / DataAnnotations / kotlinx</td> <td class="partial">runtime only</td>   <td class="partial">annotations</td>  <td class="partial">schema-only</td></tr>
-          <tr><td>Runtime metadata (drive behavior dynamically)</td> <td class="yes">all 5 ports</td>                <td class="no">no</td>                  <td class="partial">reflection</td>   <td class="no">no</td></tr>
+          <tr><td>Schema migrations</td>                         <td class="yes">diff + emit + apply (TS)</td>           <td class="yes">yes</td>                <td class="yes">yes</td>              <td class="no">no</td></tr>
+          <tr><td>Typed validation at the wire boundary</td>     <td class="yes">Zod / Pydantic / Jakarta / DataAnnotations / Jakarta</td> <td class="partial">runtime only</td>   <td class="partial">annotations</td>  <td class="partial">schema-only</td></tr>
+          <tr><td>Runtime metadata (drive behavior dynamically)</td> <td class="yes">TS / Java / Python</td>                <td class="no">no</td>                  <td class="partial">reflection</td>   <td class="no">no</td></tr>
           <tr><td>Drift detection (build-time)</td>              <td class="yes"><code>meta verify</code></td>      <td class="partial">migration diff</td> <td class="partial">migration diff</td><td class="no">no</td></tr>
           <tr><td>Typed prompt construction + render</td>        <td class="yes">5 ports, conformance-gated</td>    <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
           <tr><td><code>template.output</code> parser-on-receipt</td> <td class="yes">5 ports (Zod / Pydantic / Jackson / kotlinx / STJ)</td> <td class="no">no</td> <td class="no">no</td> <td class="no">no</td></tr>
-          <tr><td>LLM tool-call envelopes (<code>template.toolcall</code>)</td> <td class="yes">cross-port</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
+          <tr><td>LLM tool-call envelopes (<code>template.toolcall</code>)</td> <td class="yes">declared cross-port</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
           <tr><td>Hand-edit-preserving regen</td>                <td class="yes">3-way merge</td>                    <td class="partial">user-edits adjacent</td> <td class="partial">scaffolding only</td> <td class="partial">codegen reruns</td></tr>
           <tr class="ai-row"><td>Machine-readable metadata (grep-friendly)</td> <td class="yes">YAML/JSON, named constants</td> <td class="partial">DSL or schema.prisma</td> <td class="no">annotations / decorators</td> <td class="yes">YAML/JSON</td></tr>
           <tr class="ai-row"><td>Generated code is plain (no proxy/decorator magic)</td> <td class="yes">idiomatic native</td> <td class="yes">idiomatic</td>         <td class="no">proxy/runtime magic</td><td class="yes">type stubs</td></tr>
           <tr class="ai-row"><td>Deterministic regen (same in → same out)</td> <td class="yes">conformance-gated</td><td class="yes">yes</td>                <td class="yes">yes</td>              <td class="yes">yes</td></tr>
-          <tr class="ai-row"><td>Small surface area for agent context window</td><td class="yes">11 base types + extensions</td> <td class="partial">single-lang ORM API</td> <td class="no">large framework surface</td><td class="yes">small spec</td></tr>
+          <tr class="ai-row"><td>Small surface area for agent context window</td><td class="yes">13 base types + extensions</td> <td class="partial">single-lang ORM API</td> <td class="no">large framework surface</td><td class="yes">small spec</td></tr>
         </tbody>
       </table>
 
