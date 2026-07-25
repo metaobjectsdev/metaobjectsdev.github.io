@@ -265,7 +265,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
 });
 
 <span class="keyword">export const</span> SubscriberInsertSchema = z.object({
-  email:  z.string().max(320),
+  email:  z.string().min(1).max(320),
   name:   z.string().optional(),
   status: z.enum([<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>]),
 });
@@ -310,7 +310,6 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
 <span class="keyword">import</span> java.time.Instant
 <span class="keyword">import</span> kotlinx.serialization.Serializable
 
-@Serializable
 <span class="keyword">public data class</span> Subscriber(
   <span class="keyword">public val</span> id: Long? = <span class="keyword">null</span>,
   <span class="keyword">public val</span> email: String,
