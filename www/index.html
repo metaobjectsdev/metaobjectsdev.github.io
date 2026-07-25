@@ -96,7 +96,7 @@
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + JPA</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET + Postgres DDL</strong> (C#), <strong>Pydantic + FastAPI + SQLAlchemy</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
+          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + JPA</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET + Postgres DDL</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
@@ -197,8 +197,8 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         <tbody>
           <tr>
             <td><strong>TypeScript</strong></td>
-            <td><span class="status status-stable">npm 0.19.3 · reference</span></td>
-            <td>npm <code>@metaobjectsdev/*@0.19.3</code> (the reference implementation). Drizzle + Zod + Fastify + Hono codegen, Kysely runtime, and <code>meta migrate</code> for Postgres / SQLite / Cloudflare D1 — the TS toolchain owns schema migrations. 2,500+ tests across the workspace.</td>
+            <td><span class="status status-stable">npm 0.20.0 · reference</span></td>
+            <td>npm <code>@metaobjectsdev/*@0.20.0</code> (the reference implementation). Drizzle + Zod + Fastify + Hono codegen, Kysely runtime, and <code>meta migrate</code> for Postgres / SQLite / Cloudflare D1 — the TS toolchain owns schema migrations. 2,500+ tests across the workspace.</td>
           </tr>
           <tr>
             <td><strong>Java</strong></td>
@@ -217,8 +217,8 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
           </tr>
           <tr>
             <td><strong>Python</strong></td>
-            <td><span class="status status-stable">PyPI 0.19.4</span></td>
-            <td>PyPI <code>metaobjects</code> <code>0.19.4</code> + the <code>metaobjects</code> CLI. Loader + canonical serializer + render + verify + codegen (Pydantic + FastAPI + SQLAlchemy) + ObjectManager runtime. All five cross-port conformance corpora green.</td>
+            <td><span class="status status-stable">PyPI 0.19.5</span></td>
+            <td>PyPI <code>metaobjects</code> <code>0.19.5</code> + the <code>metaobjects</code> CLI. Loader + canonical serializer + render + verify + codegen (Pydantic + FastAPI) + ObjectManager runtime. All five cross-port conformance corpora green.</td>
           </tr>
         </tbody>
       </table>
@@ -230,7 +230,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
     <!-- Canonical example: one schema → five languages -->
     <section class="example" id="example">
       <h2 class="section-label">From one schema, five languages.</h2>
-      <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output is idiomatic for that language — Drizzle + Zod for TypeScript, JPA + Spring records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET records for C#, SQLAlchemy + Pydantic for Python. Same metadata; five idiomatic outputs; conformance-gated to byte-identical canonical form.</p>
+      <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output is idiomatic for that language — Drizzle + Zod for TypeScript, JPA + Spring records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET records for C#, Pydantic + FastAPI for Python. Same metadata; five idiomatic outputs; conformance-gated to byte-identical canonical form.</p>
 
       <p class="example-section-label">The source: one YAML file in <code>metaobjects/</code></p>
       <pre class="example-code"><code><span class="comment"># metaobjects/meta.subscriber.yaml</span>
@@ -360,33 +360,26 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
     }
 }</code></pre>
 
-      <p class="example-section-label">Python — SQLAlchemy + Pydantic + FastAPI from <code>metaobjects.codegen</code></p>
-      <pre class="example-code"><code><span class="comment"># generated/subscriber.py</span>
-<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
-<span class="keyword">from</span> enum <span class="keyword">import</span> Enum
-<span class="keyword">from</span> typing <span class="keyword">import</span> Optional
+      <p class="example-section-label">Python — Pydantic + FastAPI from <code>metaobjects gen</code></p>
+      <pre class="example-code"><code><span class="comment"># generated/Subscriber.py</span>
+<span class="keyword">from</span> __future__ <span class="keyword">import</span> annotations
+<span class="keyword">from</span> typing <span class="keyword">import</span> Literal
+<span class="keyword">import</span> datetime
 <span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field
-<span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> String
-<span class="keyword">from</span> sqlalchemy.orm <span class="keyword">import</span> Mapped, mapped_column
-<span class="keyword">from</span> .base <span class="keyword">import</span> Base
 
-<span class="keyword">class</span> SubscriberStatus(str, Enum):
-    ACTIVE = <span class="string">"active"</span>
-    PAUSED = <span class="string">"paused"</span>
-    CANCELLED = <span class="string">"cancelled"</span>
 
-<span class="keyword">class</span> Subscriber(Base):
-    __tablename__ = <span class="string">"subscribers"</span>
-    id:         Mapped[<span class="keyword">int</span>] = mapped_column(primary_key=<span class="keyword">True</span>, autoincrement=<span class="keyword">True</span>)
-    email:      Mapped[<span class="keyword">str</span>] = mapped_column(String(320))
-    name:       Mapped[Optional[<span class="keyword">str</span>]]
-    status:     Mapped[SubscriberStatus]
-    created_at: Mapped[datetime]
+<span class="keyword">class</span> Subscriber(BaseModel):
+    id:        <span class="keyword">int</span> | <span class="keyword">None</span> = <span class="keyword">None</span>
+    email:     <span class="keyword">str</span> = Field(max_length=320)
+    name:      <span class="keyword">str</span> | <span class="keyword">None</span> = <span class="keyword">None</span>
+    status:    Literal[<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>]
+    createdAt: datetime.datetime | <span class="keyword">None</span> = <span class="keyword">None</span>
 
-<span class="keyword">class</span> SubscriberInsert(BaseModel):
-    email:  <span class="keyword">str</span> = Field(max_length=320)
-    name:   Optional[<span class="keyword">str</span>] = <span class="keyword">None</span>
-    status: SubscriberStatus</code></pre>
+
+<span class="keyword">class</span> SubscriberCreate(BaseModel):  <span class="comment"># CREATE input — validated (FR-036)</span>
+    email:  <span class="keyword">str</span> = Field(min_length=1, max_length=320)
+    name:   <span class="keyword">str</span> | <span class="keyword">None</span> = <span class="keyword">None</span>
+    status: Literal[<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>]</code></pre>
 
       <p class="example-section-label">Plus a migration — dialect-aware (Postgres / SQLite / Cloudflare D1)</p>
       <pre class="example-code"><code><span class="comment">-- migrations/0001_create_subscribers.up.sql (SQLite dialect)</span>
@@ -525,7 +518,7 @@ price: {
             <td><strong>Python</strong></td>
             <td><a href="https://www.sqlalchemy.org/">SQLAlchemy</a>, <a href="https://docs.djangoproject.com/en/stable/topics/db/models/">Django ORM</a>, <a href="https://docs.pydantic.dev/">Pydantic</a> + <a href="https://fastapi.tiangolo.com/">FastAPI</a>, <a href="https://sqlmodel.tiangolo.com/">SQLModel</a></td>
             <td>Mature ORM (SQLAlchemy). Batteries-included framework (Django). Excellent validation (Pydantic).</td>
-            <td>SQLAlchemy declarative models + Pydantic schemas + FastAPI routers from the same metamodel that drives every other port. Same Pythonic outputs; same drift guarantees.</td>
+            <td>Pydantic schemas + FastAPI routers from the same metamodel that drives every other port. Same Pythonic outputs; same drift guarantees.</td>
           </tr>
           <tr>
             <td><strong>Schema-only IDLs</strong></td>
