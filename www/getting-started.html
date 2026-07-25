@@ -84,12 +84,13 @@ npx meta init</pre>
 ├── metaobjects.config.ts        <span class="c"># ← targets: dialect + what to generate</span>
 ├── CLAUDE.md                    <span class="c"># wired to auto-load the context below</span>
 ├── .metaobjects/                <span class="c"># tool state + agent docs (AGENTS.md, CLAUDE.md)</span>
-└── .claude/skills/              <span class="c"># five skills your agent now has:</span>
+└── .claude/skills/              <span class="c"># six skills your agent now has:</span>
     ├── metaobjects-authoring/   <span class="c">#   write &amp; edit models</span>
     ├── metaobjects-codegen/     <span class="c">#   run codegen</span>
     ├── metaobjects-runtime-ui/  <span class="c">#   wire up runtime + UI</span>
     ├── metaobjects-prompts/     <span class="c">#   typed LLM prompts</span>
-    └── metaobjects-verify/      <span class="c">#   drift checks</span></pre>
+    ├── metaobjects-verify/      <span class="c">#   drift checks</span>
+    └── metaobjects-audit/       <span class="c">#   check adoption depth</span></pre>
         </div>
       </div>
     </section>
