@@ -24,6 +24,27 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    # Deploy-time reference-doc generation: clone the public wizardsofodd
+    # reference impl, run `meta docs` (published @metaobjectsdev/cli), and drop the
+    # browsable site into www/reference/ so it publishes with the site. Regenerates
+    # on every deploy (push to main / workflow_dispatch) — no cross-repo secrets.
+    # --ignore-scripts skips wizardsofodd's wrangler postinstall (not needed for
+    # docs). --prompts data/templates surfaces the actual prompt TEXT.
+    - name: Generate wizardsofodd reference docs
+      run: |
+        git clone --depth 1 https://github.com/Draagon/wizardsofodd.git /tmp/woo
+        cd /tmp/woo
+        npm ci --ignore-scripts
+        npx meta docs . --site --prompts data/templates --out /tmp/woo-docs
+        rm -rf "$GITHUB_WORKSPACE/www/reference"
+        mkdir -p "$GITHUB_WORKSPACE/www/reference"
+        cp -r /tmp/woo-docs/site/* "$GITHUB_WORKSPACE/www/reference/"
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
 
