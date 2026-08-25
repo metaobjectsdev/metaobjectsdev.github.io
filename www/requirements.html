@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capability requirements — check what your AI actually built | MetaObjects</title>
+  <meta name="description" content="Your agent reports the feature done. The columns exist, the tests pass, and nothing ever writes the value. MetaObjects makes a capability a node in your model, so the gap between what your software claims and what it does becomes a build failure instead of a surprise.">
+
+  <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles.css">
+
+  <meta property="og:title" content="Check what your AI actually built">
+  <meta property="og:description" content="The columns exist, the tests pass, and nothing ever writes the value. Make a capability a node in your model, and the gap becomes a build failure.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://metaobjects.dev/requirements.html">
+  <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://metaobjects.dev/requirements.html">
+
+  <style>
+    /* Page-scoped styles — do not touch the shared landing styles. */
+    .page { max-width: var(--reading-width); margin: 0 auto; padding: 3.5rem 1.5rem 4rem; }
+    .page-eyebrow { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--medium-gray); margin: 0 0 0.75rem; }
+    .page h1 { font-size: 2.4rem; line-height: 1.15; color: var(--primary-blue);
+      margin: 0 0 1rem; letter-spacing: -0.02em; }
+    .page-lede { font-size: 1.15rem; line-height: 1.65; color: var(--dark-gray); margin: 0 0 2rem; }
+    .page h2 { font-size: 1.5rem; line-height: 1.25; color: var(--primary-blue);
+      margin: 3rem 0 1rem; letter-spacing: -0.01em; }
+    .page h3 { font-size: 1.05rem; color: var(--primary-blue); margin: 1.75rem 0 0.5rem; }
+    .page p { margin: 0 0 1.25rem; }
+    .page ul { margin: 0 0 1.4rem; padding-left: 1.4rem; }
+    .page li { margin: 0 0 0.6rem; }
+    .page strong { color: var(--primary-blue); }
+    .page blockquote { margin: 1.6rem 0; padding: 0.4rem 0 0.4rem 1.4rem;
+      border-left: 3px solid var(--accent-gold); color: var(--dark-gray);
+      font-size: 1.1rem; font-style: italic; }
+    .page pre { background: var(--code-bg); color: var(--code-fg); border-radius: 8px;
+      padding: 1.25rem 1.4rem; overflow-x: auto; font-family: var(--font-mono);
+      font-size: 0.86rem; line-height: 1.6; margin: 0 0 1.6rem; box-shadow: var(--shadow); }
+    .page pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+    .tok-key { color: #8FB7E8; } .tok-val { color: #A7E0C0; }
+    .tok-cmt { color: #7A8AA8; } .tok-err { color: #F0A0A0; }
+    .page hr { border: none; border-top: 1px solid var(--rule); margin: 3rem 0; }
+
+    .shapes { display: grid; gap: 1rem; margin: 0 0 1.5rem; }
+    @media (min-width: 720px) { .shapes { grid-template-columns: repeat(3, 1fr); } }
+    .shape { background: var(--light-gray); border: 1px solid var(--rule);
+      border-radius: 10px; padding: 1.1rem 1.2rem; }
+    .shape h3 { margin: 0 0 0.4rem; font-size: 0.95rem; font-family: var(--font-mono);
+      letter-spacing: 0.02em; }
+    .shape p { margin: 0; font-size: 0.93rem; line-height: 1.6; color: var(--dark-gray); }
+
+    .findings { border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+      margin: 0 0 1.5rem; }
+    .findings div { padding: 0.95rem 1.2rem; border-bottom: 1px solid var(--rule);
+      font-size: 0.95rem; line-height: 1.6; }
+    .findings div:last-child { border-bottom: none; }
+    .findings b { color: var(--primary-blue); display: block; margin-bottom: 0.15rem; }
+    .findings span { color: var(--dark-gray); }
+
+    .split { display: grid; gap: 1.25rem; margin: 0 0 1.5rem; }
+    @media (min-width: 720px) { .split { grid-template-columns: 1fr 1fr; } }
+    .split section { border: 1px solid var(--rule); border-radius: 10px; padding: 1.2rem 1.35rem; }
+    .split section.you-add { background: var(--light-gray); }
+    .split h3 { margin: 0 0 0.7rem; font-size: 0.82rem; font-family: var(--font-mono);
+      text-transform: uppercase; letter-spacing: 0.05em; color: var(--medium-gray); }
+    .split ul { margin: 0; padding-left: 1.1rem; }
+    .split li { font-size: 0.93rem; line-height: 1.6; }
+
+    .page-cta { background: var(--light-gray); border: 1px solid var(--rule);
+      border-radius: 10px; padding: 1.5rem 1.75rem; margin: 2.5rem 0 0; }
+    .page-cta p { margin: 0 0 0.9rem; font-size: 0.98rem; }
+    .page-cta p:last-child { margin: 0; }
+    .page-cta .cmds { font-family: var(--font-mono); font-size: 0.85rem;
+      display: block; color: var(--royal-blue); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="brand">
+      <img src="/images/mo-logo-only.png" alt="" class="brand-mark">
+      <span class="brand-name">MetaObjects</span>
+    </a>
+    <nav>
+      <a href="/getting-started.html" class="nav-link">Get started</a>
+      <a href="/story.html" class="nav-link">Story</a>
+      <a href="/videos.html" class="nav-link">Videos</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects" class="nav-link">GitHub</a>
+      <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="nav-link nav-cta">Spec</a>
+    </nav>
+  </header>
+
+  <main>
+    <article class="page">
+      <p class="page-eyebrow">Capability requirements · ships in all five language ports</p>
+      <h1>Check what your AI actually built.</h1>
+      <p class="page-lede">
+        Your agent reports the feature done. The columns are there, the types line up, the tests
+        pass — and no code path ever writes the value. Nothing is broken, so nothing fails.
+        MetaObjects makes a capability a node in your model, so the distance between what your
+        software <em>claims</em> to do and what it does becomes something a build can check.
+      </p>
+
+      <h2>The failure that comes after drift</h2>
+      <p>
+        Drift is when your code stops agreeing with your model. <a href="/videos.html">MetaObjects
+        already turns that into a build error</a> across your code, your prompts and your schema.
+      </p>
+      <p>
+        This is the other one. Your code can agree with your model perfectly, and the model can
+        still describe a capability your software does not have. Agent-written work fails that way
+        in three recognisable shapes:
+      </p>
+
+      <div class="shapes">
+        <div class="shape">
+          <h3>Duplicate</h3>
+          <p>It builds a capability that already exists, because nothing in the repo told it the
+          capability was there.</p>
+        </div>
+        <div class="shape">
+          <h3>Missing</h3>
+          <p>It reports the feature done. Every layer is present and nothing ever writes the
+          value. Nothing is wrong <em>enough</em> to fail.</p>
+        </div>
+        <div class="shape">
+          <h3>Partial</h3>
+          <p>It ships the legible 80% and reports done. The recovery path, the rollup, the retire
+          operation — invisible to everyone.</p>
+        </div>
+      </div>
+
+      <p>
+        A test suite cannot see any of this. A test exercises code that exists; there is no test
+        that fails because a column nobody writes was never wired to anything. <strong>The absence
+        has no address.</strong>
+      </p>
+
+      <h2>So give it one</h2>
+      <p>
+        A requirements document does not help — prose goes stale silently and nothing in your build
+        has an opinion about it. Neither does a requirements tool, where the link from a claim to
+        the code is a <em>string</em>: rename the class and the link still looks fine.
+      </p>
+      <p>
+        A capability declared in MetaObjects is a node in the same model as your entities, so its
+        link is <strong>resolved, not trusted</strong>:
+      </p>
+
+<pre><code><span class="tok-cmt">- requirement.functional:</span>
+    <span class="tok-key">name</span>: <span class="tok-val">botCanBeRetiredWithoutErasingItsResults</span>
+    <span class="tok-key">level</span>: <span class="tok-val">5</span>
+    <span class="tok-key">status</span>: <span class="tok-val">live</span>
+    <span class="tok-key">statement</span>: <span class="tok-val">"A bot's participation is switched by its own status, so it
+      can be withdrawn while the hands it played stay on the record."</span>
+    <span class="tok-key">counterexample</span>: <span class="tok-val">"A misbehaving bot that can only be stopped by deleting
+      it, taking every hand it played with it."</span>
+    <span class="tok-key">implementedBy</span>: [<span class="tok-val">arena::Bot.status</span>]</code></pre>
+
+      <ul>
+        <li><strong>The statement</strong> says what the capability is, in a sentence.</li>
+        <li><strong>The counterexample</strong> says what a violation looks like. That single line
+          is what an assertion gets written against.</li>
+        <li><strong><code>implementedBy</code></strong> names the <em>member</em> — the real field
+          in the real model — that carries it. Rename or delete that field and the build tells you
+          which capability just lost its implementation.</li>
+      </ul>
+
+      <p>
+        That is a real entry from a live product, and it is <span class="tok-err">wrong</span>.
+        <code>arena::Bot.status</code> exists, so the link resolved and every structural check
+        passed. Nothing in the codebase ever writes that column, so every bot holds the default
+        forever. The bot could not be retired.
+      </p>
+
+      <blockquote>
+        Consistency is not completeness. Knowing where a capability is supposed to live is what
+        lets you ask the only question that finds these: what would I have to break to make this
+        claim fail?
+      </blockquote>
+
+      <h2>What it found</h2>
+      <p>
+        Declared across three shipping products — roughly 700 capabilities — against suites that
+        were passing at the time. A sample:
+      </p>
+
+      <div class="findings">
+        <div><b>A bot could not be retired.</b><span>A <code>status</code> column with no writer
+          anywhere. Every bot held the default, permanently.</span></div>
+        <div><b>A season could not be run privately.</b><span>Owner and password columns exist. No
+          code path sets either one.</span></div>
+        <div><b>Private tables ignored their own stakes.</b><span>The blinds column is never
+          written, so every private table silently ran at the database default.</span></div>
+        <div><b>Interrupted work was never recovered.</b><span>No lease, no timeout, and both
+          recovery queries select only pending rows — caught while production still had zero
+          stranded rows.</span></div>
+        <div><b>A metrics rollup was marked done with an empty table.</b><span>Its only insert path
+          was generated CRUD that nothing called.</span></div>
+      </div>
+
+      <p>
+        These were found in a codebase with <strong>1,280 tests passing and zero failures</strong>,
+        and the deepest retrofit of the three — a codebase where 93% of the history predates its
+        requirements — produced the most of them. <strong>You do not need a greenfield project.</strong>
+        This works on the code you already have, and best on the parts you are least sure about.
+      </p>
+
+      <h2>What you get, and what you build</h2>
+      <p>
+        Being exact about this matters, because the last part is the important one and it is not in
+        the box yet.
+      </p>
+
+      <div class="split">
+        <section>
+          <h3>MetaObjects ships</h3>
+          <ul>
+            <li>Capabilities as registered vocabulary in all five language ports — a project that
+              declares none sees no change at all.</li>
+            <li><code>implementedBy</code> resolved by the loader. Dangling is an error, not a note.</li>
+            <li><code>meta verify</code> reporting claims whose implementation vanished, entities no
+              claim covers, and gaps recorded versus gaps nobody has ruled on — with a summary on
+              every run.</li>
+            <li><code>requirementTests()</code> scaffolding a test stub per claim, statement and
+              counterexample carried in, kept from rotting by <code>verify --codegen</code>.</li>
+            <li><code>meta docs</code> rendering the ledger for humans and for agents — including a
+              machine-readable index carrying a declared count.</li>
+          </ul>
+        </section>
+        <section class="you-add">
+          <h3>You write</h3>
+          <ul>
+            <li><strong>The assertion.</strong> A generated stub is a place to put a proof and a
+              guarantee it stays in step with the claim. It is not a proof.</li>
+            <li><strong>The proof that the assertion bites</strong> — a declared edit to your source
+              that must turn that test red. If it survives, the test is decoration.</li>
+          </ul>
+          <p style="margin:0.9rem 0 0;font-size:0.9rem;color:var(--medium-gray);">
+            That second one is not a MetaObjects feature today. Two projects built their own
+            independently, which is the best argument for moving it into the library — and the
+            reason we would rather tell you now than have you find the gap.
+          </p>
+        </section>
+      </div>
+
+      <h2>Where it sits</h2>
+      <ul>
+        <li><strong>Codegen</strong> turns a model change into a compile error on the exact line
+          your own logic needs updating. Refactoring stops being a bug hunt.</li>
+        <li><strong><code>meta verify</code></strong> turns divergence between your code, prompts,
+          schema and the model into a failed build. Drift cannot merge.</li>
+        <li><strong>Capabilities</strong> put what you said the software does on that same spine —
+          resolved links, coverage reporting, and a generated check per claim.</li>
+      </ul>
+      <p>
+        The AI writes the code. The model keeps all of it honest — and now <em>honest</em> covers
+        whether the feature is actually there.
+      </p>
+
+      <hr>
+
+      <div class="page-cta">
+        <p><strong>Start with one capability you are not certain is fully built.</strong> Write down
+        what it means and what a violation would look like, link it to the field or endpoint that
+        carries it, then try to write a test that would fail if it were false. In three codebases,
+        that exercise is where every finding above came from.</p>
+        <p>
+          <a href="/getting-started.html">Get started</a> ·
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/features/requirements.md">Full reference</a> ·
+          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec">Spec</a>
+          <span class="cmds">npm i @metaobjectsdev/cli &amp;&amp; npx meta init</span>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>
+        <strong>MetaObjects</strong> · <a href="https://github.com/metaobjectsdev/metaobjects">GitHub</a> · <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/LICENSE">Apache 2.0</a> · <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">Roadmap</a> · <a href="/llms.txt">llms.txt</a>
+      </p>
+      <p class="site-footer-meta">
+        Commercial inquiries: <a href="https://metaobjects.com">metaobjects.com</a> · Created by <a href="https://dougmealing.com">Doug Mealing</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

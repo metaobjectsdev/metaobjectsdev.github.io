@@ -30,6 +30,7 @@
     </a>
     <nav>
       <a href="/getting-started.html" class="nav-link">Get started</a>
+      <a href="/requirements.html" class="nav-link">Requirements</a>
       <a href="/story.html" class="nav-link">Story</a>
       <a href="/videos.html" class="nav-link">Videos</a>
       <a href="/reference/" class="nav-link">Reference docs</a>
@@ -164,6 +165,20 @@
       </table>
       <p class="drift-payoff">
         The win compounds with scale. For a 5k-line app, MetaObjects is overkill. For a 50k-line codebase maintained by humans-plus-agents, drift is the dominant cost of change — and MetaObjects pays back the setup cost within the first month.
+      </p>
+    </section>
+
+    <!-- The failure after drift — capability coverage. Full page: /requirements.html -->
+    <section class="drift" id="requirements">
+      <h2 class="section-label">The failure after drift: the feature your agent said it built.</h2>
+      <p class="drift-intro">
+        Drift is your code disagreeing with your model, and <code>meta verify</code> already makes that a build error. There is a second failure it cannot see: your code agrees with your model perfectly, and the model describes a capability your software does not have. The columns exist, the types line up, the tests pass — and no code path ever writes the value. Nothing is broken, so nothing fails.
+      </p>
+      <p class="drift-intro">
+        Declared across three shipping products, that check found a bot that could not be retired, a season that could not be run privately, private tables silently running at the database default, and an interrupted-work recovery path that was never built — in a codebase with <strong>1,280 tests passing and zero failures</strong>. A capability declared in MetaObjects is a node in the same model as your entities, so its link to the field that implements it is resolved rather than trusted.
+      </p>
+      <p class="drift-payoff">
+        <a href="/requirements.html">How capability requirements work →</a>
       </p>
     </section>
 
