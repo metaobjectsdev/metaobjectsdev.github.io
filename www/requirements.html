@@ -155,16 +155,23 @@
 
 <pre><code><span class="tok-cmt">- requirement.functional:</span>
     <span class="tok-key">name</span>: <span class="tok-val">botCanBeRetiredWithoutErasingItsResults</span>
+    <span class="tok-key">title</span>: <span class="tok-val">Bot retirement preserves results</span>
     <span class="tok-key">level</span>: <span class="tok-val">5</span>
     <span class="tok-key">status</span>: <span class="tok-val">live</span>
     <span class="tok-key">statement</span>: <span class="tok-val">"A bot's participation is switched by its own status, so it
       can be withdrawn while the hands it played stay on the record."</span>
     <span class="tok-key">counterexample</span>: <span class="tok-val">"A misbehaving bot that can only be stopped by deleting
       it, taking every hand it played with it."</span>
+    <span class="tok-key">description</span>: <span class="tok-val">&gt;-</span>
+      <span class="tok-val">A status on the bot rather than a deletion, so withdrawing a
+      misbehaving entrant leaves every hand it played on the record.</span>
     <span class="tok-key">implementedBy</span>: [<span class="tok-val">arena::Bot.status</span>]</code></pre>
 
       <ul>
-        <li><strong>The statement</strong> says what the capability is, in a sentence.</li>
+        <li><strong><code>title</code></strong> is the short label, <strong><code>statement</code></strong>
+          is what the capability is in a sentence, and <strong><code>description</code></strong> is
+          the longer form. Three fields because an index, a doc page and a test each want a
+          different one.</li>
         <li><strong>The counterexample</strong> says what a violation looks like. That single line
           is what an assertion gets written against.</li>
         <li><strong><code>implementedBy</code></strong> names the <em>member</em> — the real field
