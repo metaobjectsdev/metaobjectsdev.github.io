@@ -241,16 +241,16 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
     - <span class="keyword">object.entity</span>:
         <span class="key">name</span>: Subscriber
         <span class="key">children</span>:
-          - <span class="keyword">source.rdb</span>:      { <span class="string">"@table"</span>: subscribers }
+          - <span class="keyword">source.rdb</span>:      { <span class="key">table</span>: subscribers }
           - <span class="keyword">field.long</span>:      { <span class="key">name</span>: id }
-          - <span class="keyword">field.string</span>:    { <span class="key">name</span>: email, <span class="string">"@maxLength"</span>: 320, <span class="string">"@required"</span>: true }
+          - <span class="keyword">field.string</span>:    { <span class="key">name</span>: email, <span class="key">maxLength</span>: 320, <span class="key">required</span>: true }
           - <span class="keyword">field.string</span>:    { <span class="key">name</span>: name }
           - <span class="keyword">field.enum</span>:
               <span class="key">name</span>: status
-              <span class="string">"@values"</span>: [active, paused, cancelled]
-              <span class="string">"@required"</span>: true
-          - <span class="keyword">field.timestamp</span>: { <span class="key">name</span>: createdAt, <span class="string">"@autoSet"</span>: onCreate }
-          - <span class="keyword">identity.primary</span>: { <span class="string">"@fields"</span>: [id], <span class="string">"@generation"</span>: increment }</code></pre>
+              <span class="key">values</span>: [active, paused, cancelled]
+              <span class="key">required</span>: true
+          - <span class="keyword">field.timestamp</span>: { <span class="key">name</span>: createdAt, <span class="key">autoSet</span>: onCreate }
+          - <span class="keyword">identity.primary</span>: { <span class="key">fields</span>: [id], <span class="key">generation</span>: increment }</code></pre>
 
       <p class="example-section-label">TypeScript — Drizzle + Zod from <code>codegen-ts</code></p>
       <pre class="example-code"><code><span class="comment">// generated/Subscriber.ts</span>
@@ -422,36 +422,38 @@ $ meta migrate --db file:./dev.db --slug add-subscriber</code></pre>
     - <span class="keyword">object.entity</span>:
         <span class="key">name</span>: Author
         <span class="key">children</span>:
+          - <span class="keyword">field.long</span>:   { <span class="key">name</span>: id }
           - <span class="keyword">field.string</span>:
               <span class="key">name</span>: email
-              <span class="string">"@required"</span>: true
+              <span class="key">required</span>: true
               <span class="key">children</span>:                                       <span class="comment"># child metadata on a field</span>
                 - <span class="keyword">validator.required</span>: { <span class="key">name</span>: req }
-                - <span class="keyword">validator.regex</span>:    { <span class="key">name</span>: emailFmt, <span class="string">"@pattern"</span>: <span class="string">"^[^@]+@[^@]+$"</span> }
+                - <span class="keyword">validator.regex</span>:    { <span class="key">name</span>: emailFmt, <span class="key">pattern</span>: <span class="string">"^[^@]+@[^@]+$"</span> }
           - <span class="keyword">field.string</span>:
               <span class="key">name</span>: bio
               <span class="key">children</span>:
-                - <span class="keyword">validator.length</span>: { <span class="key">name</span>: bioLen, <span class="string">"@min"</span>: 0, <span class="string">"@max"</span>: 500 }
-          - <span class="keyword">relationship.composition</span>: { <span class="key">name</span>: posts, <span class="string">"@objectRef"</span>: Post, <span class="string">"@cardinality"</span>: many }
-          - <span class="keyword">identity.primary</span>: { <span class="string">"@fields"</span>: [id], <span class="string">"@generation"</span>: increment }   <span class="comment"># name optional → defaults to "primary"</span>
+                - <span class="keyword">validator.length</span>: { <span class="key">name</span>: bioLen, <span class="key">min</span>: 0, <span class="key">max</span>: 500 }
+          - <span class="keyword">relationship.composition</span>: { <span class="key">name</span>: posts, <span class="key">objectRef</span>: Post, <span class="key">cardinality</span>: many }
+          - <span class="keyword">identity.primary</span>: { <span class="key">fields</span>: [id], <span class="key">generation</span>: increment }   <span class="comment"># name optional → defaults to "primary"</span>
     - <span class="keyword">object.entity</span>:
         <span class="key">name</span>: Post
         <span class="key">children</span>:
           - <span class="keyword">field.currency</span>:
               <span class="key">name</span>: price
-              <span class="string">"@currency"</span>: USD
+              <span class="key">currency</span>: USD
               <span class="key">children</span>:
-                - <span class="keyword">view.currency</span>: { <span class="key">name</span>: money, <span class="string">"@locale"</span>: en-US }   <span class="comment"># Intl formatting, integer minor units</span>
-          <span class="comment"># … id, title, authorId, identity.reference (FK to Author) …</span>
+                - <span class="keyword">view.currency</span>: { <span class="key">name</span>: money, <span class="key">locale</span>: en-US }   <span class="comment"># Intl formatting, integer minor units</span>
+          - <span class="keyword">field.long</span>: { <span class="key">name</span>: id }
+          <span class="comment"># … title, authorId, identity.reference (FK to Author) …</span>
     - <span class="keyword">object.projection</span>:                                  <span class="comment"># derived, read-only</span>
         <span class="key">name</span>: AuthorSummary
         <span class="key">children</span>:
-          - <span class="keyword">source.rdb</span>: { <span class="string">"@kind"</span>: view, <span class="string">"@view"</span>: v_author_summary }
+          - <span class="keyword">source.rdb</span>: { <span class="key">kind</span>: view, <span class="key">view</span>: v_author_summary }
           - <span class="keyword">field.long</span>: { <span class="key">name</span>: id, <span class="key">extends</span>: blog::Author.id,
-                        <span class="key">children</span>: [ { <span class="keyword">origin.passthrough</span>: { <span class="string">"@from"</span>: Author.id } } ] }
+                        <span class="key">children</span>: [ { <span class="keyword">origin.passthrough</span>: { <span class="key">from</span>: Author.id } } ] }
           - <span class="keyword">field.int</span>:  { <span class="key">name</span>: postCount,
-                        <span class="key">children</span>: [ { <span class="keyword">origin.aggregate</span>: { <span class="string">"@agg"</span>: count, <span class="string">"@of"</span>: Post.id, <span class="string">"@via"</span>: Author.posts } } ] }
-          - <span class="keyword">identity.primary</span>: { <span class="key">extends</span>: blog::Author.primary, <span class="string">"@fields"</span>: [id] }</code></pre>
+                        <span class="key">children</span>: [ { <span class="keyword">origin.aggregate</span>: { <span class="key">agg</span>: count, <span class="key">of</span>: Post.id, <span class="key">via</span>: Author.posts } } ] }
+          - <span class="keyword">identity.primary</span>: { <span class="key">extends</span>: blog::Author.primary, <span class="key">fields</span>: [id] }</code></pre>
 
       <p class="example-section-label">Field validators → Zod refinements <code>(generated/Author.ts)</code></p>
       <pre class="example-code"><code><span class="comment">// validator.required + validator.regex + validator.length, straight from the field children</span>
