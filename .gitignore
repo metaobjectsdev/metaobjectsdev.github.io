@@ -1,2 +1,7 @@
 # Generated at deploy time by deploy.yml (meta docs from wizardsofodd)
 www/reference/
+
+# Copied from the metaobjects repo at deploy (docs/llms/*), pinned to the release tag.
+# Tracking them here would mean two editable copies of one file.
+www/llms.txt
+www/llms-full.txt

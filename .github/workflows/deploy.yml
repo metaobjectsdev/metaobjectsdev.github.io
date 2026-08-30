@@ -68,6 +68,26 @@ jobs:
         TAG=$(git tag -l 'v0.*' | grep -E '^v0\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
         test -n "$TAG" || { echo "no v0.x release tag found"; exit 1; }
         git checkout --quiet "$TAG"
+        # The agent-facing mirrors, from the SAME clone — do not clone twice. They are
+        # maintained in the metaobjects repo and merely SERVED from here; keeping a second
+        # editable copy in this repo is how the two drifted, because an edit landed on
+        # whichever copy the editor happened to open and the other one won at deploy. They
+        # are gitignored here for that reason.
+        #
+        # This runs BEFORE the injector guard below, deliberately. The copy does not depend
+        # on the injector, and because the mirrors are no longer tracked in this repo, a
+        # skipped copy means www/llms.txt does not exist at all — a 404 on a documented URL,
+        # which is worse than a stale file. A missing SOURCE warns rather than failing, for
+        # the same reason the injector guard does: one absent text file must not take down
+        # the whole site.
+        if [ -f docs/llms/llms.txt ] && [ -f docs/llms/llms-full.txt ]; then
+          cp docs/llms/llms.txt      "$GITHUB_WORKSPACE/www/llms.txt"
+          cp docs/llms/llms-full.txt "$GITHUB_WORKSPACE/www/llms-full.txt"
+          echo "copied llms mirrors from metaobjects $TAG"
+        else
+          echo "::warning::metaobjects $TAG has no docs/llms mirrors — /llms.txt will 404."
+        fi
+
         # A release older than the injection program has neither the injector nor the
         # payload. Skip rather than fail: the pages still carry their placeholders, and a
         # hard failure here would take down the whole deploy — including unrelated prose
