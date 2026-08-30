@@ -4,9 +4,13 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 ## Generated files — do not hand-edit
 
-- `www/llms.txt` and `www/llms-full.txt` are **generated output**, copied in from the
-  MetaObjects monorepo's `docs/llms/` by the deploy job. Editing them in this repo creates
-  drift that is silently overwritten on the next deploy. Fix them upstream instead.
+- `www/reference/` is generated at deploy time (`.github/workflows/deploy.yml` clones the
+  public reference implementation and runs `meta docs`). Anything committed there is
+  replaced on every deploy.
+- `www/llms.txt` and `www/llms-full.txt` are **becoming** generated output, copied in from
+  the MetaObjects monorepo's `docs/llms/`. As of this writing `deploy.yml` does not copy them
+  yet — they are still committed files — but treat them as read-only here: once the copy
+  lands, hand-edits made in this repo are silently overwritten. Fix them upstream instead.
 
 ## Content that mirrors the CLI
 
