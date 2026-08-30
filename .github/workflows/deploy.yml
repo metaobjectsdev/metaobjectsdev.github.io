@@ -45,6 +45,40 @@ jobs:
         mkdir -p "$GITHUB_WORKSPACE/www/reference"
         cp -r /tmp/woo-docs/site/* "$GITHUB_WORKSPACE/www/reference/"
 
+    # Snippet injection: clone metaobjects at its latest npm RELEASE TAG — not main —
+    # and inject its committed site-payload.json into this site's data-snippet
+    # placeholders. Pinning to the tag matters: an unrelated site edit triggers a deploy,
+    # and against main that deploy would publish unreleased snippets.
+    #
+    # `node`, never `bun`: setup-node above is this workflow's ONLY toolchain step and
+    # ubuntu-latest carries no bun, so a bun line would be `command not found` and — from
+    # here, before "Upload artifact" — would fail the entire deploy. The injector is plain
+    # Node ESM with zero dependencies for exactly that reason, so there is no install step
+    # (a root `bun install` would fetch 16 workspace packages to run a regex replace).
+    - name: Inject generated snippets
+      run: |
+        set -euo pipefail
+        git clone --filter=blob:none https://github.com/metaobjectsdev/metaobjects.git /tmp/mo
+        cd /tmp/mo
+        # The repo carries TWO tag lines: v0.x (npm lockstep) and v7.x (JVM). An
+        # unfiltered `git tag -l 'v*' | sort -V | tail -1` returns v7.20.12 — a Maven-only
+        # cut — and always will, because 7 sorts above 0. That tree has no
+        # examples/showcase, so an unfiltered pin would break forever. Filter to the npm
+        # line. (Never `git fetch --all`: it deletes local release tags.)
+        TAG=$(git tag -l 'v0.*' | grep -E '^v0\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+        test -n "$TAG" || { echo "no v0.x release tag found"; exit 1; }
+        git checkout --quiet "$TAG"
+        # A release older than the injection program has neither the injector nor the
+        # payload. Skip rather than fail: the pages still carry their placeholders, and a
+        # hard failure here would take down the whole deploy — including unrelated prose
+        # edits — for every push until the next release. Loud, and self-extinguishing.
+        if [ ! -f scripts/site-inject-ci.mjs ] || [ ! -f examples/showcase/site-payload.json ]; then
+          echo "::warning::metaobjects $TAG predates snippet injection — skipping. Code blocks will render EMPTY until the next release."
+          exit 0
+        fi
+        echo "injecting snippets from metaobjects $TAG"
+        node scripts/site-inject-ci.mjs --site "$GITHUB_WORKSPACE/www"
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
 
