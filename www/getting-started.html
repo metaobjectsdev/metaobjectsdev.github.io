@@ -77,11 +77,18 @@
           <p>Add the TypeScript CLI and scaffold the workspace. <code>meta init</code> also teaches your coding agent how to use MetaObjects:</p>
           <pre class="gs-code">npm i <span class="s">@metaobjectsdev/cli</span>
 npx meta init</pre>
-          <p>That writes a small, legible tree — <strong>your models go in <code>metaobjects/</code></strong>:</p>
+          <p>That writes a small, legible tree — <strong>your models go in <code>metaobjects/</code></strong>,
+            and the code generators land in your repo too:</p>
           <pre class="gs-code"><span class="c">your-project/</span>
 ├── metaobjects/                 <span class="c"># ← your models live here (.yaml or .json)</span>
 │   └── meta.common.json         <span class="c">#   starter file (shared abstracts)</span>
+├── codegen/generators/          <span class="c"># ← the code generators — YOURS to edit</span>
+│   ├── entity.ts                <span class="c">#   Drizzle table + Zod schemas</span>
+│   ├── queries.ts               <span class="c">#   typed data-access</span>
+│   ├── routes.ts                <span class="c">#   REST endpoints (Fastify)</span>
+│   └── barrel.ts                <span class="c">#   the index.ts re-exports</span>
 ├── metaobjects.config.ts        <span class="c"># ← targets: dialect + what to generate</span>
+├── src/db.ts                    <span class="c"># throwing stub — swap in your DB connection</span>
 ├── CLAUDE.md                    <span class="c"># wired to auto-load the context below</span>
 ├── .metaobjects/                <span class="c"># tool state + agent docs (AGENTS.md, CLAUDE.md)</span>
 └── .claude/skills/              <span class="c"># six skills your agent now has:</span>
@@ -91,6 +98,10 @@ npx meta init</pre>
     ├── metaobjects-prompts/     <span class="c">#   typed LLM prompts</span>
     ├── metaobjects-verify/      <span class="c">#   drift checks</span>
     └── metaobjects-audit/       <span class="c">#   check adoption depth</span></pre>
+          <p>Those four generators under <code>codegen/generators/</code> are the point: they're plain
+            TypeScript, copied into your project, and <strong>yours to edit</strong>. <code>meta gen</code>
+            runs those local copies — not the ones inside the package — so changing the shape of the
+            generated code is an ordinary edit to a file you own.</p>
         </div>
       </div>
     </section>
@@ -138,19 +149,37 @@ npx meta init</pre>
         </tbody>
       </table>
       <p class="gs-note">For TypeScript, <code>metaobjects.config.ts</code> chooses <em>what</em> you generate — the SQL
-        <code>dialect</code> and which <code>generators</code> run:</p>
+        <code>dialect</code> and which <code>generators</code> run. Note where those generators come from:
+        <code>./codegen/generators/</code>, in your repo. Here's what <code>meta init</code> writes, with its
+        longer comments trimmed:</p>
       <pre class="gs-code"><span class="c">// metaobjects.config.ts</span>
+import { defineConfig } from <span class="s">"@metaobjectsdev/cli"</span>;
+<span class="c">// meta init copied these reference templates into ./codegen/generators/ —</span>
+<span class="c">// they are YOURS to edit, and meta gen runs from these local copies, not</span>
+<span class="c">// from the package.</span>
+import { entityFile } from <span class="s">"./codegen/generators/entity.js"</span>;
+import { queriesFile } from <span class="s">"./codegen/generators/queries.js"</span>;
+import { routesFile } from <span class="s">"./codegen/generators/routes.js"</span>;
+import { barrel } from <span class="s">"./codegen/generators/barrel.js"</span>;
+
 export default defineConfig({
-  outDir:  <span class="s">"src/generated"</span>,
-  dialect: <span class="s">"sqlite"</span>,        <span class="c">// sqlite | postgres | d1</span>
+  outDir:    <span class="s">"src/generated"</span>,
+  extStyle:  <span class="s">"js"</span>,        <span class="c">// ".js" import suffixes — right for Node ESM + tsc</span>
+  dialect:   <span class="s">"sqlite"</span>,    <span class="c">// sqlite | postgres | d1</span>
+  dbImport:  <span class="s">"../db"</span>,     <span class="c">// the src/db.ts stub — swap in your real DB</span>
+  apiPrefix: <span class="s">""</span>,          <span class="c">// set to "/api" to mount the routes under /api</span>
   generators: [
-    entityFile(),               <span class="c">// Drizzle table + Zod schemas + typed constants</span>
-    queriesFile(),              <span class="c">// typed data-access (findById, list, create…)</span>
-    routesFile(),               <span class="c">// REST endpoints (Fastify)</span>
-    <span class="c">// formFile(),              // opt-in: React form components</span>
-    barrel(),
+    entityFile(),           <span class="c">// Drizzle table + Zod schemas + typed constants</span>
+    queriesFile(),          <span class="c">// typed data-access (findById, list, create…)</span>
+    routesFile(),           <span class="c">// REST endpoints (Fastify)</span>
+    barrel(),               <span class="c">// src/generated/index.ts re-exports</span>
   ],
+  docs: { outDir: <span class="s">"./docs"</span>, surfaces: [<span class="s">"model"</span>, <span class="s">"api"</span>] },
 });</pre>
+      <p class="gs-note">Those four are what <code>meta init</code> wires up. There are more — React forms,
+        TanStack hooks and grids, Hono routes — and you take ownership of one the same way:
+        <code>meta eject --list</code> shows what's available, and <code>meta eject form</code> copies it
+        into <code>codegen/generators/</code> and prints the import line to wire up.</p>
     </section>
 
     <section>
