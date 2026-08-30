@@ -35,15 +35,23 @@ jobs:
     # on every deploy (push to main / workflow_dispatch) — no cross-repo secrets.
     # --ignore-scripts skips wizardsofodd's wrangler postinstall (not needed for
     # docs). --prompts data/templates surfaces the actual prompt TEXT.
-    - name: Generate wizardsofodd reference docs
+    # A REAL PROJECT documented by `meta docs` — not "the reference". It lives at
+    # /reference/example because a self-referential metamodel page cannot show that the
+    # tool works on somebody's actual model, which is the only thing this demonstrates.
+    # /reference itself is the metamodel, copied in the next step.
+    #
+    # The `rm` is narrowed to this subdirectory. It used to remove the whole of
+    # www/reference, which — now that the metamodel lands there too — would delete the
+    # reference and leave only the example behind, on every deploy.
+    - name: Generate the example project's docs (a real model, documented by meta docs)
       run: |
         git clone --depth 1 https://github.com/Draagon/wizardsofodd.git /tmp/woo
         cd /tmp/woo
         npm ci --ignore-scripts
         npx meta docs . --site --prompts data/templates --out /tmp/woo-docs
-        rm -rf "$GITHUB_WORKSPACE/www/reference"
-        mkdir -p "$GITHUB_WORKSPACE/www/reference"
-        cp -r /tmp/woo-docs/site/* "$GITHUB_WORKSPACE/www/reference/"
+        rm -rf "$GITHUB_WORKSPACE/www/reference/example"
+        mkdir -p "$GITHUB_WORKSPACE/www/reference/example"
+        cp -r /tmp/woo-docs/site/* "$GITHUB_WORKSPACE/www/reference/example/"
 
     # Snippet injection: clone metaobjects at its latest npm RELEASE TAG — not main —
     # and inject its committed site-payload.json into this site's data-snippet
@@ -98,6 +106,24 @@ jobs:
         fi
         echo "injecting snippets from metaobjects $TAG"
         node scripts/site-inject-ci.mjs --site "$GITHUB_WORKSPACE/www"
+
+        # The metamodel reference at /reference — every type, subtype and attribute the
+        # loader accepts, rendered in the metaobjects repo and carried by the tag. It is
+        # NOT rendered here: this workflow has setup-node and nothing else, the metaobjects
+        # clone gets no install step, and keeping it that way is what stops a site deploy
+        # from depending on that workspace resolving.
+        #
+        # A plain copy, never `rm -rf www/reference` — the previous step has already
+        # written www/reference/example, and removing the parent would delete it on every
+        # deploy. Nothing stale can accumulate anyway: www/reference is gitignored, so each
+        # run starts from a checkout that does not contain it.
+        if [ -d site-reference ]; then
+          mkdir -p "$GITHUB_WORKSPACE/www/reference"
+          cp -r site-reference/. "$GITHUB_WORKSPACE/www/reference/"
+          echo "copied the metamodel reference from metaobjects $TAG"
+        else
+          echo "::warning::metaobjects $TAG has no site-reference/ — /reference will show only the example."
+        fi
 
     - name: Setup Pages
       uses: actions/configure-pages@v4

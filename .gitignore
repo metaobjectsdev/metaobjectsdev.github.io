@@ -1,4 +1,6 @@
-# Generated at deploy time by deploy.yml (meta docs from wizardsofodd)
+# Built at deploy time by deploy.yml: /reference is the metamodel reference, rendered
+# in the metaobjects repo and copied from the release tag; /reference/example is a real
+# project documented by `meta docs`. Neither is authored here.
 www/reference/
 
 # Copied from the metaobjects repo at deploy (docs/llms/*), pinned to the release tag.
