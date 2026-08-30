@@ -92,13 +92,13 @@
       </figure>
     </section>
 
-    <!-- Four pillars — all shipping -->
+    <!-- Five pillars — all shipping -->
     <section class="pillars">
-      <h2 class="section-label">Four pillars. All shipping.</h2>
+      <h2 class="section-label">Five pillars. All shipping.</h2>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + JPA</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
+          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
@@ -112,6 +112,15 @@
           <h3>Prompt construction</h3>
           <p>The prompt is code too — not a string scattered across services. Declare a typed payload as a projection, keep the text external and provider-resolved, render deterministically: snapshot-testable, cache-stable (no stray whitespace silently breaking exact-prefix prompt-cache hits), drift-checked at build time so a renamed field can't quietly degrade a prompt. Plus typed <code>template.output</code> parsers — Zod / Pydantic / Jackson / kotlinx.serialization / System.Text.Json across the ports.</p>
           <p class="pillar-read"><a href="/articles/prompts-are-code.html">Read: Prompts are code now — even OpenAI says so&nbsp;→</a></p>
+        </article>
+        <article class="pillar">
+          <h3>Requirements and testing</h3>
+          <p>A capability is a node in the same model as your entities, so
+          <code>implementedBy</code> is <strong>resolved, not trusted</strong> — a claim whose
+          implementation vanished fails the build. <code>meta verify</code> reports the ledger on
+          every run. The vocabulary and its checks ship in all five languages;
+          <code>requirementTests()</code> scaffolds a test per claim in TypeScript.</p>
+          <p class="pillar-read"><a href="/requirements.html">Read: capability requirements&nbsp;→</a></p>
         </article>
       </div>
     </section>
@@ -246,170 +255,28 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
     <!-- Canonical example: one schema → five languages -->
     <section class="example" id="example">
       <h2 class="section-label">From one schema, five languages.</h2>
-      <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output is idiomatic for that language — Drizzle + Zod for TypeScript, JPA + Spring records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET classes for C#, Pydantic + FastAPI for Python. Same metadata; five idiomatic outputs; conformance-gated to byte-identical canonical form.</p>
+      <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output is idiomatic for that language — Drizzle + Zod for TypeScript, Spring REST + DTO records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET classes for C#, Pydantic + FastAPI for Python. Same metadata; five idiomatic outputs; conformance-gated to byte-identical canonical form.</p>
 
-      <p class="example-section-label">The source: one YAML file in <code>metaobjects/</code></p>
-      <pre class="example-code"><code><span class="comment"># metaobjects/meta.subscriber.yaml</span>
-<span class="keyword">metadata.root</span>:
-  <span class="key">package</span>: acme
-  <span class="key">children</span>:
-    - <span class="keyword">object.entity</span>:
-        <span class="key">name</span>: Subscriber
-        <span class="key">children</span>:
-          - <span class="keyword">source.rdb</span>:      { <span class="key">table</span>: subscribers }
-          - <span class="keyword">field.long</span>:      { <span class="key">name</span>: id }
-          - <span class="keyword">field.string</span>:    { <span class="key">name</span>: email, <span class="key">maxLength</span>: 320, <span class="key">required</span>: true }
-          - <span class="keyword">field.string</span>:    { <span class="key">name</span>: name }
-          - <span class="keyword">field.enum</span>:
-              <span class="key">name</span>: status
-              <span class="key">values</span>: [active, paused, cancelled]
-              <span class="key">required</span>: true
-          - <span class="keyword">field.timestamp</span>: { <span class="key">name</span>: createdAt, <span class="key">autoSet</span>: onCreate }
-          - <span class="keyword">identity.primary</span>: { <span class="key">fields</span>: [id], <span class="key">generation</span>: increment }</code></pre>
+      <p class="example-section-label">The source — the <code>Subscriber</code> entity, from <code>metaobjects/meta.subscriber.yaml</code> in package <code>acme</code></p>
+      <pre class="example-code" data-snippet="showcase-model"></pre>
 
-      <p class="example-section-label">TypeScript — Drizzle + Zod from <code>codegen-ts</code></p>
-      <pre class="example-code"><code><span class="comment">// generated/Subscriber.ts</span>
-<span class="keyword">import</span> { sqliteTable, integer, text } <span class="keyword">from</span> <span class="string">"drizzle-orm/sqlite-core"</span>;
-<span class="keyword">import</span> { z } <span class="keyword">from</span> <span class="string">"zod"</span>;
+      <p class="example-section-label">TypeScript — the Drizzle table and Zod schemas, from <code>codegen-ts</code> (same run: typed queries, Fastify/Hono routes, a barrel)</p>
+      <pre class="example-code" data-snippet="ts-entity"></pre>
 
-<span class="keyword">export const</span> subscribers = sqliteTable(<span class="string">"subscribers"</span>, {
-  id:        integer(<span class="string">"id"</span>).primaryKey({ autoIncrement: <span class="keyword">true</span> }),
-  email:     text(<span class="string">"email"</span>, { length: 320 }).notNull(),
-  name:      text(<span class="string">"name"</span>),
-  status:    text(<span class="string">"status"</span>, { enum: [<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>] <span class="keyword">as const</span> }).notNull(),
-  createdAt: text(<span class="string">"created_at"</span>).notNull(),
-});
+      <p class="example-section-label">Java — the DTO record, from <code>codegen-spring</code> (same run: the <code>@RestController</code>, a repository interface, filter allowlists)</p>
+      <pre class="example-code" data-snippet="java-dto"></pre>
 
-<span class="keyword">export const</span> SubscriberInsertSchema = z.object({
-  email:  z.string().min(1).max(320),
-  name:   z.string().optional(),
-  status: z.enum([<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>]),
-});
+      <p class="example-section-label">Kotlin — the data class, from <code>codegen-kotlin</code> (same run: the Exposed table, a Spring controller)</p>
+      <pre class="example-code" data-snippet="kotlin-entity"></pre>
 
-<span class="keyword">export type</span> Subscriber = <span class="keyword">typeof</span> subscribers.$inferSelect;
-<span class="keyword">export type</span> SubscriberInsert = z.infer&lt;<span class="keyword">typeof</span> SubscriberInsertSchema&gt;;</code></pre>
+      <p class="example-section-label">C#.NET — the EF Core entity, from <code>MetaObjects.Codegen</code> (same run: the <code>AppDbContext</code>, minimal-API CRUD routes)</p>
+      <pre class="example-code" data-snippet="csharp-entity"></pre>
 
-      <p class="example-section-label">Java — Spring REST + DTO record from <code>codegen-spring</code></p>
-      <pre class="example-code"><code><span class="comment">// generated/SubscriberDto.java</span>
-<span class="keyword">package</span> acme;
+      <p class="example-section-label">Python — the Pydantic model, from <code>metaobjects gen</code> (same run: the FastAPI router, filter allowlists)</p>
+      <pre class="example-code" data-snippet="python-model"></pre>
 
-<span class="keyword">public record</span> SubscriberDto(
-    Long id,
-    String email,
-    String name,
-    SubscriberStatus status,
-    java.time.Instant createdAt
-) {
-    <span class="keyword">public enum</span> SubscriberStatus { active, paused, cancelled }
-}
-
-<span class="comment">// generated/SubscriberController.java (excerpt)</span>
-@RestController
-@RequestMapping(<span class="string">"/api/subscribers"</span>)
-<span class="keyword">public class</span> SubscriberController {
-    @GetMapping(<span class="string">"/{id}"</span>)
-    <span class="keyword">public</span> ResponseEntity&lt;?&gt; get(@PathVariable Long id) { <span class="comment">/* ... */</span> }
-
-    @GetMapping  <span class="comment">// cross-port envelope: limit/offset + optional withCount</span>
-    <span class="keyword">public</span> ResponseEntity&lt;?&gt; list(@RequestParam Integer limit, Integer offset,
-                                 String sort, Integer withCount) { <span class="comment">/* ... */</span> }
-
-    @PostMapping <span class="keyword">public</span> ResponseEntity&lt;?&gt; create(@RequestBody SubscriberDto dto) { <span class="comment">/* ... */</span> }
-    @RequestMapping(value = <span class="string">"/{id}"</span>, method = { PATCH, PUT })
-    <span class="keyword">public</span> ResponseEntity&lt;?&gt; update(@PathVariable Long id, @RequestBody JsonNode patch) { <span class="comment">/* ... */</span> }
-    @DeleteMapping(<span class="string">"/{id}"</span>) <span class="keyword">public</span> ResponseEntity&lt;?&gt; delete(@PathVariable Long id) { <span class="comment">/* ... */</span> }
-}</code></pre>
-
-      <p class="example-section-label">Kotlin — Exposed + KotlinPoet data class from <code>codegen-kotlin</code></p>
-      <pre class="example-code"><code><span class="comment">// generated/Subscriber.kt</span>
-<span class="keyword">package</span> acme
-
-<span class="keyword">import</span> java.time.Instant
-<span class="keyword">import</span> kotlinx.serialization.Serializable
-
-<span class="keyword">public data class</span> Subscriber(
-  <span class="keyword">public val</span> id: Long? = <span class="keyword">null</span>,
-  <span class="keyword">public val</span> email: String,
-  <span class="keyword">public val</span> name: String? = <span class="keyword">null</span>,
-  <span class="keyword">public val</span> status: SubscriberStatus,
-  <span class="keyword">public val</span> createdAt: Instant? = <span class="keyword">null</span>,
-)
-
-@Serializable
-<span class="keyword">public enum class</span> SubscriberStatus { active, paused, cancelled }
-
-<span class="comment">// generated/SubscriberTable.kt</span>
-<span class="keyword">object</span> SubscriberTable : Table(<span class="string">"subscribers"</span>) {
-    <span class="keyword">val</span> id        = long(<span class="string">"id"</span>).autoIncrement()
-    <span class="keyword">val</span> email     = varchar(<span class="string">"email"</span>, 320)
-    <span class="keyword">val</span> name      = text(<span class="string">"name"</span>).nullable()
-    <span class="keyword">val</span> status    = enumerationByName(<span class="string">"status"</span>, 64, SubscriberStatus::class)
-    <span class="keyword">val</span> createdAt = instantWithTimeZone(<span class="string">"created_at"</span>).nullable()
-
-    <span class="keyword">override val</span> primaryKey = PrimaryKey(id)
-}</code></pre>
-
-      <p class="example-section-label">C#.NET — EF Core + ASP.NET from <code>MetaObjects.Codegen</code></p>
-      <pre class="example-code"><code><span class="comment">// generated/Subscriber.g.cs</span>
-<span class="keyword">using</span> System.ComponentModel.DataAnnotations;
-<span class="keyword">using</span> System.ComponentModel.DataAnnotations.Schema;
-<span class="keyword">namespace</span> Acme;
-
-[Table(<span class="string">"subscribers"</span>)]
-<span class="keyword">public class</span> Subscriber {
-    <span class="keyword">public enum</span> SubscriberStatus { active, paused, cancelled }
-
-    [Key] [Column(<span class="string">"id"</span>)]
-    <span class="keyword">public long</span> Id { <span class="keyword">get; set;</span> }
-
-    [Column(<span class="string">"email"</span>)] [Required(AllowEmptyStrings = <span class="keyword">true</span>)] [MaxLength(320)] [MinLength(1)]
-    <span class="keyword">public string</span> Email { <span class="keyword">get; set;</span> } = <span class="keyword">default!</span>;
-
-    [Column(<span class="string">"name"</span>)]      <span class="keyword">public string?</span> Name { <span class="keyword">get; set;</span> }
-    [Column(<span class="string">"status"</span>)]    <span class="keyword">public</span> SubscriberStatus Status { <span class="keyword">get; set;</span> }
-    [Column(<span class="string">"createdAt"</span>)] <span class="keyword">public</span> DateTimeOffset? CreatedAt { <span class="keyword">get; set;</span> }
-}
-
-<span class="comment">// generated/AppDbContext.g.cs (excerpt)</span>
-<span class="keyword">public class</span> AppDbContext : DbContext {
-    <span class="keyword">public</span> DbSet&lt;Subscriber&gt; Subscribers { <span class="keyword">get; set;</span> } = <span class="keyword">default!</span>;
-
-    <span class="keyword">protected override void</span> OnModelCreating(ModelBuilder b) {
-        b.Entity&lt;Subscriber&gt;().Property(x =&gt; x.Status).HasConversion&lt;<span class="keyword">string</span>&gt;();
-        b.Entity&lt;Subscriber&gt;().Property(x =&gt; x.CreatedAt).HasColumnType(<span class="string">"timestamp with time zone"</span>);
-    }
-}</code></pre>
-
-      <p class="example-section-label">Python — Pydantic + FastAPI from <code>metaobjects gen</code></p>
-      <pre class="example-code"><code><span class="comment"># generated/Subscriber.py</span>
-<span class="keyword">from</span> __future__ <span class="keyword">import</span> annotations
-<span class="keyword">from</span> typing <span class="keyword">import</span> Literal
-<span class="keyword">import</span> datetime
-<span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field
-
-
-<span class="keyword">class</span> Subscriber(BaseModel):
-    id:        <span class="keyword">int</span> | <span class="keyword">None</span> = <span class="keyword">None</span>
-    email:     <span class="keyword">str</span> = Field(max_length=320)
-    name:      <span class="keyword">str</span> | <span class="keyword">None</span> = <span class="keyword">None</span>
-    status:    Literal[<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>]
-    createdAt: datetime.datetime | <span class="keyword">None</span> = <span class="keyword">None</span>
-
-
-<span class="keyword">class</span> SubscriberCreate(BaseModel):  <span class="comment"># CREATE input — validated (FR-036)</span>
-    email:  <span class="keyword">str</span> = Field(min_length=1, max_length=320)
-    name:   <span class="keyword">str</span> | <span class="keyword">None</span> = <span class="keyword">None</span>
-    status: Literal[<span class="string">"active"</span>, <span class="string">"paused"</span>, <span class="string">"cancelled"</span>]</code></pre>
-
-      <p class="example-section-label">Plus a migration — dialect-aware (Postgres / SQLite / Cloudflare D1)</p>
-      <pre class="example-code"><code><span class="comment">-- migrations/0001_create_subscribers.up.sql (SQLite dialect)</span>
-<span class="keyword">CREATE TABLE</span> subscribers (
-  id         INTEGER <span class="keyword">PRIMARY KEY AUTOINCREMENT</span>,
-  email      <span class="keyword">VARCHAR</span>(320) <span class="keyword">NOT NULL</span>,
-  name       TEXT,
-  status     <span class="keyword">VARCHAR</span>(20)  <span class="keyword">NOT NULL CHECK</span> (status <span class="keyword">IN</span> (<span class="string">'active'</span>, <span class="string">'paused'</span>, <span class="string">'cancelled'</span>)),
-  created_at TIMESTAMP   <span class="keyword">NOT NULL</span>
-);</code></pre>
+      <p class="example-section-label">Plus the migration <code>meta migrate</code> emits — dialect-aware (this one SQLite; Postgres and Cloudflare D1 too)</p>
+      <pre class="example-code" data-snippet="sql-migration"></pre>
 
       <p class="example-section-label">And the three CLI commands you actually run</p>
       <pre class="example-code"><code><span class="comment"># Scaffold metaobjects/ + .metaobjects/ + metaobjects.config.ts</span>
@@ -418,8 +285,8 @@ $ meta init
 <span class="comment"># Generate code (entities, validators, queries, routes, payload VOs, output parsers)</span>
 $ meta gen
 
-<span class="comment"># Diff metadata vs live DB; emit migration SQL (up + down)</span>
-$ meta migrate --db file:./dev.db --slug add-subscriber</code></pre>
+<span class="comment"># Introspect the live DB, diff it against the metadata, write + apply the SQL</span>
+$ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --apply</code></pre>
 
       <p class="example-note">Conformance fixtures (JSON form): <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">fixtures/conformance/</a>. YAML and JSON are equivalent — pick whichever your stack prefers.</p>
     </section>
@@ -429,70 +296,19 @@ $ meta migrate --db file:./dev.db --slug add-subscriber</code></pre>
       <h2 class="section-label">The metamodel goes deep.</h2>
       <p class="example-intro">Fields aren't just columns. They carry <strong>validators</strong>, <strong>views</strong>, and <strong>currency formatting</strong> as child metadata. Entities derive read-only <strong>projections</strong> — passthrough fields and aggregates over relationships — that generate as database <em>views</em>, not tables. Everything below is real <code>meta gen</code> output, conformance-gated, not hand-wired annotations.</p>
 
-      <p class="example-section-label">The source: rich child metadata on fields + a derived projection</p>
-      <pre class="example-code"><code><span class="comment"># metaobjects/meta.blog.yaml</span>
-<span class="keyword">metadata.root</span>:
-  <span class="key">package</span>: blog
-  <span class="key">children</span>:
-    - <span class="keyword">object.entity</span>:
-        <span class="key">name</span>: Author
-        <span class="key">children</span>:
-          - <span class="keyword">field.long</span>:   { <span class="key">name</span>: id }
-          - <span class="keyword">field.string</span>:
-              <span class="key">name</span>: email
-              <span class="key">required</span>: true
-              <span class="key">children</span>:                                       <span class="comment"># child metadata on a field</span>
-                - <span class="keyword">validator.required</span>: { <span class="key">name</span>: req }
-                - <span class="keyword">validator.regex</span>:    { <span class="key">name</span>: emailFmt, <span class="key">pattern</span>: <span class="string">"^[^@]+@[^@]+$"</span> }
-          - <span class="keyword">field.string</span>:
-              <span class="key">name</span>: bio
-              <span class="key">children</span>:
-                - <span class="keyword">validator.length</span>: { <span class="key">name</span>: bioLen, <span class="key">min</span>: 0, <span class="key">max</span>: 500 }
-          - <span class="keyword">relationship.composition</span>: { <span class="key">name</span>: posts, <span class="key">objectRef</span>: Post, <span class="key">cardinality</span>: many }
-          - <span class="keyword">identity.primary</span>: { <span class="key">fields</span>: [id], <span class="key">generation</span>: increment }   <span class="comment"># name optional → defaults to "primary"</span>
-    - <span class="keyword">object.entity</span>:
-        <span class="key">name</span>: Post
-        <span class="key">children</span>:
-          - <span class="keyword">field.currency</span>:
-              <span class="key">name</span>: price
-              <span class="key">currency</span>: USD
-              <span class="key">children</span>:
-                - <span class="keyword">view.currency</span>: { <span class="key">name</span>: money, <span class="key">locale</span>: en-US }   <span class="comment"># Intl formatting, integer minor units</span>
-          - <span class="keyword">field.long</span>: { <span class="key">name</span>: id }
-          <span class="comment"># … title, authorId, identity.reference (FK to Author) …</span>
-    - <span class="keyword">object.projection</span>:                                  <span class="comment"># derived, read-only</span>
-        <span class="key">name</span>: AuthorSummary
-        <span class="key">children</span>:
-          - <span class="keyword">source.rdb</span>: { <span class="key">kind</span>: view, <span class="key">view</span>: v_author_summary }
-          - <span class="keyword">field.long</span>: { <span class="key">name</span>: id, <span class="key">extends</span>: blog::Author.id,
-                        <span class="key">children</span>: [ { <span class="keyword">origin.passthrough</span>: { <span class="key">from</span>: Author.id } } ] }
-          - <span class="keyword">field.int</span>:  { <span class="key">name</span>: postCount,
-                        <span class="key">children</span>: [ { <span class="keyword">origin.aggregate</span>: { <span class="key">agg</span>: count, <span class="key">of</span>: Post.id, <span class="key">via</span>: Author.posts } } ] }
-          - <span class="keyword">identity.primary</span>: { <span class="key">extends</span>: blog::Author.primary, <span class="key">fields</span>: [id] }</code></pre>
+      <p class="example-section-label">The source — <code>Author</code>, whose fields carry validators as child metadata (from <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/examples/advanced-modeling/metaobjects/meta.catalog.yaml"><code>examples/advanced-modeling</code></a>, package <code>acme::learn</code>)</p>
+      <pre class="example-code" data-snippet="deep-model"></pre>
 
       <p class="example-section-label">Field validators → Zod refinements <code>(generated/Author.ts)</code></p>
-      <pre class="example-code"><code><span class="comment">// validator.required + validator.regex + validator.length, straight from the field children</span>
-<span class="keyword">export const</span> AuthorInsertSchema = z.object({
-  email: z.string().min(<span class="string">1</span>).regex(<span class="keyword">new</span> RegExp(<span class="string">"^[^@]+@[^@]+$"</span>)),
-  bio:   z.string().min(<span class="string">0</span>).max(<span class="string">500</span>).optional(),
-});</code></pre>
+      <pre class="example-code" data-snippet="deep-validators"></pre>
 
-      <p class="example-section-label">Currency view → typed formatting metadata <code>(generated/Post.ts)</code></p>
-      <pre class="example-code"><code><span class="comment">// field.currency stores integer minor units; view.currency carries the Intl config</span>
-price: {
-  name: <span class="string">"price"</span>, label: <span class="string">"Price"</span>,
-  view: <span class="string">"currency"</span>, currency: <span class="string">"USD"</span>, locale: <span class="string">"en-US"</span>,
-},</code></pre>
+      <p class="example-section-label">Currency view → typed formatting metadata — <code>Program.priceCents</code> is a <code>field.currency</code> with a <code>view.currency</code> child <code>(generated/Program.ts)</code></p>
+      <pre class="example-code" data-snippet="deep-currency"></pre>
 
-      <p class="example-section-label">Projection → a read-only database view, not a table <code>(generated/AuthorSummary.ts)</code></p>
-      <pre class="example-code"><code><span class="comment">// No Insert/Update schema — a projection is read-only by construction.</span>
-<span class="keyword">export const</span> authorSummaryView = sqliteView(<span class="string">"v_author_summary"</span>, {}).existing();
-<span class="keyword">export const</span> AuthorSummarySchema = z.object({
-  id:        z.number().int(),
-  postCount: z.number().int(),   <span class="comment">// COUNT(Post.id) via the Author→posts relationship</span>
-});</code></pre>
+      <p class="example-section-label">Projection → a read-only database view, not a table — <code>ProgramSummary</code> passes through <code>Author.name</code> and aggregates over its lessons and purchases <code>(generated/ProgramSummary.ts)</code></p>
+      <pre class="example-code" data-snippet="deep-projection"></pre>
 
-      <p class="example-note">Run it yourself: this exact model loads and generates a full typed stack in the TypeScript reference implementation with zero errors and zero warnings — and every construct it uses (projections, origins, currency views, field-level validators) is <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">conformance-gated across all five ports</a>.</p>
+      <p class="example-note">Run it yourself: every metadata and generated-code block on this page is cut from <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/examples">a committed example</a> that loads and generates a full typed stack with zero errors and zero warnings, and the cuts are checked against the real generated files on every release — so a block here cannot drift from what the tool emits. Every construct it uses (projections, origins, currency views, field-level validators) is <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">conformance-gated across all five ports</a>.</p>
     </section>
 
     <!-- Compare: per-language alternatives -->

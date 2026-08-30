@@ -45,11 +45,6 @@
       padding: 1.25rem 1.4rem; overflow-x: auto; font-family: var(--font-mono);
       font-size: 0.86rem; line-height: 1.6; margin: 0 0 1.6rem; box-shadow: var(--shadow); }
     .article pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
-    .article .tok-key { color: #8FB7E8; }
-    .article .tok-val { color: #A7E0C0; }
-    .article .tok-cmt { color: #7A8AA8; }
-    .article .tok-err { color: #F0A0A0; }
-    .article .tok-ok  { color: #A7E0C0; }
     .article hr { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
     .article-cta { background: var(--light-gray); border: 1px solid var(--rule);
       border-radius: 10px; padding: 1.5rem 1.75rem; margin: 2.5rem 0 0; }
@@ -136,27 +131,15 @@
 
       <p>(It grew out of a mess of my own — a few thousand lines of <code>StringBuilder</code> driving the characters in an LLM game. For the origin story, and the <em>data + text + render</em> decomposition that became the fix, the longer essay is <a href="https://dougmealing.com/writing/the-prompt-is-code/">The prompt is code — and yours is drifting too</a>.)</p>
 
-      <p>A prompt declares its input as a typed payload — a projection of the same entities that drive your database and API:</p>
+      <p>A prompt declares its input as a typed payload — a projection of the same entities that drive your database and API — and names its text by a logical reference, so the text itself stays a versioned file in your repo rather than a row in someone's cloud:</p>
 
-      <pre><code><span class="tok-cmt"># prompt = typed payload + external text</span>
-<span class="tok-key">object.value:</span>
-  <span class="tok-key">name:</span> <span class="tok-val">AuthorBlurbPayload</span>
-  <span class="tok-key">children:</span>
-    - <span class="tok-key">field.string:</span> { name: authorName }
-    - <span class="tok-key">field.string:</span> { name: bio }
-
-<span class="tok-key">template.prompt:</span>
-  <span class="tok-key">name:</span> <span class="tok-val">authorBlurb</span>
-  <span class="tok-key">payloadRef:</span> <span class="tok-val">AuthorBlurbPayload</span>
-  <span class="tok-key">textRef:</span> <span class="tok-val">author/blurb</span>        <span class="tok-cmt"># template text lives in a versioned file, not a cloud</span></code></pre>
+      <pre class="example-code" data-snippet="showcase-prompt"></pre>
 
       <p>From that one declaration you get a generated, typed <code>render</code> function per language — deterministic and byte-identical across all five ports (there's a shared conformance corpus that proves it), so snapshot tests pass and your exact-prefix prompt cache stays warm. Nothing reformats your prompt behind your back.</p>
 
-      <p>And because the payload is <em>declared</em>, the build can check it. Rename <code>authorName</code> in the model — or reference a variable the payload doesn't have — and:</p>
+      <p>And because the payload is <em>declared</em>, the build can check it. Reference a variable the payload doesn't have — rename <code>subscriberName</code> in the model and forget the template, say — and <code>meta verify</code> says so and exits non-zero:</p>
 
-      <pre><code><span class="tok-ok">$</span> meta verify
-<span class="tok-err">[authorBlurb] (prompt) ERR_VAR_NOT_ON_PAYLOAD: displayName</span>
-meta verify — 1 drift error(s) across 1 template(s).   <span class="tok-cmt"># exit 1 — the build fails</span></code></pre>
+      <pre class="example-code" data-snippet="verify-transcript"></pre>
 
       <p>That's the moment a prompt stops being a string and becomes code: <strong>the renamed field is a compile error now</strong>, not a quality regression you discover in three weeks.</p>
 

@@ -430,6 +430,33 @@ h1, h2, h3 {
 .example-code .keyword { color: #d4a35b; font-weight: 500; }
 .example-code .key { color: #8fb8e6; }
 .example-code .string { color: #97c895; }
+/* Terminal transcripts only: the `$` prompt and any ERR_-prefixed line. */
+.example-code .ok  { color: #97c895; }
+.example-code .err { color: #e06c5f; }
+
+/* Expand-to-whole-file, appended after a snippet whose full generated output is
+   published. The site has zero <script> tags, so this is a <details>, not a
+   click handler — style it, because the browser default has no relationship to
+   the block it belongs to. */
+.example-details { margin: -0.5rem 0 1rem; }
+.example-details > summary {
+  cursor: pointer;
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--royal-blue);
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--light-gray);
+  list-style: none;
+}
+.example-details > summary::-webkit-details-marker { display: none; }
+.example-details > summary::before { content: "\25B8\00A0"; }
+.example-details[open] > summary::before { content: "\25BE\00A0"; }
+.example-details > summary:hover { border-color: rgba(212, 175, 55, 0.5); }
+.example-details > .example-code { margin-top: 0.75rem; }
+
 .example-note { font-size: 0.92rem; color: var(--medium-gray); margin-top: 0.875rem; }
 
 /* ============================================================ For AI section (dark band) */
