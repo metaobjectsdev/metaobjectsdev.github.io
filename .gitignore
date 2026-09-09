@@ -3,7 +3,11 @@
 # project documented by `meta docs`. Neither is authored here.
 www/reference/
 
-# Copied from the metaobjects repo at deploy (docs/llms/*), pinned to the release tag.
-# Tracking them here would mean two editable copies of one file.
+# Copied from the metaobjects repo at deploy, pinned to the release tag. Tracking them
+# here would mean two editable copies of one file — which is how each of these drifted
+# before it was untracked. Fix them upstream:
+#   www/llms.txt, www/llms-full.txt  <- docs/llms/*
+#   www/assess.md                    <- agent-context/skills/metaobjects-fit-assessment/SKILL.md
 www/llms.txt
 www/llms-full.txt
+www/assess.md

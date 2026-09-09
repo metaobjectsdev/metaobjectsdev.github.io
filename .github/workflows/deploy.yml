@@ -68,13 +68,28 @@ jobs:
         set -euo pipefail
         git clone --filter=blob:none https://github.com/metaobjectsdev/metaobjects.git /tmp/mo
         cd /tmp/mo
-        # The repo carries TWO tag lines: v0.x (npm lockstep) and v7.x (JVM). An
-        # unfiltered `git tag -l 'v*' | sort -V | tail -1` returns v7.20.12 — a Maven-only
-        # cut — and always will, because 7 sorts above 0. That tree has no
-        # examples/showcase, so an unfiltered pin would break forever. Filter to the npm
-        # line. (Never `git fetch --all`: it deletes local release tags.)
-        TAG=$(git tag -l 'v0.*' | grep -E '^v0\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
-        test -n "$TAG" || { echo "no v0.x release tag found"; exit 1; }
+        # Pin to the newest tag on the NPM RELEASE LINE — the line every registry has cut
+        # together since the 0.20.14 lockstep ruling. Two other lines sit in this repo's
+        # history and BOTH outrank it under `sort -V`: v7.x, the JVM-only cuts made before
+        # that ruling (they stop at v7.20.12, a tree with neither examples/showcase nor
+        # site-reference), and the `-rc.*` prereleases.
+        #
+        # The filter is deliberately NOT a hardcoded major. It used to be `v0.*`, which
+        # stopped matching the day 1.0 shipped — and the failure was SILENT: the deploy
+        # would have kept pinning to v0.25.0 and publishing 0.25.0 coordinates, snippets,
+        # llms mirrors and metamodel reference under a 1.0 announcement, with every step
+        # green. Instead, test the property that actually defines the line: a release tag
+        # is on the npm line exactly when the CLI package it carries is versioned AS that
+        # tag. v1.0.0 ships cli 1.0.0; v7.20.12 ships cli 0.20.11. Nothing to maintain at
+        # the next major. (Never `git fetch --all`: it deletes local release tags.)
+        TAG=""
+        for t in $(git tag -l 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -rV); do
+          v=$(git show "$t:server/typescript/packages/cli/package.json" 2>/dev/null \
+              | sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1) || true
+          if [ "v$v" = "$t" ]; then TAG="$t"; break; fi
+        done
+        test -n "$TAG" || { echo "no npm-line release tag found"; exit 1; }
+        echo "pinned to metaobjects $TAG"
         git checkout --quiet "$TAG"
         # The agent-facing mirrors, from the SAME clone — do not clone twice. They are
         # maintained in the metaobjects repo and merely SERVED from here; keeping a second
@@ -94,6 +109,24 @@ jobs:
           echo "copied llms mirrors from metaobjects $TAG"
         else
           echo "::warning::metaobjects $TAG has no docs/llms mirrors — /llms.txt will 404."
+        fi
+
+        # /assess.md is the SAME text as the fit-assessment skill, minus the skill's YAML
+        # frontmatter and the maintainer comment above its first heading — so it is copied
+        # here for exactly the reason the llms mirrors are. It was hand-maintained instead,
+        # and drifted to 519 lines against the skill's 565, still telling every reader it
+        # was grounded against npm `0.15.x` / Maven `7.7.x`. That page is the acquisition
+        # surface: it is what an evaluator's agent fetches before adopting anything.
+        #
+        # `sed` from the first top-level heading, rather than matching the title text, so a
+        # retitle does not silently truncate the page. An empty result means the skill was
+        # restructured — warn, and leave the page missing rather than publish a blank one.
+        SKILL=agent-context/skills/metaobjects-fit-assessment/SKILL.md
+        if [ -f "$SKILL" ] && sed -n '/^# /,$p' "$SKILL" > /tmp/assess.md && [ -s /tmp/assess.md ]; then
+          cp /tmp/assess.md "$GITHUB_WORKSPACE/www/assess.md"
+          echo "copied assess.md from metaobjects $TAG ($(wc -l < /tmp/assess.md) lines)"
+        else
+          echo "::warning::metaobjects $TAG has no usable fit-assessment skill — /assess.md will 404."
         fi
 
         # A release older than the injection program has neither the injector nor the

@@ -7,10 +7,16 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 - `www/reference/` is generated at deploy time (`.github/workflows/deploy.yml` clones the
   public reference implementation and runs `meta docs`). Anything committed there is
   replaced on every deploy.
-- `www/llms.txt` and `www/llms-full.txt` are **becoming** generated output, copied in from
-  the MetaObjects monorepo's `docs/llms/`. As of this writing `deploy.yml` does not copy them
-  yet — they are still committed files — but treat them as read-only here: once the copy
-  lands, hand-edits made in this repo are silently overwritten. Fix them upstream instead.
+- `www/llms.txt`, `www/llms-full.txt` and `www/assess.md` are copied in from the MetaObjects
+  monorepo at deploy time, pinned to the release tag — the first two from `docs/llms/`, the
+  third from `agent-context/skills/metaobjects-fit-assessment/SKILL.md` (its body, from the
+  first top-level heading). All three are gitignored here, because a second editable copy is
+  what let each of them drift. Fix them upstream.
+- The four version coordinates on the pages are not hand-written either: any element carrying
+  `data-registry="npm|maven|nuget|pypi|metamodel"` has its text replaced at deploy from the
+  release tag's `examples/showcase/site-payload.json`. The numbers sitting in the committed
+  HTML are placeholders. Preview what a deploy would render with
+  `bun run site:preview --site <this-repo>/www` from the monorepo.
 
 ## Content that mirrors the CLI
 
