@@ -223,6 +223,61 @@ h1, h2, h3 {
   .pillars-grid { grid-template-columns: 1fr; }
 }
 
+/* ============================================================ Proof band */
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.proof-card {
+  background: var(--light-gray);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent-gold);
+  border-radius: 0 0 8px 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.proof-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: rgba(212, 175, 55, 0.35);
+}
+.proof-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--medium-gray);
+  line-height: 1.4;
+  min-height: 2.8em;          /* two lines, so the h3s align across cards */
+  margin: 0 0 0.4rem;
+}
+.proof-card h3 { font-size: 1.15rem; font-weight: 700; margin: 0 0 0.5rem; }
+.proof-card p { margin: 0; font-size: 0.93rem; line-height: 1.6; color: var(--dark-gray); }
+.proof-links {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: 0.88rem;
+}
+.proof-links a { font-weight: 600; }
+.proof-caveat {
+  margin: 1.5rem 0 0;
+  max-width: var(--reading-width);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--medium-gray);
+}
+.proof-caveat a { font-weight: 600; white-space: nowrap; }
+
+@media (max-width: 800px) {
+  .proof-grid { grid-template-columns: 1fr; }
+}
+
 /* ============================================================ Implementations table */
 .impl-table {
   width: 100%;

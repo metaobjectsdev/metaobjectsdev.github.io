@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MetaObjects — Cross-language metadata standard for codegen, runtime, drift detection, and prompt construction</title>
+  <title>MetaObjects — Cross-language metadata standard for codegen, runtime, drift detection, prompts, and requirements</title>
   <meta name="description" content="Define typed entities once. Generate idiomatic code in TypeScript, Java, Kotlin, C#.NET, and Python. Runtime metadata. Drift detection. Conformance-gated. Apache 2.0. Installable in all five languages — npm, Maven Central, NuGet, and PyPI.">
 
   <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/styles.css">
 
   <meta property="og:title" content="MetaObjects — Cross-language metadata standard">
-  <meta property="og:description" content="Codegen, runtime metadata, drift detection, and prompt construction across TypeScript, Java, Kotlin, C#.NET, and Python. Installable in all five — npm, Maven Central, NuGet, PyPI. Apache 2.0.">
+  <meta property="og:description" content="Codegen, runtime metadata, drift detection, prompt construction, and capability requirements across TypeScript, Java, Kotlin, C#.NET, and Python. Installable in all five — npm, Maven Central, NuGet, PyPI. Apache 2.0.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://metaobjects.dev/">
   <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
@@ -64,6 +64,52 @@
           <code>meta gen</code> — one metadata model, a full typed stack generated.
         </figcaption>
       </figure>
+    </section>
+
+    <!-- Proof band — the case studies live on metaobjects.com; surface them here -->
+    <section class="proof">
+      <h2 class="section-label">Built on it. Read the code.</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <p class="proof-tag">Open source &middot; clone and run</p>
+          <h3>Wizards of Odd</h3>
+          <p>A live AI wizard-council app built to be read: one metadata spine drives the
+          Postgres schema, the API types, the LLM prompts and the SSE streaming protocol.
+          Rename one field and all four fail in CI. Apache&nbsp;2.0.</p>
+          <p class="proof-links">
+            <a href="https://metaobjects.com/case-studies/wizardsofodd/">Read the case study&nbsp;&rarr;</a>
+            <a href="https://wizardsofodd.com">wizardsofodd.com</a>
+          </p>
+        </article>
+        <article class="proof-card">
+          <p class="proof-tag">Python + TypeScript &middot; production</p>
+          <h3>Draagon AI</h3>
+          <p>From 17 runtime <code>ALTER TABLE</code> patches to zero. One ~5,000-line YAML
+          spine generates ~19,600 lines of drift-checked Python and TypeScript &mdash; 44
+          entities and 106 LLM prompts declared once, on the published packages.</p>
+          <p class="proof-links">
+            <a href="https://metaobjects.com/case-studies/draagon-ai/">Read the case study&nbsp;&rarr;</a>
+          </p>
+        </article>
+        <article class="proof-card">
+          <p class="proof-tag">The small-adoption case</p>
+          <h3>Roxy</h3>
+          <p>Not every adoption is a rewrite. An existing Python voice assistant took exactly
+          two pillars &mdash; prompts rendered from typed payloads, Postgres schema owned by
+          the CLI &mdash; in about seventy lines of metadata, and left the rest of its
+          codebase alone.</p>
+          <p class="proof-links">
+            <a href="https://metaobjects.com/case-studies/roxy/">Read the case study&nbsp;&rarr;</a>
+          </p>
+        </article>
+      </div>
+      <p class="proof-caveat">
+        Every project here is maintainer-owned &mdash; MetaObjects has no independent adopters
+        yet, and saying otherwise would be the fastest way to lose the readers who check.
+        Wizards of Odd is Apache&nbsp;2.0 and clone-and-run, so you can verify these claims
+        instead of trusting them.
+        <a href="https://metaobjects.com/case-studies/">All case studies&nbsp;&rarr;</a>
+      </p>
     </section>
 
     <!-- Introduction video -->
