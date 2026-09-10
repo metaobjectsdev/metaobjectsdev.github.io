@@ -131,13 +131,17 @@
 
       <p>(It grew out of a mess of my own — a few thousand lines of <code>StringBuilder</code> driving the characters in an LLM game. For the origin story, and the <em>data + text + render</em> decomposition that became the fix, the longer essay is <a href="https://dougmealing.com/writing/the-prompt-is-code/">The prompt is code — and yours is drifting too</a>.)</p>
 
-      <p>A prompt declares its input as a typed payload — a projection of the same entities that drive your database and API — and names its text by a logical reference, so the text itself stays a versioned file in your repo rather than a row in someone's cloud:</p>
+      <p>A prompt declares its input as a typed payload — a value object that can bind its members to the same entities that drive your database and API, so a prompt's shape belongs to the model rather than sitting beside it as a lookalike — and names its text by a logical reference, so the text itself stays a versioned file in your repo rather than a row in someone's cloud:</p>
 
       <pre class="example-code" data-snippet="showcase-prompt"></pre>
 
+      <p>Naming the members is not bureaucracy — it is the only thing that makes a prompt's cost legible. Fill a template from an untyped bag and the honest answer to &ldquo;what do we send this model?&rdquo; is <em>whatever the caller had lying around</em>. Someone passes the whole user object because it was in scope, thirty fields ride along on every call forever, and nothing anywhere records that it happened. When the payload is declared, <strong>adding a field to a prompt is a line in a pull request</strong> — with a name on it, in a review, next to the reason. Payload bloat stops being a mystery you diagnose from a bill and becomes a diff you either approve or don't.</p>
+
       <p>From that one declaration you get a generated, typed <code>render</code> function per language — deterministic and byte-identical across all five ports (there's a shared conformance corpus that proves it), so snapshot tests pass and your exact-prefix prompt cache stays warm. Nothing reformats your prompt behind your back.</p>
 
-      <p>And because the payload is <em>declared</em>, the build can check it. Reference a variable the payload doesn't have — rename <code>subscriberName</code> in the model and forget the template, say — and <code>meta verify</code> says so and exits non-zero:</p>
+      <p>That last one is worth spelling out, because it is the failure with no symptom. Provider prompt caching matches your prompt <em>from the first byte</em>, and the first byte that differs ends the match — everything after it is billed as new input, where a hit would have cost up to about a tenth as much. So a reordered key, a trailing space, a template helper that decides to pretty-print today does not throw, does not return a worse answer, and does not show up in a log or a test. <strong>It shows up on the invoice, four weeks later, as a number nobody can attribute to a change.</strong> Deterministic rendering is what makes that class of bug impossible rather than merely unlikely.</p>
+
+      <p>And because the payload is <em>declared</em>, the build can check it. Rename a field, carry the rename into the payload, and forget the one template still writing the old variable — <code>meta verify</code> says so and exits non-zero:</p>
 
       <pre class="example-code" data-snippet="verify-transcript"></pre>
 
