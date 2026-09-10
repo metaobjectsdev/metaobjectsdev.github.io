@@ -100,10 +100,13 @@
       <p class="page-eyebrow">Capability requirements · ships in all five language ports</p>
       <h1>Check what your AI actually built.</h1>
       <p class="page-lede">
-        Your agent reports the feature done. The columns are there, the types line up, the tests
-        pass — and no code path ever writes the value. Nothing is broken, so nothing fails.
-        MetaObjects makes a capability a node in your model, so the distance between what your
-        software <em>claims</em> to do and what it does becomes something a build can check.
+        A test exercises code that exists. That is the whole reason a passing suite can sit on
+        top of a feature nobody finished: there is no test that fails because a column nobody
+        writes was never wired to anything, and no linter that flags the handler you meant to
+        add. The absence has no address — so give it one. A capability declared in MetaObjects
+        is a node in the same model as your entities, and its link to the code is
+        <strong>resolved, not trusted</strong>: name something that isn't there and the build
+        stops.
       </p>
 
       <h2>The failure that comes after drift</h2>

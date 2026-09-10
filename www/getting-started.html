@@ -76,7 +76,13 @@
           <h3>Set up the project and the agent context</h3>
           <p>Add the TypeScript CLI and scaffold the workspace. <code>meta init</code> also teaches your coding agent how to use MetaObjects:</p>
           <pre class="gs-code">npm i <span class="s">@metaobjectsdev/cli</span>
-npx meta init</pre>
+npx meta init
+npm install   <span class="c"># init DECLARES what it scaffolds against; it does not install</span></pre>
+          <p class="gs-note">That third line is not optional. <code>meta init</code> adds the packages the
+            scaffolded generators and the generated code import — to <code>devDependencies</code> and
+            <code>dependencies</code> — but it deliberately never runs your package manager. Skip it and
+            <code>meta gen</code> and <code>npx tsc</code> both report <code>TS2307</code> on files that are
+            perfectly correct.</p>
           <p>That writes a small, legible tree — <strong>your models go in <code>metaobjects/</code></strong>,
             and the code generators land in your repo too:</p>
           <pre class="gs-code"><span class="c">your-project/</span>
@@ -92,7 +98,7 @@ npx meta init</pre>
 ├── src/db.ts                    <span class="c"># throwing stub — swap in your DB connection</span>
 ├── CLAUDE.md                    <span class="c"># wired to auto-load the context below</span>
 ├── .metaobjects/                <span class="c"># tool state + agent docs (AGENTS.md, CLAUDE.md)</span>
-└── .claude/skills/              <span class="c"># seven skills your agent now has:</span>
+└── .claude/skills/              <span class="c"># six skills your agent now has:</span>
     ├── metaobjects-authoring/   <span class="c">#   write &amp; edit models</span>
     ├── metaobjects-codegen/     <span class="c">#   run codegen</span>
     ├── metaobjects-runtime-ui/  <span class="c">#   wire up runtime + UI</span>
@@ -239,7 +245,29 @@ export const TaskInsertSchema = z.object({
     </section>
 
     <section>
-      <h2 class="section-label">6 · Use it — and add your own logic</h2>
+      <h2 class="section-label">6 · Wire your database</h2>
+      <p class="gs-note"><code>meta init</code> scaffolded <code>src/db.ts</code> as a <strong>throwing
+        stub</strong>, on purpose: the generated routes have to import a <code>db</code> from somewhere for
+        <code>meta gen</code> and your first <code>tsc</code> to succeed, and MetaObjects will not pick a driver
+        for you — <code>better-sqlite3</code>, <code>@libsql/client</code>, <code>pg</code> and
+        <code>postgres.js</code> are your call, not a dependency it adds behind your back. It type-checks
+        everywhere and throws the first time anything actually touches it, with instructions. Replace it:</p>
+      <pre class="gs-code">$ npm i <span class="s">better-sqlite3</span>
+
+<span class="c">// src/db.ts — replace the scaffolded stub</span>
+import { drizzle } from <span class="s">"drizzle-orm/better-sqlite3"</span>;
+import Database from <span class="s">"better-sqlite3"</span>;
+
+export const db = drizzle(new Database(<span class="s">"dev.sqlite"</span>));</pre>
+      <p class="gs-note">Swap the driver import for your dialect. For libsql, Cloudflare D1, Postgres and
+        multi-tenant setups, see
+        <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/recipes/wiring-generated-queries.md">wiring
+        generated queries</a>. Create the tables themselves with
+        <code>meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --apply</code>.</p>
+    </section>
+
+    <section>
+      <h2 class="section-label">7 · Use it — and add your own logic</h2>
       <p class="gs-note">Import the generated code into your app. <strong>It runs with no MetaObjects dependency</strong> —
         Drizzle, Zod, and Fastify only:</p>
       <pre class="gs-code">import Fastify from <span class="s">"fastify"</span>;
@@ -255,7 +283,7 @@ await app.listen({ port: 3000 });</pre>
     </section>
 
     <section>
-      <h2 class="section-label">7 · Keep it honest</h2>
+      <h2 class="section-label">8 · Keep it honest</h2>
       <p class="gs-note">As the model evolves, <code>meta verify</code> fails the build the moment generated code,
         schema, or prompt templates drift from it:</p>
       <pre class="gs-code">npx meta verify              <span class="c"># --templates (default): prompt-template drift</span>

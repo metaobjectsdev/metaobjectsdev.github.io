@@ -294,7 +294,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         </tbody>
       </table>
       <p class="impl-note">
-        Nineteen shared conformance corpora at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures"><code>fixtures/</code></a> — metamodel (253 fixtures), render, verify, extract, persistence (24 query scenarios against Testcontainers Postgres), API contract (cross-port, reference <em>and</em> generated lanes), YAML and more — validate every implementation against the same expectations. All ports implement <code>metamodelVersion</code> <code data-registry="metamodel">0.13</code> — the metadata contract, versioned separately from the package lines.
+        Twenty-one shared conformance corpora at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures"><code>fixtures/</code></a> — metamodel (313 fixtures), render, verify, extract, persistence (24 query scenarios against Testcontainers Postgres), API contract (cross-port, reference <em>and</em> generated lanes), YAML and more — validate every implementation against the same expectations. All ports implement <code>metamodelVersion</code> <code data-registry="metamodel">0.13</code> — the metadata contract, versioned separately from the package lines.
       </p>
     </section>
 
@@ -440,7 +440,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <tr class="ai-row"><td>Machine-readable metadata (grep-friendly)</td> <td class="yes">YAML/JSON, named constants</td> <td class="partial">DSL or schema.prisma</td> <td class="no">annotations / decorators</td> <td class="yes">YAML/JSON</td></tr>
           <tr class="ai-row"><td>Generated code is plain (no proxy/decorator magic)</td> <td class="yes">idiomatic native</td> <td class="yes">idiomatic</td>         <td class="no">proxy/runtime magic</td><td class="yes">type stubs</td></tr>
           <tr class="ai-row"><td>Deterministic regen (same in → same out)</td> <td class="yes">conformance-gated</td><td class="yes">yes</td>                <td class="yes">yes</td>              <td class="yes">yes</td></tr>
-          <tr class="ai-row"><td>Small surface area for agent context window</td><td class="yes">13 base types + extensions</td> <td class="partial">single-lang ORM API</td> <td class="no">large framework surface</td><td class="yes">small spec</td></tr>
+          <tr class="ai-row"><td>Small surface area for agent context window</td><td class="yes">14 base types + extensions</td> <td class="partial">single-lang ORM API</td> <td class="no">large framework surface</td><td class="yes">small spec</td></tr>
         </tbody>
       </table>
 
@@ -474,23 +474,23 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
       <div class="qs-group">
         <h3 class="qs-group-title">Server-side</h3>
         <div class="quickstart-grid">
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/typescript" class="quickstart-card">
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/ports/typescript.md" class="quickstart-card">
             <span class="qs-lang">TypeScript</span>
             <span class="qs-arrow">→</span>
           </a>
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/java" class="quickstart-card">
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/ports/java.md" class="quickstart-card">
             <span class="qs-lang">Java</span>
             <span class="qs-arrow">→</span>
           </a>
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/java/codegen-kotlin" class="quickstart-card">
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/ports/kotlin.md" class="quickstart-card">
             <span class="qs-lang">Kotlin</span>
             <span class="qs-arrow">→</span>
           </a>
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/csharp" class="quickstart-card">
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/ports/csharp.md" class="quickstart-card">
             <span class="qs-lang">C#.NET</span>
             <span class="qs-arrow">→</span>
           </a>
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/server/python" class="quickstart-card">
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/ports/python.md" class="quickstart-card">
             <span class="qs-lang">Python</span>
             <span class="qs-arrow">→</span>
           </a>
@@ -500,11 +500,11 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
       <div class="qs-group">
         <h3 class="qs-group-title">Client-side</h3>
         <div class="quickstart-grid quickstart-grid--client">
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/client/web/packages/runtime-web" class="quickstart-card">
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/ports/typescript-client.md#browser-runtime-packages" class="quickstart-card">
             <span class="qs-lang">Runtime Web</span>
             <span class="qs-arrow">→</span>
           </a>
-          <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/client/web/packages/react" class="quickstart-card">
+          <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/ports/typescript-client.md#generated-react-forms" class="quickstart-card">
             <span class="qs-lang">React</span>
             <span class="qs-arrow">→</span>
           </a>
