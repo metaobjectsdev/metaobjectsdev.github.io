@@ -139,9 +139,11 @@
       </div>
 
       <p>
-        A test suite cannot see any of this. A test exercises code that exists; there is no test
-        that fails because a column nobody writes was never wired to anything. <strong>The absence
-        has no address.</strong>
+        Notice what all three have in common: nothing is <em>wrong</em>. No exception, no failing
+        assertion, no type that stopped lining up — so every gate you own stays green and reports
+        that it checked. <strong>The three shapes are invisible to your test suite by
+        construction, not by oversight</strong>, and that is why the fix has to live somewhere
+        else: in the model, next to the entities, where a claim can be resolved instead of read.
       </p>
 
       <h2>So give it one</h2>
