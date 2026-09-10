@@ -86,19 +86,20 @@ npx meta init</pre>
 │   ├── entity.ts                <span class="c">#   Drizzle table + Zod schemas</span>
 │   ├── queries.ts               <span class="c">#   typed data-access</span>
 │   ├── routes.ts                <span class="c">#   REST endpoints (Fastify)</span>
+│   ├── names.ts                 <span class="c">#   physical table/column name constants</span>
 │   └── barrel.ts                <span class="c">#   the index.ts re-exports</span>
 ├── metaobjects.config.ts        <span class="c"># ← targets: dialect + what to generate</span>
 ├── src/db.ts                    <span class="c"># throwing stub — swap in your DB connection</span>
 ├── CLAUDE.md                    <span class="c"># wired to auto-load the context below</span>
 ├── .metaobjects/                <span class="c"># tool state + agent docs (AGENTS.md, CLAUDE.md)</span>
-└── .claude/skills/              <span class="c"># six skills your agent now has:</span>
+└── .claude/skills/              <span class="c"># seven skills your agent now has:</span>
     ├── metaobjects-authoring/   <span class="c">#   write &amp; edit models</span>
     ├── metaobjects-codegen/     <span class="c">#   run codegen</span>
     ├── metaobjects-runtime-ui/  <span class="c">#   wire up runtime + UI</span>
     ├── metaobjects-prompts/     <span class="c">#   typed LLM prompts</span>
     ├── metaobjects-verify/      <span class="c">#   drift checks</span>
     └── metaobjects-audit/       <span class="c">#   check adoption depth</span></pre>
-          <p>Those four generators under <code>codegen/generators/</code> are the point: they're plain
+          <p>Those five generators under <code>codegen/generators/</code> are the point: they're plain
             TypeScript, copied into your project, and <strong>yours to edit</strong>. <code>meta gen</code>
             runs those local copies — not the ones inside the package — so changing the shape of the
             generated code is an ordinary edit to a file you own.</p>
@@ -172,6 +173,7 @@ export default defineConfig({
     entityFile(),           <span class="c">// Drizzle table + Zod schemas + typed constants</span>
     queriesFile(),          <span class="c">// typed data-access (findById, list, create…)</span>
     routesFile(),           <span class="c">// REST endpoints (Fastify)</span>
+    namesFile(),            <span class="c">// &lt;Entity&gt;Names — physical table/column constants</span>
     barrel(),               <span class="c">// src/generated/index.ts re-exports</span>
   ],
   docs: { outDir: <span class="s">"./docs"</span>, surfaces: [<span class="s">"model"</span>, <span class="s">"api"</span>] },
@@ -209,10 +211,11 @@ meta gen — sqlite, src/generated
   <span class="n">NEW</span>        src/generated/Task.ts
   <span class="n">NEW</span>        src/generated/Task.queries.ts
   <span class="n">NEW</span>        src/generated/Task.routes.ts
+  <span class="n">NEW</span>        src/generated/Task.names.ts
   <span class="n">NEW</span>        src/generated/index.ts
 
-  4 written</pre>
-      <p class="gs-note">That's a real run. You get three things per entity (plus a barrel):</p>
+  5 written</pre>
+      <p class="gs-note">That's a real run. You get four things per entity (plus a barrel):</p>
       <ul class="gs-note">
         <li><code>Task.ts</code> — the <strong>entity</strong>: a Drizzle table, Zod insert/update schemas, a typed
           <code>Task</code> constants object (fields, labels, validation rules), and filter/sort allowlists.</li>
