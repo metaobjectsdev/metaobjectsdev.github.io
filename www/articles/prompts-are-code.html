@@ -131,7 +131,7 @@
 
       <p>(It grew out of a mess of my own — a few thousand lines of <code>StringBuilder</code> driving the characters in an LLM game. For the origin story, and the <em>data + text + render</em> decomposition that became the fix, the longer essay is <a href="https://dougmealing.com/writing/the-prompt-is-code/">The prompt is code — and yours is drifting too</a>.)</p>
 
-      <p>A prompt declares its input as a typed payload — a value object that can bind its members to the same entities that drive your database and API, so a prompt's shape belongs to the model rather than sitting beside it as a lookalike — and names its text by a logical reference, so the text itself stays a versioned file in your repo rather than a row in someone's cloud:</p>
+      <p>A prompt declares its input as a typed payload — a value object whose members bind to the same entities that drive your database and API, so a prompt's shape is part of the model rather than a lookalike sitting beside it — and names its text by a logical reference, so the text itself stays a versioned file in your repo rather than a row in someone's cloud:</p>
 
       <pre class="example-code" data-snippet="showcase-prompt"></pre>
 
@@ -141,7 +141,7 @@
 
       <p>That last one is worth spelling out, because it is the failure with no symptom. Provider prompt caching matches your prompt <em>from the first byte</em>, and the first byte that differs ends the match — everything after it is billed as new input, where a hit would have cost up to about a tenth as much. So a reordered key, a trailing space, a template helper that decides to pretty-print today does not throw, does not return a worse answer, and does not show up in a log or a test. <strong>It shows up on the invoice, four weeks later, as a number nobody can attribute to a change.</strong> Deterministic rendering is what makes that class of bug impossible rather than merely unlikely.</p>
 
-      <p>And because the payload is <em>declared</em>, the build can check it. Rename a field, carry the rename into the payload, and forget the one template still writing the old variable — <code>meta verify</code> says so and exits non-zero:</p>
+      <p>And because the payload is <em>declared</em>, the build can check it. Rename <code>Subscriber.name</code> and the payload above cannot be left behind — <code>extends: Subscriber.name</code> stops resolving, so the rename is <em>forced</em> into it. What is not forced is the template still writing the old variable, and that is exactly the surface nothing else was watching. <code>meta verify</code> says so and exits non-zero:</p>
 
       <pre class="example-code" data-snippet="verify-transcript"></pre>
 
