@@ -43,15 +43,23 @@
   <main>
     <!-- Hero -->
     <section class="hero">
-      <p class="hero-eyebrow">Cross-language metadata standard · Apache 2.0 · Installable in 5 languages</p>
-      <h1>Make schema drift a compile-time error.</h1>
+      <p class="hero-eyebrow">Apache 2.0 · TypeScript · Java · Kotlin · C# · Python</p>
+      <h1>One typed model of your app. Your agent writes it, your code is generated from it, your build is checked against it.</h1>
       <p class="hero-lede">
-        AI coding agents regenerate thousands of lines a day. Without a shared spine they produce inconsistent boilerplate at every prompt — and the drift surfaces as a production incident, not a compile error. MetaObjects is the spine: define typed entities once, generate idiomatic code across <strong>TypeScript, Java, Kotlin, C#.NET, and Python</strong>, and every generated stack breaks the type checker the moment the metadata moves underneath it.
+        Coding agents get context — rules files, memories, MCP servers — and context is <strong>advisory</strong>: nothing fails when the code stops matching it. MetaObjects gives your agent one typed model of your application — data, API, UI, prompt payloads, and what the software is supposed to do — generates each layer's code from it with no proprietary runtime in the output, and fails your build when generated code, a prompt, or a claimed capability drifts from that model.
+      </p>
+      <p class="hero-verbs">
+        <strong>Generate.</strong> The boring parts are derived from the model, in five languages — at build time as code you own, or at runtime from the live model.
+        <br>
+        <strong>Verify.</strong> The build fails when generated code drifts from the model, when a prompt's payload no longer matches what it's told, and when a feature someone marked done has nothing implementing it.
+      </p>
+      <p class="hero-scope">
+        It protects what the model declares; your hand-written logic is still yours. And if your app is single-language with no LLM calls, a good ORM is probably enough — <a href="#compare">the honest comparison</a> says so first.
       </p>
       <div class="hero-ctas">
-        <a href="/getting-started.html" class="btn btn-primary">Get started →</a>
+        <a href="#drift" class="btn btn-primary">See what breaks the build</a>
         <a href="#assess" class="btn btn-secondary">Assess your repo — no install</a>
-        <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/spec" class="btn btn-secondary">Read the spec</a>
+        <a href="/getting-started.html" class="btn btn-secondary">Get started →</a>
         <a href="https://github.com/metaobjectsdev/metaobjects" class="btn btn-secondary">GitHub</a>
       </div>
       <figure class="hero-demo">
@@ -140,7 +148,7 @@
 
     <!-- Five pillars — all shipping -->
     <section class="pillars">
-      <h2 class="section-label">Five pillars. All shipping.</h2>
+      <h2 class="section-label">What is underneath the two verbs.</h2>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
@@ -171,9 +179,10 @@
       </div>
     </section>
 
-    <!-- Drift table — the #1 AI-era reason to adopt -->
-    <section class="drift">
-      <h2 class="section-label">The #1 reason in the AI era: drift breaks the build.</h2>
+    <!-- Drift table — what Verify actually catches -->
+    <section class="drift" id="drift">
+      <h2 class="section-label">Context is advisory. This is not: drift breaks the build.</h2>
+      <p class="hero-gateline" style="text-align:left;margin:0 0 1rem;">When AI-written code drifts from your typed model, the build fails.</p>
       <p class="drift-intro">
         AI coding agents regenerate thousands of lines a day. A field rename in one file misses three others — types compile, runtime breaks at the boundary, hours to chase. A required field added to an entity is forgotten in the migration, the validator, the form. A prompt template references <code>{{userName}}</code> while the payload type carries <code>user.name</code>. Without a shared spine, every prompt accelerates the entropy. MetaObjects inverts the source of truth: generated code is owned by the codegen, not by humans or agents.
       </p>
@@ -462,7 +471,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <li><a href="https://github.com/metaobjectsdev/metaobjects/blob/main/CLAUDE.md"><code>CLAUDE.md</code> in the repo</a> — agent instructions for working in the metaobjects codebase itself</li>
         </ul>
         <p class="ai-future">
-          <strong>Why Claude Code in particular.</strong> Anthropic's official CLI was the day-zero driver for the standard's design choices. The metamodel vocabulary is small enough to fit in a context window; the conformance contract is enforced as compile-time errors rather than runtime drift; and the generated code is the same idiomatic per-language output a senior engineer would write by hand, so an agent's review pass converges fast. A first-party MCP server exposing the spec, conformance fixtures, and codegen tools as agent-callable functions is on the <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">roadmap</a>.
+          <strong>Why Claude Code in particular.</strong> Anthropic's official CLI was the day-zero driver for the standard's design choices. The metamodel vocabulary is small enough to fit in a context window; the conformance contract is enforced by a build gate rather than discovered as runtime drift; and the generated code is the same idiomatic per-language output a senior engineer would write by hand, so an agent's review pass converges fast. A first-party MCP server exposing the spec, conformance fixtures, and codegen tools as agent-callable functions is on the <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">roadmap</a>.
         </p>
       </div>
     </section>
