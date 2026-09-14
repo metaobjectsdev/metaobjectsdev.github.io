@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/styles.css">
 
   <meta property="og:title" content="MetaObjects — Cross-language metadata standard">
-  <meta property="og:description" content="Codegen, runtime metadata, drift detection, prompt construction, and capability requirements across TypeScript, Java, Kotlin, C#.NET, and Python. Installable in all five — npm, Maven Central, NuGet, PyPI. Apache 2.0.">
+  <meta property="og:description" content="Codegen, runtime metadata, drift detection, prompt construction, capability requirements, and libraries for TypeScript, Java, Kotlin, C#.NET, and Python. Installable in all five — npm, Maven Central, NuGet, PyPI. Apache 2.0.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://metaobjects.dev/">
   <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
@@ -51,7 +51,7 @@
       <p class="hero-verbs">
         <strong>Generate.</strong> The boring parts are derived from the model, in five languages — at build time as code you own, or at runtime from the live model.
         <br>
-        <strong>Verify.</strong> The build fails when generated code drifts from the model, when a prompt's payload no longer matches what it's told, and when a feature someone marked done has nothing implementing it.
+        <strong>Verify.</strong> The build fails when generated code drifts from the model and when a prompt's payload no longer matches what it's told — and it fails or warns when a feature someone marked done has nothing implementing it.
       </p>
       <p class="hero-scope">
         It protects what the model declares; your hand-written logic is still yours. And if your app is single-language with no LLM calls, a good ORM is probably enough — <a href="#compare">the honest comparison</a> says so first.
@@ -146,37 +146,48 @@
       </figure>
     </section>
 
-    <!-- Five pillars — all shipping -->
+    <!-- Six pillars — each labelled with what ships, where, at what stability (FR-042 §4) -->
     <section class="pillars">
       <h2 class="section-label">What is underneath the two verbs.</h2>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
           <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
+          <p class="pillar-maturity">All five ports, gated by the cross-port conformance corpora. Opt-in since 1.0.4: nothing generates until you choose.</p>
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
-          <p>Load metadata at runtime and drive behavior dynamically — CRUD, validation, relationships, dynamic admin UIs. (Typed tool payloads are declared today; MCP tool exposure is on the roadmap.) Less code in the repo; less surface area for AI agents to drift on.</p>
+          <p>Load metadata at runtime and drive behavior dynamically — CRUD, validation, relationships, dynamic admin UIs. (Typed tool payloads are declared today; MCP tool exposure is on the roadmap.)</p>
+          <p class="pillar-maturity">TypeScript, Java, Kotlin, Python. C#: roadmap — its EF Core output is generated code, not a metadata-driven runtime.</p>
         </article>
         <article class="pillar">
           <h3>Drift detection</h3>
           <p><code>meta verify</code> validates every generated artifact against the metadata at build time. Renaming a field in one place breaks the type checker everywhere it's used — across services, across languages, across the human-and-AI-generated boundary.</p>
+          <p class="pillar-maturity">All five ports for generated code and prompts. Live-database schema drift runs in the Node <code>meta</code> CLI, for every port.</p>
         </article>
         <article class="pillar">
           <h3>Prompt construction</h3>
           <p>The prompt is code too — not a string scattered across services. Declare a typed payload as a projection, keep the text external and provider-resolved, render deterministically: snapshot-testable, cache-stable (no stray whitespace silently breaking exact-prefix prompt-cache hits), drift-checked at build time so a renamed field can't quietly degrade a prompt. Plus typed <code>template.output</code> parsers — Zod / Pydantic / Jackson / kotlinx.serialization / System.Text.Json across the ports.</p>
+          <p class="pillar-maturity">Render, payload types, <code>verify</code> and parsers in all five ports. MCP exposure of declared prompts: roadmap.</p>
           <p class="pillar-read"><a href="/articles/prompts-are-code.html">Read: Prompts are code now — even OpenAI says so&nbsp;→</a></p>
         </article>
         <article class="pillar">
           <h3>Requirements and testing</h3>
           <p>A capability is a node in the same model as your entities, so
           <code>implementedBy</code> is <strong>resolved, not trusted</strong> — a claim whose
-          implementation vanished fails the build. <code>meta verify</code> reports the ledger on
-          every run. The vocabulary and its checks ship in all five languages;
-          <code>requirementTests()</code> scaffolds a test per claim in TypeScript.</p>
+          implementation vanished fails the build, and one naming nothing is a warning.
+          <code>meta verify</code> reports the ledger on every run. It proves the links resolve,
+          not that the implementation is correct.</p>
+          <p class="pillar-maturity">Vocabulary in all five ports; the <code>meta verify</code> checks run in the Node <code>meta</code> CLI; test scaffolding is TypeScript-only. Dogfooded on maintainer-owned projects, no outside adopter yet.</p>
           <p class="pillar-read"><a href="/requirements.html">Read: capability requirements&nbsp;→</a></p>
         </article>
+        <article class="pillar">
+          <h3>Libraries</h3>
+          <p>Design you didn't invent and won't differentiate on, declared once and opted into by name: <code>"libraries": ["iam"]</code>. Entities, the requirements they promise, and the generators they imply arrive as one drift-gated artifact. The core layer adds no tables; the schema is a separate <code>iam/db</code> opt-in. <code>meta eject</code> copies one into your repo to own.</p>
+          <p class="pillar-maturity">Since 1.0.4, all five ports. <code>ai</code> (LLM-call tracing): stable. <code>iam</code> (users, groups, roles, grants): preview.</p>
+        </article>
       </div>
+      <p class="pillars-note"><strong>Sharing a model across your own projects.</strong> One project publishes part of its model — a common <code>Customer</code>, an audited base, a set of enums — and another declares it as a dependency, syncs a committed, hash-locked snapshot, and builds on it with <code>extends</code> and references. When the publisher's model moves, <code>meta verify --deps</code> says so instead of two copies drifting apart. <span class="pillar-scope">Today the TypeScript toolchain publishes and TypeScript and Python projects consume, over a <code>path</code> dependency (a sibling checkout or submodule). Java, Kotlin and C# arrive in Phase 2.</span></p>
     </section>
 
     <!-- Drift table — what Verify actually catches -->

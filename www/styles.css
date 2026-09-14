@@ -245,6 +245,17 @@ h1, h2, h3 {
   margin: 0 0 0.5rem;
 }
 .pillar p { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--dark-gray); }
+/* The maturity label (FR-042 §4): what ships, in which ports, at what stability. */
+.pillar p.pillar-maturity {
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--medium-gray);
+}
+.pillars-note { max-width: 880px; margin: 1.75rem 0 0; font-size: 0.95rem; line-height: 1.6; color: var(--dark-gray); }
+.pillars-note .pillar-scope { color: var(--medium-gray); }
 
 @media (max-width: 800px) {
   .pillars-grid { grid-template-columns: 1fr; }

@@ -20,22 +20,28 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 ## Content that mirrors the CLI
 
-Several code blocks on `www/getting-started.html` reproduce what `meta init` actually writes
-— the scaffold tree, and the `metaobjects.config.ts` example. Nothing checks that they still
-match, so they drift silently when the CLI's scaffold changes. The authoritative source is
-the monorepo's `server/typescript/packages/cli/src/commands/init.ts` (the
-`SCAFFOLDED_GENERATOR_NAMES`, `OWNED_GENERATORS_DIR`, `buildMetaobjectsConfigBody`, and
-`DB_STUB_*` constants). Read it before changing those blocks; don't work from memory.
+Several code blocks on `www/getting-started.html` reproduce real CLI output: the scaffold
+tree, `meta init`'s closing line, the `meta gen --list --probe` and `meta eject` excerpts, the
+wired `metaobjects.config.ts`, the `meta gen` and `meta migrate` runs, and the curl calls.
+Nothing checks that they still match, so they drift silently when the CLI changes. The
+scaffold's authoritative source is the monorepo's
+`server/typescript/packages/cli/src/commands/init.ts` (`OWNED_GENERATORS_DIR`,
+`buildMetaobjectsConfigBody`, `SCAFFOLD_SUMMARY`, `NEXT_STEPS`). For the rest, **run the flow
+end to end against the published CLI in a scratch project OUTSIDE `/tmp`** and copy from what
+it prints. A stale `/tmp/node_modules` shadows packages the project did not install, so a run
+there can pass on a page that fails for a newcomer. Don't work from memory or the CHANGELOG.
 
-The page also carries a doctrinal claim worth keeping intact: the generators under
-`codegen/generators/` are copied into the adopter's repo for them to **own and edit**, and
-`meta gen` runs those local copies rather than the packaged ones. `www/video/getting-started.vtt`
-states the same thing — if a page edit contradicts it, the page is the thing that is wrong.
+Since 1.0.4 (ADR-0034 Amendment 2) `meta init` scaffolds `codegen/generators/` EMPTY with
+`generators: []`, no dependencies, and no `src/db.ts`. The page's doctrinal claim is that the
+generators an adopter CHOOSES (`meta gen --list --probe`, then `meta eject <names>`) are copied
+into their repo to **own and edit**, and `meta gen` runs those local copies rather than the
+packaged ones. `www/video/getting-started.vtt` captions a recording made before 1.0.4, when
+`init` still scaffolded the generators; `www/videos.html` says so beside it.
 
 ## Editing the `pre.gs-code` blocks
 
 `www/getting-started.html` hand-writes its syntax highlighting with `<span class="c">`
-(comment), `s` (string), `k` (keyword), `n` (the `NEW` marker). An unclosed span or a
+(comment), `s` (string), `k` (keyword), `n` (the `new` status in `meta gen` output). An unclosed span or a
 misaligned comment column does not show up in a diff review — render the page and look at
 the block before calling an edit done. In the scaffold tree, the `#` comments all sit at
 visible column 33.

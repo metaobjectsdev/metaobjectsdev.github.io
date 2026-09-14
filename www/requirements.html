@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Capability requirements — check what your AI actually built | MetaObjects</title>
-  <meta name="description" content="Your agent reports the feature done. The columns exist, the tests pass, and nothing ever writes the value. MetaObjects makes a capability a node in your model, so the gap between what your software claims and what it does becomes a build failure instead of a surprise.">
+  <meta name="description" content="Your agent reports the feature done. The columns exist, the tests pass, and nothing ever writes the value. MetaObjects makes a capability a node in your model, so its link to the code that implements it is checked on every build instead of trusted.">
 
   <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
 
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/styles.css">
 
   <meta property="og:title" content="Check what your AI actually built">
-  <meta property="og:description" content="The columns exist, the tests pass, and nothing ever writes the value. Make a capability a node in your model, and the gap becomes a build failure.">
+  <meta property="og:description" content="The columns exist, the tests pass, and nothing ever writes the value. Make a capability a node in your model, and its link to the code is checked instead of trusted.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://metaobjects.dev/requirements.html">
   <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
@@ -97,7 +97,7 @@
 
   <main>
     <article class="page">
-      <p class="page-eyebrow">Capability requirements · ships in all five language ports</p>
+      <p class="page-eyebrow">Capability requirements · vocabulary in all five ports · checked by the Node <code>meta</code> CLI</p>
       <h1>Check what your AI actually built.</h1>
       <p class="page-lede">
         A test exercises code that exists. That is the whole reason a passing suite can sit on
@@ -231,7 +231,8 @@
           <ul>
             <li>Capabilities as registered vocabulary in all five language ports — a project that
               declares none sees no change at all.</li>
-            <li><code>implementedBy</code> resolved by the loader. Dangling is an error, not a note.</li>
+            <li><code>implementedBy</code> resolved by <code>meta verify</code>. Dangling on a live or partial
+              claim is an error, not a note; a live claim that names nothing is a warning.</li>
             <li><code>meta verify</code> reporting claims whose implementation vanished, entities no
               claim covers, and gaps recorded versus gaps nobody has ruled on — with a summary on
               every run.</li>
@@ -267,8 +268,9 @@
       <pre class="example-code" data-snippet="ts-requirement-test"></pre>
 
       <p>
-        <strong>This part is TypeScript-only.</strong> The vocabulary and every
-        <code>meta verify</code> check ship in all five ports; the test scaffolding does not.
+        <strong>This part is TypeScript-only.</strong> The vocabulary loads and validates in all
+        five ports, and the <code>meta verify</code> checks run in the Node <code>meta</code> CLI.
+        The test scaffolding is TypeScript's alone.
       </p>
 
       <h2>Where it sits</h2>
