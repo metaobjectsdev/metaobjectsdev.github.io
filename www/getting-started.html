@@ -179,45 +179,32 @@ metadata:
       <p class="gs-note">Ask the catalog what your model can generate. <code>--probe</code> runs every generator against
         <em>your</em> metadata and reports how many files each would emit:</p>
       <pre class="gs-code">$ npx meta gen --list --probe
-[25]:
-  - name: entity
-    kind: generator
-    layer: model
-    <span class="c">…</span>
-    project:
-      wired: false
-      frameworkDetected: null
-      wouldEmit: 1
-  <span class="c">…</span>
-  - name: routes
-    kind: generator
-    layer: api
-    framework: fastify
-    <span class="c">…</span>
-    project:
-      wired: false
-      frameworkDetected: false
-      wouldEmit: null
-      probeError: "[routes-file] codegen config is missing dbImport — …"
-  <span class="c"># … every generator, grouped by layer: model, persistence, api, client,</span>
-  <span class="c">#   docs, capability — plus the ai and iam libraries</span></pre>
-      <p class="gs-note">The <code>routes</code> row is already telling you what it needs: a <code>dbImport</code>,
-        which you'll add below. Take the ones you want. <code>meta eject</code> copies each into
+Generator catalog — nothing runs until you wire it in `generators: [...]`.
+
+model  —  the entity modules and the constants beside them
+  barrel             —  Single index.ts re-exporting every generated entity module.  [would emit 1]
+                        requires: entity
+  entity             —  Per-entity Drizzle table + typed model module (the entity module).  [would emit 1]
+  names              —  Per-entity physical database name constants (table/view, schema, columns).  [would emit 1]
+persistence  —  how rows are read and written
+  queries            —  Per-entity typed query helpers (findById/create/...).  [would emit 1]
+                        requires: entity
+api  —  the HTTP surface — pick ONE framework
+  routes             —  Per-entity Fastify CRUD routes (drizzle-fastify mountCrudRoutes).  [fastify]
+                        requires: entity
+  routes-hono        —  Per-entity Hono CRUD routes (runtime-ts/hono mountCrudRoutes).  [hono, would emit 1]
+<span class="c"># … client, docs and capability generators, then the ai and iam libraries</span></pre>
+      <p class="gs-note">Take the ones you want. <code>meta eject</code> copies each into
         <code>codegen/generators/</code> and tells you exactly how to wire it:</p>
       <pre class="gs-code">$ npx meta eject entity queries routes names barrel
-ejected[5]:
-  - name: entity
-    path: codegen/generators/entity.ts
-    status: created
-    wire:
-      import: "import { entityFile } from \"./codegen/generators/entity.js\";"
-      entry: entityFile()
-  <span class="c"># … queries, routes, names, barrel</span>
-install:
-  dev[1]: @metaobjectsdev/codegen-ts@^<span data-registry="npm">1.0.4</span>
-  <span class="c"># … and the runtime packages the generated code imports</span>
-config:
-  keys[9]: apiPrefix,collectionNameOverrides,columnNamingStrategy,dbImport,dialect,extStyle,…</pre>
+Ejected "entity" -> codegen/generators/entity.ts. You own it now (ADR-0034 scaffold-and-own).
+In metaobjects.config.ts, "entityFile" must resolve to this file:
+  import { entityFile } from "./codegen/generators/entity.js";
+<span class="c"># … the same for queries, routes, names and barrel</span>
+
+Install what the ejected generators and their output need:
+<span class="c">  # … the packages below</span>
+These generators read config: apiPrefix, collectionNameOverrides, columnNamingStrategy, dbImport, dialect, extStyle, …</pre>
       <p class="gs-note">Those five files are the point: they're plain TypeScript in your repo, and <strong>yours to
         edit</strong>. <code>meta gen</code> runs those local copies — not the ones inside the package — so changing
         the shape of the generated code is an ordinary edit to a file you own. Install what they import:</p>
@@ -255,13 +242,15 @@ export default defineConfig({
     <section>
       <h2 class="section-label">6 · Generate</h2>
       <pre class="gs-code">$ npx meta gen
-gen[5]{file,status}:
-  src/generated/Task.ts,<span class="n">new</span>
-  src/generated/Task.queries.ts,<span class="n">new</span>
-  src/generated/Task.routes.ts,<span class="n">new</span>
-  src/generated/Task.names.ts,<span class="n">new</span>
-  src/generated/index.ts,<span class="n">new</span>
-summary: 5 written</pre>
+meta gen — sqlite, src/generated
+
+  <span class="n">NEW</span>        src/generated/Task.ts
+  <span class="n">NEW</span>        src/generated/Task.queries.ts
+  <span class="n">NEW</span>        src/generated/Task.routes.ts
+  <span class="n">NEW</span>        src/generated/Task.names.ts
+  <span class="n">NEW</span>        src/generated/index.ts
+
+  5 written</pre>
       <p class="gs-note">That's a real run. You get four things per entity (plus a barrel):</p>
       <ul class="gs-note">
         <li><code>Task.ts</code> — the <strong>entity</strong>: a Drizzle table, Zod insert/update schemas, a typed
@@ -310,9 +299,15 @@ export const db = drizzle(createClient({ url: <span class="s">"file:dev.sqlite"<
         generated queries</a>. Then create the tables. <code>meta migrate</code> diffs the live database against the
         model and writes a paired <code>up.sql</code>/<code>down.sql</code> under <code>.metaobjects/migrations/</code>:</p>
       <pre class="gs-code">$ npx meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --apply
-changes[1]{kind,count}:
-  create-table,1
-summary: 1 create-table; applied 1 migration(s)</pre>
+meta migrate — sqlite, file:dev.sqlite
+
+  Changes: 1 create-table
+
+  Written:
+    .metaobjects/migrations/&lt;timestamp&gt;-init/up.sql
+    .metaobjects/migrations/&lt;timestamp&gt;-init/down.sql
+
+migrate: applied 1 migration(s): &lt;timestamp&gt;-init</pre>
     </section>
 
     <section>

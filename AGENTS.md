@@ -29,7 +29,9 @@ scaffold's authoritative source is the monorepo's
 `buildMetaobjectsConfigBody`, `SCAFFOLD_SUMMARY`, `NEXT_STEPS`). For the rest, **run the flow
 end to end against the published CLI in a scratch project OUTSIDE `/tmp`** and copy from what
 it prints. A stale `/tmp/node_modules` shadows packages the project did not install, so a run
-there can pass on a page that fails for a newcomer. Don't work from memory or the CHANGELOG.
+there can pass on a page that fails for a newcomer. **Capture with `--format text`**, or from a real
+terminal: the CLI's default format is TTY-aware, so a piped capture prints the machine format
+(TOON), which no human following the page will see. Don't work from memory or the CHANGELOG.
 
 Since 1.0.4 (ADR-0034 Amendment 2) `meta init` scaffolds `codegen/generators/` EMPTY with
 `generators: []`, no dependencies, and no `src/db.ts`. The page's doctrinal claim is that the
