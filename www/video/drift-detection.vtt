@@ -1,142 +1,174 @@
 WEBVTT
 
 1
-00:00:00.500 --> 00:00:06.752
+00:00:00.500 --> 00:00:07.118
 Drift is the quiet failure mode of AI-written code — locally right, globally wrong.
 
 2
-00:00:06.752 --> 00:00:09.764
-MetaObjects turns it into a build error.
+00:00:07.118 --> 00:00:10.387
+MetaObjects turns it into a failed build.
 
 3
-00:00:09.764 --> 00:00:11.271
+00:00:10.387 --> 00:00:11.981
 This is meta verify.
 
 4
-00:00:12.671 --> 00:00:13.891
+00:00:13.381 --> 00:00:14.658
 Here's one in action.
 
 5
-00:00:13.891 --> 00:00:19.296
-An agent edited a generated file, and one command caught it — exit one, before it could ship.
+00:00:14.658 --> 00:00:21.591
+The model gained a field, nobody re-ran the generator, and one command caught it — exit one, before it could ship.
 
 6
-00:00:19.296 --> 00:00:25.108
-Let me show you how this works across all three surfaces — your code, your prompts, and your schema.
+00:00:21.591 --> 00:00:28.160
+Let me show you how this works across four surfaces — your code, your prompts, your schema, and your claims.
 
 7
-00:00:26.508 --> 00:00:30.602
+00:00:29.560 --> 00:00:33.697
 Meta verify checks one thing: does everything still agree with the model?
 
 8
-00:00:30.602 --> 00:00:35.369
-It does it across three surfaces — your code, your prompts, and your database schema.
+00:00:33.697 --> 00:00:43.332
+It does it across four surfaces — your generated code, your prompt templates, your database schema, and the requirements you declare: what the software is supposed to do.
 
 9
-00:00:35.369 --> 00:00:37.444
+00:00:43.332 --> 00:00:45.429
 Drift on any of them fails the build.
 
 10
-00:00:38.844 --> 00:00:41.131
+00:00:46.829 --> 00:00:49.188
 Before we run it, here's that one model.
 
 11
-00:00:41.131 --> 00:00:47.762
+00:00:49.188 --> 00:00:56.031
 The Task entity carries its validators right on the fields — that drives the code, and its source drives the schema.
 
 12
-00:00:47.762 --> 00:00:51.935
-The prompt has a typed payload and a template — that's the third surface.
+00:00:56.031 --> 00:01:00.396
+The prompt has a typed payload and a template — that's the second surface.
 
 13
-00:00:51.935 --> 00:00:58.910
-And look at the references between them: the payload extends a real Task field, and the template points at a real payload.
+00:01:00.396 --> 00:01:05.292
+And the requirements at the bottom claim what's built — each one names a real node.
 
 14
-00:00:58.910 --> 00:01:03.483
-Those are enforced — rename or delete the target, and the model won't even load.
+00:01:05.292 --> 00:01:12.253
+And look at the references between them: the payload extends a real Task field, the template points at a real payload.
 
 15
-00:01:03.483 --> 00:01:05.770
-So the model can't drift against itself.
+00:01:12.253 --> 00:01:17.739
+Those are resolved, not trusted — rename or delete the target, and the model won't even load.
 
 16
-00:01:07.170 --> 00:01:08.394
-Surface one: your code.
+00:01:17.739 --> 00:01:20.099
+So the model can't drift against itself.
 
 17
-00:01:08.394 --> 00:01:12.122
-Verify regenerates from the model and compares it to what's committed.
+00:01:21.499 --> 00:01:23.073
+Surface one: your code.
 
 18
-00:01:12.122 --> 00:01:16.808
-The moment an agent hand-edits a generated file, it no longer matches — drift, exit one.
+00:01:23.073 --> 00:01:27.863
+Verify regenerates from the model and compares it to what's committed.
 
 19
-00:01:18.208 --> 00:01:19.878
-Surface two: your prompts.
+00:01:27.863 --> 00:01:31.559
+The model moved and the code didn't — drift, exit one.
 
 20
-00:01:19.878 --> 00:01:24.373
-Every variable in a prompt template has to exist on its typed payload.
+00:01:32.959 --> 00:01:34.462
+Surface two: your prompts.
 
 21
-00:01:24.373 --> 00:01:32.079
-Reference a field that isn't there — say, after a rename — and the build fails, instead of the prompt quietly degrading.
+00:01:34.462 --> 00:01:38.506
+Every variable in a prompt template has to exist on its typed payload.
 
 22
-00:01:33.479 --> 00:01:35.034
-Surface three: your schema.
+00:01:38.506 --> 00:01:44.747
+Rename a field and leave the template behind, and the build fails — instead of the prompt quietly degrading.
 
 23
-00:01:35.034 --> 00:01:37.913
-Verify diffs the model against your live database.
+00:01:46.147 --> 00:01:47.702
+Surface three: your schema.
 
 24
-00:01:37.913 --> 00:01:44.478
-A column that drifted out of band — dropped, renamed, or added by hand — gets caught before it reaches production.
+00:01:47.702 --> 00:01:50.581
+Verify diffs the model against your live database.
 
 25
-00:01:45.878 --> 00:01:52.084
-When everything's in sync, one command says so: code, prompts, and schema all agree with the model.
+00:01:50.581 --> 00:01:57.146
+A column that drifted out of band — dropped, renamed, or added by hand — gets caught before it reaches production.
 
 26
-00:01:53.484 --> 00:01:57.218
-Put that one line in your C I, and drift can't merge.
+00:01:58.546 --> 00:02:01.847
+And surface four is the one no test can replace.
 
 27
-00:01:57.218 --> 00:02:05.742
-A pull request that diverges from the model fails the check — so an agent has to change the model first, then regenerate.
+00:02:01.847 --> 00:02:06.043
+A test exercises code that exists; an absence can't fail one.
 
 28
-00:02:05.742 --> 00:02:08.279
-The model stays the source of truth.
+00:02:06.043 --> 00:02:10.308
+So you declare requirements in the model — and mark them live.
 
 29
-00:02:09.679 --> 00:02:11.257
-That's the whole idea.
+00:02:10.308 --> 00:02:16.774
+Mark one live while nothing implements it, verify gives a warning — a capability nobody built.
 
 30
-00:02:11.257 --> 00:02:17.927
-AI code is locally coherent and globally divergent — drift you can't see by reading one file.
+00:02:16.774 --> 00:02:19.885
+And it resolves the link rather than trusting it.
 
 31
-00:02:17.927 --> 00:02:23.809
-Meta verify checks three surfaces against one model, and any mismatch is exit one.
+00:02:19.885 --> 00:02:25.219
+Rename the node a live claim points at, and the warning becomes an error — exit one.
 
 32
-00:02:23.809 --> 00:02:27.395
-The AI writes the code; the model keeps it honest.
+00:02:25.219 --> 00:02:30.616
+It checks that the claim points at something real, not that the something is correct.
 
 33
-00:02:28.795 --> 00:02:32.689
-Add meta verify to your build, and make drift a compile error.
+00:02:32.016 --> 00:02:38.870
+When everything's in sync, one command says so: code, prompts, schema, and claims all agree with the model.
 
 34
-00:02:32.689 --> 00:02:37.023
-This is part of the MetaObjects series — more at metaobjects dot dev.
+00:02:40.270 --> 00:02:43.951
+Put that one line in your CI, and drift can't merge.
 
 35
-00:02:37.023 --> 00:02:38.279
+00:02:43.951 --> 00:02:52.516
+A pull request that diverges from the model fails the check — so an agent has to change the model first, then regenerate.
+
+36
+00:02:52.516 --> 00:02:55.064
+The model stays the source of truth.
+
+37
+00:02:56.464 --> 00:02:57.754
+That's the whole idea.
+
+38
+00:02:57.754 --> 00:03:03.206
+AI code is locally coherent and globally divergent — drift you can't see by reading one file.
+
+39
+00:03:03.206 --> 00:03:08.307
+Meta verify checks four surfaces against one model, and any mismatch is a failed build.
+
+40
+00:03:08.307 --> 00:03:11.239
+The AI writes the code; the model keeps it honest.
+
+41
+00:03:12.639 --> 00:03:16.402
+Add meta verify to your build, and make drift fail the build.
+
+42
+00:03:16.402 --> 00:03:20.411
+This is part of the MetaObjects series — more at metaobjects.dev.
+
+43
+00:03:20.411 --> 00:03:21.645
 Thanks for watching.
 

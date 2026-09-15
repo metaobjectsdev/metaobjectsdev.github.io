@@ -72,10 +72,7 @@
     <section class="video-section" id="getting-started" style="max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 0;">
       <h2 class="section-label">Getting started — build a typed app from one model</h2>
       <p style="color:#8b9ab5;max-width:720px;">
-        Watch Claude Code build a working task tracker on MetaObjects: one model becomes the database, validation, a CRUD API, forms, hooks, and a grid — and it can't silently drift.
-      </p>
-      <p style="color:#8b9ab5;max-width:720px;">
-        Recorded before 1.0.4. Since then, <code>meta init</code> scaffolds no generators: the agent picks them from <code>meta gen --list --probe</code> and copies them into your repo with <code>meta eject</code>. The rest of the flow is unchanged. <a href="/getting-started.html" style="color:#7dd3fc;">The getting-started page</a> shows the current commands.
+        Watch Claude Code build a working task tracker on MetaObjects: one model becomes the database, validation, and a CRUD API — and drift fails the build instead of shipping.
       </p>
       <figure style="margin:0;">
         <video controls preload="metadata" playsinline
@@ -131,7 +128,7 @@
 
     <!-- Drift detection -->
     <section class="video-section" id="drift-detection" style="max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 0;">
-      <h2 class="section-label">Drift detection — make drift a compile error</h2>
+      <h2 class="section-label">Drift detection — make drift fail the build</h2>
       <p style="color:#8b9ab5;max-width:720px;">
         <code>meta verify</code> checks that your code, your prompts, and your database schema still agree with the model — any mismatch fails the build.
       </p>
