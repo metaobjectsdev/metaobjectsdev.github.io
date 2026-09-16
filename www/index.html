@@ -193,7 +193,6 @@
     <!-- Drift table — what Verify actually catches -->
     <section class="drift" id="drift">
       <h2 class="section-label">Context is advisory. This is not: drift breaks the build.</h2>
-      <p class="hero-gateline" style="text-align:left;margin:0 0 1rem;">When AI-written code drifts from your typed model, the build fails.</p>
       <p class="drift-intro">
         AI coding agents regenerate thousands of lines a day. A field rename in one file misses three others — types compile, runtime breaks at the boundary, hours to chase. A required field added to an entity is forgotten in the migration, the validator, the form. A prompt template references <code>{{userName}}</code> while the payload type carries <code>user.name</code>. Without a shared spine, every prompt accelerates the entropy. MetaObjects inverts the source of truth: generated code is owned by the codegen, not by humans or agents.
       </p>
