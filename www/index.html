@@ -152,8 +152,8 @@
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge.</p>
-          <p class="pillar-maturity">All five ports, gated by the cross-port conformance corpora. Opt-in since 1.0.4: nothing generates until you choose.</p>
+          <p>One metadata model → idiomatic native code in five languages: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand-edit-preserving regen via three-way merge. The generators are reference helpers, not the product: copy any of them into your repo with <code>eject</code> and the copy is yours to change. What MetaObjects guarantees is the model, the loader, <code>migrate</code>, <code>verify</code> and prompt render.</p>
+          <p class="pillar-maturity">All five ports; every generator's output is compiled, and the generated APIs are run, in CI. Eject in every port since 1.0.5: <code>meta eject</code>, <code>metaobjects eject</code>, <code>mvn metaobjects:eject</code>, <code>dotnet meta eject</code>. Opt-in since 1.0.4: nothing generates until you choose.</p>
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
@@ -194,7 +194,7 @@
     <section class="drift" id="drift">
       <h2 class="section-label">Context is advisory. This is not: drift breaks the build.</h2>
       <p class="drift-intro">
-        AI coding agents regenerate thousands of lines a day. A field rename in one file misses three others — types compile, runtime breaks at the boundary, hours to chase. A required field added to an entity is forgotten in the migration, the validator, the form. A prompt template references <code>{{userName}}</code> while the payload type carries <code>user.name</code>. Without a shared spine, every prompt accelerates the entropy. MetaObjects inverts the source of truth: generated code is owned by the codegen, not by humans or agents.
+        AI coding agents regenerate thousands of lines a day. A field rename in one file misses three others — types compile, runtime breaks at the boundary, hours to chase. A required field added to an entity is forgotten in the migration, the validator, the form. A prompt template references <code>{{userName}}</code> while the payload type carries <code>user.name</code>. Without a shared spine, every prompt accelerates the entropy. MetaObjects inverts the source of truth: the model is the spine, generated code follows it, and a build that disagrees with it fails.
       </p>
       <table class="drift-table">
         <thead>
