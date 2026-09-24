@@ -233,7 +233,7 @@
           <tr>
             <td>TS service renames a column; the Java consumer's POJO mapping silently goes stale</td>
             <td>Boundary drifts. Cross-service schema mismatch in production.</td>
-            <td>Same metadata regenerates both stacks. Conformance corpus guarantees they agree byte-for-byte.</td>
+            <td>Same metadata regenerates both stacks. Each port's <code>verify</code> fails the build that has not regenerated, and the conformance corpora hold every port to one reading of the model.</td>
           </tr>
         </tbody>
       </table>
