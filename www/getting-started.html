@@ -51,7 +51,7 @@
         for tasks,"</em> <em>"add a priority field and update everything."</em> Because <code>meta&nbsp;init</code> installs
         the MetaObjects skills, it knows the model is the source of truth: it edits the model, picks the generators the
         job needs, and <strong>generates the code</strong> — it never hand-writes the boilerplate. Every command and
-        output below is real <span class="real">verified</span>, run against <code>@metaobjectsdev/cli@1.0.4</code>.</p>
+        output below is real <span class="real">verified</span>, run against <code>@metaobjectsdev/cli@1.0.7</code>.</p>
     </section>
 
     <section>
@@ -180,6 +180,9 @@ metadata:
         <em>your</em> metadata and reports how many files each would emit:</p>
       <pre class="gs-code">$ npx meta gen --list --probe
 Generator catalog — nothing runs until you wire it in `generators: [...]`.
+Each generator is a reference helper, not a guarantee: `meta eject &lt;name&gt;` copies it into
+your repo and the copy is yours to change. What MetaObjects guarantees (migrate, verify,
+render) is not a generator and is not listed here.
 
 model  —  the entity modules and the constants beside them
   barrel             —  Single index.ts re-exporting every generated entity module.  [would emit 1]
@@ -208,7 +211,7 @@ These generators read config: apiPrefix, collectionNameOverrides, columnNamingSt
       <p class="gs-note">Those five files are the point: they're plain TypeScript in your repo, and <strong>yours to
         edit</strong>. <code>meta gen</code> runs those local copies — not the ones inside the package — so changing
         the shape of the generated code is an ordinary edit to a file you own. Install what they import:</p>
-      <pre class="gs-code">npm i -D <span class="s">@metaobjectsdev/codegen-ts</span>
+      <pre class="gs-code">npm i -D <span class="s">@metaobjectsdev/codegen-ts</span> <span class="s">typescript</span>
 npm i <span class="s">@metaobjectsdev/runtime-ts</span> <span class="s">"drizzle-orm@&gt;=0.36.0 &lt;1.0.0"</span> <span class="s">"fastify@&gt;=5.0.0 &lt;6.0.0"</span> <span class="s">"zod@&gt;=3.23.0 &lt;5.0.0"</span></pre>
       <p class="gs-note">Then add them to <code>metaobjects.config.ts</code>, with the config keys the routes need. Here's
         the file with <code>meta init</code>'s longer comments trimmed:</p>
@@ -279,6 +282,11 @@ export const TaskInsertSchema = z.object({
   status: z.enum([<span class="s">"open"</span>, <span class="s">"active"</span>, <span class="s">"done"</span>]).optional(),
   createdAt: z.string(),
 });</pre>
+      <p class="gs-note">To typecheck what was generated, create a <code>tsconfig.json</code> once and run the compiler.
+        <code>meta init</code> only scaffolds <code>tsconfig.codegen.json</code>, which covers the generators you own,
+        not <code>src/</code>:</p>
+      <pre class="gs-code">npx tsc --init
+npx tsc --noEmit</pre>
     </section>
 
     <section>
