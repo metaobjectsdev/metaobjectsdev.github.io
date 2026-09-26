@@ -112,7 +112,8 @@ jobs:
         fi
 
         # /assess.md is the SAME text as the fit-assessment skill, minus the skill's YAML
-        # frontmatter and the maintainer comment above its first heading — so it is copied
+        # frontmatter and its maintainer notes (an HTML comment block on lines of their own:
+        # above the first heading in older tags, at the end of the file since 1.0.9) — so it is copied
         # here for exactly the reason the llms mirrors are. It was hand-maintained instead,
         # and drifted to 519 lines against the skill's 565, still telling every reader it
         # was grounded against npm `0.15.x` / Maven `7.7.x`. That page is the acquisition
@@ -122,7 +123,7 @@ jobs:
         # retitle does not silently truncate the page. An empty result means the skill was
         # restructured — warn, and leave the page missing rather than publish a blank one.
         SKILL=agent-context/skills/metaobjects-fit-assessment/SKILL.md
-        if [ -f "$SKILL" ] && sed -n '/^# /,$p' "$SKILL" > /tmp/assess.md && [ -s /tmp/assess.md ]; then
+        if [ -f "$SKILL" ] && sed -n '/^# /,$p' "$SKILL" | sed '/^<!--$/,/^-->$/d' > /tmp/assess.md && [ -s /tmp/assess.md ]; then
           cp /tmp/assess.md "$GITHUB_WORKSPACE/www/assess.md"
           echo "copied assess.md from metaobjects $TAG ($(wc -l < /tmp/assess.md) lines)"
         else
