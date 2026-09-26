@@ -51,16 +51,17 @@
         for tasks,"</em> <em>"add a priority field and update everything."</em> Because <code>meta&nbsp;init</code> installs
         the MetaObjects skills, it knows the model is the source of truth: it edits the model, picks the generators the
         job needs, and <strong>generates the code</strong> — it never hand-writes the boilerplate. Every command and
-        output below is real <span class="real">verified</span>, run against <code>@metaobjectsdev/cli@1.0.7</code>.</p>
+        output below is real <span class="real">verified</span>, run against <code>@metaobjectsdev/cli@1.0.9</code>.</p>
     </section>
 
     <section>
       <h2 class="section-label">0 · Already have an app? Assess it first — nothing to install</h2>
       <p class="gs-note">Adopting into an existing codebase? Before you install anything, have your agent run the
-        <strong>fit &amp; migration assessment</strong> against your repo. It's read-only and propose-only — it reads
-        your code, migrations, and git history, and writes a decision-grade report: per-pillar fit verdicts (including
-        <em>NOT A FIT</em>), a drift ledger of the shapes you already declare twice — with the past commits where a fix
-        patched one copy and missed the other — and, if the verdict is yes, a first-week wedge plan.</p>
+        <strong>fit &amp; migration assessment</strong> against your repo. It's read-only and propose-only. A quick pass (5–30 minutes of agent time) reads your
+        code, migrations and git history and answers in the conversation: how much of MetaObjects this project should
+        adopt — <em>not worth it</em>, a contract spine between your apps, one subsystem, or all of it — and the seams
+        where it would pay off. Ask for the full assessment and it also writes an evidence-cited report, outside your
+        repo, with a drift ledger of the shapes you already declare twice and a first-week plan.</p>
       <p class="gs-say">Fetch https://metaobjects.dev/assess.md and run the MetaObjects Fit &amp; Migration Assessment against this repository.</p>
       <p class="gs-note">Any agent that can fetch a URL works (Claude Code, Cursor, Windsurf, Copilot's
         <code>#fetch</code>, Gemini CLI). Locked-down agent? Save <a href="/assess.md">the prompt file</a> into your
@@ -75,7 +76,8 @@
         <div class="gs-step">
           <h3>Set up the project and the agent context</h3>
           <p>Add the TypeScript CLI and scaffold the workspace. <code>meta init</code> also teaches your coding agent how to use MetaObjects:</p>
-          <pre class="gs-code">npm i <span class="s">@metaobjectsdev/cli</span>
+          <pre class="gs-code">npm init -y
+npm i <span class="s">@metaobjectsdev/cli</span>
 npx meta init</pre>
           <p>That writes a small, legible tree — <strong>your models go in <code>metaobjects/</code></strong>,
             and <code>codegen/generators/</code> is waiting for the generators you choose:</p>
@@ -112,7 +114,7 @@ npx meta init</pre>
       <div class="gs-steps">
         <div class="gs-step">
           <h3>Author the model</h3>
-          <p class="gs-say">Model a Task — a title (required, max 120), a status of open / active / done, and when it was created.</p>
+          <p class="gs-say">Model a Task — a title (required, max 120), a status of open / active / done, and a created-at time the server sets itself.</p>
           <p>→ Claude writes <code>metaobjects/meta.tasks.yaml</code> using the <code>metaobjects-authoring</code> skill. You review a few readable lines.</p>
         </div>
         <div class="gs-step">
@@ -170,8 +172,11 @@ metadata:
           - <span class="k">field.long</span>:       { name: id }
           - <span class="k">field.string</span>:     { name: title, required: true, maxLength: 120 }
           - <span class="k">field.enum</span>:       { name: status, values: [<span class="s">open</span>, <span class="s">active</span>, <span class="s">done</span>] }
-          - <span class="k">field.timestamp</span>:  { name: createdAt, required: true }
+          - <span class="k">field.timestamp</span>:  { name: createdAt, required: true, autoSet: onCreate }
           - <span class="k">identity.primary</span>: { fields: [id], generation: increment }</pre>
+      <p class="gs-note"><code>autoSet: onCreate</code> makes <code>createdAt</code> the server's job: the generated
+        insert schema stamps it with the current time, so a client never sends it, and a value a client does send is
+        ignored.</p>
     </section>
 
     <section>
@@ -197,22 +202,28 @@ api  —  the HTTP surface — pick ONE framework
                         requires: entity
   routes-hono        —  Per-entity Hono CRUD routes (runtime-ts/hono mountCrudRoutes).  [hono, would emit 1]
 <span class="c"># … client, docs and capability generators, then the ai and iam libraries</span></pre>
+      <p class="gs-note">That is the layout you see in a terminal. When stdout is not a terminal (piped, or run by an
+        agent), <code>meta gen --list</code> prints a structured format instead; pass <code>--format text</code> to get
+        the layout above, or <code>--format json</code> for JSON. <code>meta eject</code> behaves the same way.</p>
       <p class="gs-note">Take the ones you want. <code>meta eject</code> copies each into
         <code>codegen/generators/</code> and tells you exactly how to wire it:</p>
       <pre class="gs-code">$ npx meta eject entity queries routes names barrel
 Ejected "entity" -> codegen/generators/entity.ts. You own it now (ADR-0034 scaffold-and-own).
 In metaobjects.config.ts, "entityFile" must resolve to this file:
   import { entityFile } from "./codegen/generators/entity.js";
-<span class="c"># … the same for queries, routes, names and barrel</span>
+<span class="c"># … the same for queries, routes, names and barrel; for routes also:</span>
+The code this generator emits imports its HTTP adapter from codegen/runtime/, not from @metaobjectsdev/runtime-ts: the adapter, filter parser, error envelopes and pagination are yours too.
 
 Install what the ejected generators and their output need:
 <span class="c">  # … the packages below</span>
 These generators read config: apiPrefix, collectionNameOverrides, columnNamingStrategy, dbImport, dialect, extStyle, …</pre>
       <p class="gs-note">Those five files are the point: they're plain TypeScript in your repo, and <strong>yours to
         edit</strong>. <code>meta gen</code> runs those local copies — not the ones inside the package — so changing
-        the shape of the generated code is an ordinary edit to a file you own. Install what they import:</p>
-      <pre class="gs-code">npm i -D <span class="s">@metaobjectsdev/codegen-ts</span> <span class="s">typescript</span>
-npm i <span class="s">@metaobjectsdev/runtime-ts</span> <span class="s">"drizzle-orm@&gt;=0.36.0 &lt;1.0.0"</span> <span class="s">"fastify@&gt;=5.0.0 &lt;6.0.0"</span> <span class="s">"zod@&gt;=3.23.0 &lt;5.0.0"</span></pre>
+        the shape of the generated code is an ordinary edit to a file you own. Ejecting <code>routes</code> also copies
+        the HTTP adapter the routes call (mount helpers, filter parser, error envelopes, pagination) into
+        <code>codegen/runtime/</code>, so that code is yours too. Install what they all import:</p>
+      <pre class="gs-code">npm i -D <span class="s">@metaobjectsdev/codegen-ts</span> <span class="s">@types/qs</span> <span class="s">typescript</span>
+npm i <span class="s">@metaobjectsdev/metadata</span> <span class="s">qs</span> <span class="s">"drizzle-orm@&gt;=0.36.0 &lt;1.0.0"</span> <span class="s">"fastify@&gt;=5.0.0 &lt;6.0.0"</span> <span class="s">"zod@&gt;=3.23.0 &lt;5.0.0"</span></pre>
       <p class="gs-note">Then add them to <code>metaobjects.config.ts</code>, with the config keys the routes need. Here's
         the file with <code>meta init</code>'s longer comments trimmed:</p>
       <pre class="gs-code"><span class="c">// metaobjects.config.ts</span>
@@ -272,7 +283,9 @@ export const tasks = sqliteTable(
     status: text(TaskNames.fields.status.column, {
       enum: [<span class="s">"open"</span>, <span class="s">"active"</span>, <span class="s">"done"</span>] as const,
     }),
-    createdAt: text(TaskNames.fields.createdAt.column).notNull(),
+    createdAt: text(TaskNames.fields.createdAt.column)
+      .notNull()
+      .$defaultFn(() =&gt; new Date().toISOString()),
   },
   <span class="c">// … plus a CHECK constraint on status</span>
 );
@@ -280,13 +293,11 @@ export const tasks = sqliteTable(
 export const TaskInsertSchema = z.object({
   title: z.string().min(1).max(120),
   status: z.enum([<span class="s">"open"</span>, <span class="s">"active"</span>, <span class="s">"done"</span>]).optional(),
-  createdAt: z.string(),
+  createdAt: z
+    .string()
+    .optional()
+    .transform(() =&gt; new Date().toISOString()),
 });</pre>
-      <p class="gs-note">To typecheck what was generated, create a <code>tsconfig.json</code> once and run the compiler.
-        <code>meta init</code> only scaffolds <code>tsconfig.codegen.json</code>, which covers the generators you own,
-        not <code>src/</code>:</p>
-      <pre class="gs-code">npx tsc --init
-npx tsc --noEmit</pre>
     </section>
 
     <section>
@@ -316,12 +327,17 @@ meta migrate — sqlite, file:dev.sqlite
     .metaobjects/migrations/&lt;timestamp&gt;-init/down.sql
 
 migrate: applied 1 migration(s): &lt;timestamp&gt;-init</pre>
+      <p class="gs-note">Now that <code>src/db.ts</code> exists, typecheck everything: create a <code>tsconfig.json</code> once and run the compiler.
+        <code>meta init</code> only scaffolds <code>tsconfig.codegen.json</code>, which covers the generators you own,
+        not <code>src/</code>:</p>
+      <pre class="gs-code">npx tsc --init
+npx tsc --noEmit</pre>
     </section>
 
     <section>
       <h2 class="section-label">8 · Use it — and add your own logic</h2>
       <p class="gs-note">Import the generated code into your app:</p>
-      <pre class="gs-code"><span class="c">// src/server.ts — run it with: npx tsx src/server.ts</span>
+      <pre class="gs-code"><span class="c">// src/server.ts — run it with: npx tsx src/server.ts (npx fetches tsx on first use)</span>
 import Fastify from <span class="s">"fastify"</span>;
 import { taskRoutes } from <span class="s">"./generated/Task.routes.js"</span>;
 
@@ -329,15 +345,18 @@ const app = Fastify();
 app.register(taskRoutes);   <span class="c">// GET/POST/PATCH/DELETE /tasks, validated</span>
 await app.listen({ port: 3000 });</pre>
       <pre class="gs-code">$ curl -X POST localhost:3000/tasks -H <span class="s">'content-type: application/json'</span> \
-    -d <span class="s">'{"title":"Write the page","status":"open","createdAt":"2026-09-14T12:00:00Z"}'</span>
-{"id":1,"title":"Write the page","status":"open","createdAt":"2026-09-14T12:00:00Z"}
+    -d <span class="s">'{"title":"Write the page","status":"open"}'</span>
+{"id":1,"title":"Write the page","status":"open","createdAt":"2026-09-26T14:08:05.053Z"}
 
 $ curl -X POST localhost:3000/tasks -H <span class="s">'content-type: application/json'</span> -d <span class="s">'{"status":"nope"}'</span>
 {"error":"validation","issues":[{"expected":"string","code":"invalid_type","path":["title"], <span class="c">…</span></pre>
-      <p class="gs-note">The entity module imports only Drizzle and Zod. The routes mount through
-        <code>@metaobjectsdev/runtime-ts</code>, an ordinary Apache-2.0 package you could vendor. <strong>The generated
+      <p class="gs-note">The entity module imports only Drizzle and Zod. The routes mount through the
+        HTTP adapter eject copied into <code>codegen/runtime/</code>: plain TypeScript you own and can change. <strong>The generated
         endpoints are unauthenticated:</strong> register them inside a Fastify scope that carries your auth hook. The
         header of <code>Task.routes.ts</code> shows how.</p>
+      <p class="gs-note">Lists filter as <code>?filter[status][eq]=open</code>, and only fields you mark
+        <code>filterable: true</code> in the model accept a filter; filtering on any other field answers 400
+        <code>invalid_filter_field</code>. That keeps an unindexed column from becoming a query anyone can run.</p>
       <p class="gs-note">The custom business logic that makes the app yours? You write it, in your own modules, against
         the generated, typed code. A <code>Task.extra.ts</code> beside the output is a naming convention, not a plugin
         point: nothing imports it for you, so register its handlers next to <code>taskRoutes</code>. Change the model,
@@ -349,7 +368,7 @@ $ curl -X POST localhost:3000/tasks -H <span class="s">'content-type: applicatio
       <h2 class="section-label">9 · Keep it honest</h2>
       <p class="gs-note">As the model evolves, <code>meta verify</code> fails the build the moment generated code, the
         database schema, or a prompt template drifts from it:</p>
-      <pre class="gs-code">npx meta verify                         <span class="c"># prompt templates + the requirements ledger</span>
+      <pre class="gs-code">npx meta verify                         <span class="c"># the prompt-template gate (the default when no gate is named)</span>
 npx meta verify --codegen               <span class="c"># generated code vs the model</span>
 npx meta verify --db file:dev.sqlite    <span class="c"># live database schema vs the model</span></pre>
       <p class="gs-note">Using a different assistant than Claude Code? Point it at
