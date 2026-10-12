@@ -122,12 +122,29 @@ jobs:
         # `sed` from the first top-level heading, rather than matching the title text, so a
         # retitle does not silently truncate the page. An empty result means the skill was
         # restructured — warn, and leave the page missing rather than publish a blank one.
-        SKILL=agent-context/skills/metaobjects-fit-assessment/SKILL.md
-        if [ -f "$SKILL" ] && sed -n '/^# /,$p' "$SKILL" | sed '/^<!--$/,/^-->$/d' > /tmp/assess.md && [ -s /tmp/assess.md ]; then
-          cp /tmp/assess.md "$GITHUB_WORKSPACE/www/assess.md"
-          echo "copied assess.md from metaobjects $TAG ($(wc -l < /tmp/assess.md) lines)"
+        #
+        # Tags that split the skill (capability sheet and JSON contract moved into its
+        # `references/`) carry `scripts/build-assess-prompt.mjs`, the only complete form of
+        # the prompt. Use it when the tag has it. A script that exists but fails FAILS THE
+        # DEPLOY: the `sed` copy of such a tag is missing those two parts, and publishing it
+        # would be an incomplete prompt behind a green build. Older tags are one file, so
+        # the `sed` copy stays complete for them.
+        if [ -f scripts/build-assess-prompt.mjs ]; then
+          if node scripts/build-assess-prompt.mjs --out /tmp/assess.md && [ -s /tmp/assess.md ]; then
+            cp /tmp/assess.md "$GITHUB_WORKSPACE/www/assess.md"
+            echo "built assess.md from metaobjects $TAG ($(wc -l < /tmp/assess.md) lines)"
+          else
+            echo "metaobjects $TAG could not build assess.md with scripts/build-assess-prompt.mjs"
+            exit 1
+          fi
         else
-          echo "::warning::metaobjects $TAG has no usable fit-assessment skill — /assess.md will 404."
+          SKILL=agent-context/skills/metaobjects-fit-assessment/SKILL.md
+          if [ -f "$SKILL" ] && sed -n '/^# /,$p' "$SKILL" | sed '/^<!--$/,/^-->$/d' > /tmp/assess.md && [ -s /tmp/assess.md ]; then
+            cp /tmp/assess.md "$GITHUB_WORKSPACE/www/assess.md"
+            echo "copied assess.md from metaobjects $TAG ($(wc -l < /tmp/assess.md) lines)"
+          else
+            echo "::warning::metaobjects $TAG has no usable fit-assessment skill — /assess.md will 404."
+          fi
         fi
 
         # A release older than the injection program has neither the injector nor the
