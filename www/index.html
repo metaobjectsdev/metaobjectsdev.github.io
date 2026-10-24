@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MetaObjects — Cross-language metadata standard for codegen, runtime, drift detection, prompts, and requirements</title>
-  <meta name="description" content="Define typed entities once. Generate idiomatic code in TypeScript, Java, Kotlin, C#.NET, and Python. Runtime metadata. Drift detection. Conformance-gated. Apache 2.0. Installable in all five languages — npm, Maven Central, NuGet, and PyPI.">
+  <title>MetaObjects — One typed model of your app. Your agent writes it, your code is generated from it, your build is checked against it.</title>
+  <meta name="description" content="Coding agents get context — rules files, memories, MCP servers — and context is advisory: nothing fails when the code stops matching it.">
 
   <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
 
@@ -14,11 +14,19 @@
 
   <link rel="stylesheet" href="/styles.css">
 
-  <meta property="og:title" content="MetaObjects — Cross-language metadata standard">
-  <meta property="og:description" content="Codegen, runtime metadata, drift detection, prompt construction, capability requirements, and libraries for TypeScript, Java, Kotlin, C#.NET, and Python. Installable in all five — npm, Maven Central, NuGet, PyPI. Apache 2.0.">
+  <meta property="og:title" content="One typed model of your app. Your agent writes it, your code is generated from it, your build is checked against it.">
+  <meta property="og:description" content="Coding agents get context — rules files, memories, MCP servers — and context is advisory: nothing fails when the code stops matching it.">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MetaObjects">
   <meta property="og:url" content="https://metaobjects.dev/">
-  <meta property="og:image" content="https://metaobjects.dev/images/mo-logo.png">
+  <meta property="og:image" content="https://metaobjects.dev/images/cli-drift-poster.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:image:alt" content="A terminal recording of meta verify failing the build after a field rename">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="One typed model of your app. Your agent writes it, your code is generated from it, your build is checked against it.">
+  <meta name="twitter:description" content="Coding agents get context — rules files, memories, MCP servers — and context is advisory: nothing fails when the code stops matching it.">
+  <meta name="twitter:image" content="https://metaobjects.dev/images/cli-drift-poster.png">
 
   <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt — AI assistant index">
 </head>
@@ -176,9 +184,9 @@
           <p>A capability is a node in the same model as your entities, so
           <code>implementedBy</code> is <strong>resolved, not trusted</strong> — a claim whose
           implementation vanished fails the build, and one naming nothing is a warning.
-          <code>meta verify</code> reports the ledger on every run. It proves the links resolve,
+          <code>verify</code> reports the ledger on every run. It proves the links resolve,
           not that the implementation is correct.</p>
-          <p class="pillar-maturity">Vocabulary in all five ports; the <code>meta verify</code> checks run in the Node <code>meta</code> CLI; test scaffolding is TypeScript-only. Dogfooded on maintainer-owned projects, no outside adopter yet.</p>
+          <p class="pillar-maturity">Since 1.1.0 the requirement gate runs in every port's <code>verify</code>, and every port ships a <code>requirement-tests</code> generator; the authoring lint is TypeScript-only (<a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/features/requirements.md">docs</a>). Dogfooded on maintainer-owned projects, no outside adopter yet.</p>
           <p class="pillar-read"><a href="/requirements.html">Read: capability requirements&nbsp;→</a></p>
         </article>
         <article class="pillar">

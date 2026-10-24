@@ -97,7 +97,7 @@
 
   <main>
     <article class="page">
-      <p class="page-eyebrow">Capability requirements · vocabulary in all five ports · checked by the Node <code>meta</code> CLI</p>
+      <p class="page-eyebrow">Capability requirements · vocabulary and the verify gate in all five ports</p>
       <h1>Check what your AI actually built.</h1>
       <p class="page-lede">
         A test exercises code that exists. That is the whole reason a passing suite can sit on
@@ -268,9 +268,9 @@
       <pre class="example-code" data-snippet="ts-requirement-test"></pre>
 
       <p>
-        <strong>This part is TypeScript-only.</strong> The vocabulary loads and validates in all
-        five ports, and the <code>meta verify</code> checks run in the Node <code>meta</code> CLI.
-        The test scaffolding is TypeScript's alone.
+        <strong>The example above is TypeScript.</strong> Since 1.1.0 the vocabulary loads and validates in
+        all five ports, the requirement gate runs in every port's <code>verify</code>, and every port
+        ships a <code>requirement-tests</code> generator. Only the authoring lint is TypeScript-only.
       </p>
 
       <h2>Where it sits</h2>
