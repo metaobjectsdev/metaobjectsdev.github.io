@@ -51,7 +51,7 @@
         for tasks,"</em> <em>"add a priority field and update everything."</em> Because <code>meta&nbsp;init</code> installs
         the MetaObjects skills, it knows the model is the source of truth: it edits the model, picks the generators the
         job needs, and <strong>generates the code</strong> — it never hand-writes the boilerplate. Every command and
-        output below is real <span class="real">verified</span>, run against <code>@metaobjectsdev/cli@1.0.9</code>.</p>
+        output below is real <span class="real">verified</span>, run against <code>@metaobjectsdev/cli@1.1.0</code>.</p>
     </section>
 
     <section>
@@ -147,14 +147,17 @@ npx meta init</pre>
         <thead><tr><th>Language</th><th>Install</th><th>Generate</th></tr></thead>
         <tbody>
           <tr><td><strong>TypeScript</strong> (this guide)</td><td><code>npm i @metaobjectsdev/cli</code></td><td><code>meta gen</code></td></tr>
-          <tr><td>C# / .NET</td><td><code>dotnet add package MetaObjects</code></td><td><code>dotnet meta gen</code></td></tr>
-          <tr><td>Java / Kotlin</td><td><code>com.metaobjects</code> (Maven Central)</td><td><code>mvn metaobjects:generate</code></td></tr>
-          <tr><td>Python</td><td><code>pip install metaobjects</code></td><td><code>metaobjects gen</code></td></tr>
+          <tr><td>C# / .NET</td><td><code>dotnet tool install --global MetaObjects.Cli</code>, then <code>dotnet meta init</code></td><td><code>dotnet meta gen ./metaobjects --out ./Generated --namespace App</code></td></tr>
+          <tr><td>Java / Kotlin</td><td><code>com.metaobjects:metaobjects-maven-plugin</code> (Maven Central)</td><td><code>mvn metaobjects:generate</code></td></tr>
+          <tr><td>Python (3.11+)</td><td><code>pip install metaobjects</code></td><td><code>metaobjects gen</code></td></tr>
         </tbody>
       </table>
       <p class="gs-note">Every port works the same way: <strong>nothing is generated until you name the generators you
-        want</strong>. There is no default suite to switch off. <code>--list</code> is the catalog in each CLI, and the
-        C# and Python CLIs take the names you chose with <code>--generators</code>.</p>
+        want</strong>. There is no default suite to switch off. <code>--list</code> is the catalog in the TypeScript and C# CLIs. Each port keeps the
+        list you chose in a file you own: <code>generators</code> in <code>metaobjects.config.ts</code> (TypeScript),
+        <code>codegen/Generators.cs</code> (C#, which <code>dotnet meta init</code> writes empty), <code>metaobjects.config.yaml</code>
+        (Python), and the plugin's <code>&lt;generators&gt;</code> in your <code>pom.xml</code> (Java and Kotlin, set at plugin level
+        so the bare goal finds it). <code>--generators</code> only narrows a run to names that list already holds.</p>
     </section>
 
     <section>
@@ -198,7 +201,7 @@ persistence  —  how rows are read and written
   queries            —  Per-entity typed query helpers (findById/create/...).  [would emit 1]
                         requires: entity
 api  —  the HTTP surface — pick ONE framework
-  routes             —  Per-entity Fastify CRUD routes (drizzle-fastify mountCrudRoutes).  [fastify]
+  routes             —  Per-entity Fastify CRUD routes (drizzle-fastify mountCrudRoutes).  [fastify, would emit 1 once dbImport is set]
                         requires: entity
   routes-hono        —  Per-entity Hono CRUD routes (runtime-ts/hono mountCrudRoutes).  [hono, would emit 1]
 <span class="c"># … client, docs and capability generators, then the ai and iam libraries</span></pre>
@@ -216,7 +219,7 @@ The code this generator emits imports its HTTP adapter from codegen/runtime/, no
 
 Install what the ejected generators and their output need:
 <span class="c">  # … the packages below</span>
-These generators read config: apiPrefix, collectionNameOverrides, columnNamingStrategy, dbImport, dialect, extStyle, …</pre>
+These generators read config: apiPrefix, collectionNameOverrides, dbImport, dialect, extStyle, outputLayout, …</pre>
       <p class="gs-note">Those five files are the point: they're plain TypeScript in your repo, and <strong>yours to
         edit</strong>. <code>meta gen</code> runs those local copies — not the ones inside the package — so changing
         the shape of the generated code is an ordinary edit to a file you own. Ejecting <code>routes</code> also copies
@@ -247,7 +250,6 @@ export default defineConfig({
     namesFile(),            <span class="c">// &lt;Entity&gt;Names — physical table/column constants</span>
     barrel(),               <span class="c">// src/generated/index.ts re-exports</span>
   ],
-  docs: { outDir: <span class="s">"./docs/generated"</span>, layout: <span class="s">"flat"</span> },
 });</pre>
       <p class="gs-note">The rest of the catalog works the same way: React forms, TanStack hooks and grids, Hono routes,
         prompt renderers and parsers. <code>meta eject form</code> is all it takes to own one.</p>
