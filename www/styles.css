@@ -731,3 +731,7 @@ h1, h2, h3 {
 @media (max-width: 800px) {
   #generators .drift-table td:nth-child(2)::before { content: "How you start one"; }
 }
+
+.includes-list { max-width: 880px; margin: 0; padding-left: 1.25rem; font-size: 0.95rem; line-height: 1.6; color: var(--dark-gray); }
+.includes-list li { margin: 0 0 0.85rem; }
+.drift .includes-list { margin: 1rem 0; }
