@@ -695,3 +695,33 @@ h1, h2, h3 {
 .origin .section-label { margin-bottom: 1rem; }
 .origin-lede { color: var(--dark-gray); font-size: 1.0625rem; line-height: 1.7;
   margin: 0 auto 1.75rem; max-width: 760px; }
+
+/* Port-scope labels in the "what fails the build" and fit tables */
+.fit-ship { font-weight: 600; color: #15803d; }
+.fit-some { font-weight: 600; color: #b45309; }
+.fit-not  { font-weight: 600; color: #b91c1c; }
+#fit .pillar h3 { font-size: 1.05rem; }
+#drift .drift-table td, #keep-your-orm .drift-table td { color: inherit; }
+
+/* Narrow screens: stack the three-column tables so the page never scrolls sideways. */
+@media (max-width: 800px) {
+  .drift-table, .drift-table tbody, .drift-table tr, .drift-table td { display: block; width: 100%; box-sizing: border-box; }
+  .drift-table thead { display: none; }
+  .drift-table tbody tr { padding: 0.5rem 0; border-bottom: 1px solid var(--rule); }
+  .drift-table tbody tr:last-child { border-bottom: none; }
+  .drift-table tbody td { border-bottom: none; padding: 0.35rem 0; }
+  .drift-table td:nth-child(2)::before,
+  .drift-table td:nth-child(3)::before {
+    display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--medium-gray); margin-bottom: 0.1rem;
+  }
+  #drift .drift-table td:nth-child(2)::before { content: "What fails, and how"; }
+  #drift .drift-table td:nth-child(3)::before { content: "Where it runs today"; }
+  #keep-your-orm .drift-table td:nth-child(2)::before { content: "Generate only this"; }
+  #keep-your-orm .drift-table td:nth-child(3)::before { content: "How"; }
+}
+
+/* Wide reference tables scroll inside themselves rather than widening the page. */
+@media (max-width: 800px) {
+  .impl-table, .compare-table, .capability-matrix { display: block; overflow-x: auto; max-width: 100%; }
+}
