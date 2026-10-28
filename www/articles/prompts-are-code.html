@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompts are code now — even OpenAI says so | MetaObjects</title>
+  <title>Prompts are code now, and OpenAI says so | MetaObjects</title>
   <meta name="description" content="The first generation of prompt management treated prompts like CMS content. OpenAI is shutting that down and telling customers to move prompts into typed, version-controlled, build-verified code. Here's what prompts-as-code actually looks like.">
 
   <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
@@ -14,7 +14,7 @@
 
   <link rel="stylesheet" href="/styles.css">
 
-  <meta property="og:title" content="Prompts are code now — even OpenAI says so">
+  <meta property="og:title" content="Prompts are code now, and OpenAI says so">
   <meta property="og:description" content="OpenAI is shutting down managed prompts and telling customers to move them into typed, version-controlled, build-verified code. What prompts-as-code actually looks like.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://metaobjects.dev/articles/prompts-are-code.html">
@@ -74,10 +74,10 @@
       <a href="/" class="article-back">← metaobjects.dev</a>
 
       <p class="article-eyebrow">Prompt construction · AI-era drift</p>
-      <h1>Prompts are code now — even OpenAI says so</h1>
+      <h1>Prompts are code now, and OpenAI says so</h1>
       <p class="article-meta">By <a href="https://dougmealing.com">Doug Mealing</a> · June 2026 · ~6 min read</p>
 
-      <p>On November 30, 2026, OpenAI is shutting down its managed Prompts API. Their <a href="https://developers.openai.com/api/docs/guides/prompting/migrate-from-prompt-object">migration guide</a> tells customers what to do instead, and it reads like a manifesto:</p>
+      <p>On November 30, 2026, OpenAI is shutting down its managed Prompts API. Their <a href="https://developers.openai.com/api/docs/guides/prompting/migrate-from-prompt-object">migration guide</a> tells customers what to do instead:</p>
 
       <ul>
         <li>Move prompts <strong>into your application code</strong>, versioned in <strong>git</strong>, tested in <strong>CI</strong>.</li>
@@ -85,85 +85,81 @@
         <li>Keep static content first, so <strong>exact-prefix prompt caching</strong> keeps working.</li>
       </ul>
 
-      <p>A year earlier, Humanloop — one of the most engineering-grade prompt platforms — <a href="https://techcrunch.com/2025/08/13/anthropic-nabs-humanloop-team-as-competition-for-enterprise-ai-talent-heats-up/">shut down</a> after its team joined Anthropic.</p>
+      <p>A year earlier, Humanloop, one of the most engineering-minded prompt platforms, <a href="https://techcrunch.com/2025/08/13/anthropic-nabs-humanloop-team-as-competition-for-enterprise-ai-talent-heats-up/">shut down</a> after its team joined Anthropic.</p>
 
-      <p>The signal is hard to miss. The first generation of prompt management treated prompts like CMS content: strings in someone else's cloud, edited in a dashboard, fetched at runtime. That model is being abandoned by its biggest exponent, and the replacement guidance — typed inputs, version control, build-time verification, cache-stable rendering — describes something else entirely.</p>
-
-      <p>It describes <strong>code</strong>.</p>
+      <p>The first generation of prompt management treated prompts like CMS content: strings stored in someone else's cloud, edited in a dashboard and fetched at runtime. Its biggest backer is now walking away from that, and what it recommends instead (typed inputs, version control, build-time checks, cache-stable rendering) is how we already handle <strong>code</strong>.</p>
 
       <h2>We already learned this lesson once</h2>
 
-      <p>Twenty years ago, SQL scattered through string concatenation gave us injection bugs and unrefactorable data access — so we moved queries behind typed interfaces. Configuration scattered through environments gave us "works on my machine" — so we moved it into declarative, versioned files.</p>
+      <p>Twenty years ago, SQL scattered through string concatenation gave us injection bugs and data access that was hard to refactor, so we moved queries behind typed interfaces. Configuration scattered through environments gave us "works on my machine", so we moved it into declarative, versioned files.</p>
 
-      <p>Prompts are at that same inflection point, with a forcing function the earlier shifts didn't have: <strong>AI now writes much of your code</strong>. Every regeneration is a chance for your prompts to quietly disagree with the model they describe — a renamed field, a changed enum, a restructured payload. A prompt that drifts doesn't throw an exception. It just gets <em>worse</em>, silently, in production.</p>
+      <p>Prompts are at the same point now, with one difference the earlier shifts didn't have: <strong>AI now writes much of your code</strong>. Every regeneration is a chance for your prompts to quietly disagree with the model they describe, through a renamed field, a changed enum or a restructured payload. A prompt that drifts doesn't throw an exception. It gets <em>worse</em> in production, and nothing reports it.</p>
 
-      <p>So what would it actually take to treat a prompt as code? Four things:</p>
+      <p>Treating a prompt as code takes four things:</p>
 
       <ol>
-        <li><strong>Typed inputs</strong> — the prompt's variables come from a declared, typed structure, not ad-hoc string substitution.</li>
-        <li><strong>Build-time verification</strong> — rename a field the prompt uses, and the <em>build fails</em>.</li>
-        <li><strong>Deterministic rendering</strong> — the same inputs produce byte-identical prompt text (your snapshot tests and your prompt cache both depend on this).</li>
-        <li><strong>Typed output handling</strong> — the response contract is declared once, and parsing — including <em>recovering from the malformed output real models actually produce</em> — is generated from it.</li>
+        <li><strong>Typed inputs.</strong> The prompt's variables come from a declared, typed structure, not ad-hoc string substitution.</li>
+        <li><strong>Build-time verification.</strong> Rename a field the prompt uses, and the <em>build fails</em>.</li>
+        <li><strong>Deterministic rendering.</strong> The same inputs produce byte-identical prompt text, which your snapshot tests and your prompt cache both depend on.</li>
+        <li><strong>Typed output handling.</strong> The response contract is declared once, and parsing (including <em>recovering from the malformed output real models produce</em>) is generated from it.</li>
       </ol>
 
-      <p>Here's the uncomfortable part: almost nothing in the current tool landscape does these.</p>
+      <p>Almost no current tool does these.</p>
 
-      <h2>The prompt platforms don't type your variables — none of them</h2>
+      <h2>The prompt platforms don't type your variables</h2>
 
-      <p>I went through the docs of every major prompt-management platform: Langfuse, LangSmith, PromptLayer, Agenta, Braintrust. They're genuinely good at what they're built for — versioned templates, deployment labels, A/B testing, dashboards, non-engineer editing.</p>
+      <p>I went through the docs of every major prompt-management platform: Langfuse, LangSmith, PromptLayer, Agenta, Braintrust. They are good at what they were built for: versioned templates, deployment labels, A/B testing, dashboards and non-engineer editing.</p>
 
       <p>But on the four requirements above:</p>
 
       <ul>
-        <li><strong>Typed variables: none.</strong> Every platform does name-based string substitution — <code>{{variable}}</code> filled from an untyped bag. The closest gestures are <a href="https://agenta.ai/docs/reference/sdk/configuration-management">Agenta's optional runtime name-list</a> and PromptLayer's enum/image variable "roles." No schema, no typed payload, nothing that knows <code>authorName</code> is a string that exists.</li>
-        <li><strong>Build-time drift detection: none.</strong> The uniform story is webhooks → your CI → tests you wrote yourself — which fire <em>after</em> the registry already changed. Nothing inspects whether the variables a template references still exist.</li>
+        <li><strong>Typed variables: none.</strong> Every platform does name-based string substitution: <code>{{variable}}</code> filled from an untyped bag. The closest gestures are <a href="https://agenta.ai/docs/reference/sdk/configuration-management">Agenta's optional runtime name-list</a> and PromptLayer's enum/image variable "roles." There is no schema or typed payload, and nothing that knows <code>authorName</code> is a string that exists.</li>
+        <li><strong>Build-time drift detection: none.</strong> Every platform offers the same path: webhooks, then your CI, then tests you wrote yourself, which fire <em>after</em> the registry has already changed. Nothing inspects whether the variables a template references still exist.</li>
         <li><strong>Output parsing: delegated.</strong> Structured output means storing a provider <code>json_schema</code> in the prompt config and letting the model vendor enforce it. No platform parses, repairs, or reports anything itself.</li>
         <li><strong>Codegen: none.</strong> No platform generates a typed client from a prompt.</li>
       </ul>
 
-      <p>And the typed-extraction tools — Instructor, Outlines, Pydantic-AI, LangChain's structured output, TypeChat, BAML — own the <em>output</em> half of the problem, with real sophistication. But across all of them: only <a href="https://www.boundaryml.com/blog/schema-aligned-parsing">BAML</a> has a genuinely cross-language schema (and no native Java, Kotlin, or C#); repairs are either silent (BAML's SAP), bought with another LLM call (everyone's retry loops), or delegated to vendor-locked constrained decoding; <strong>no tool in the field produces a recovery report</strong> telling you what it fixed; <strong>no tool repairs XML</strong>; and none of them connect the prompt's schema to the rest of your application — the database column, the API field, the UI form that hold the <em>same</em> data.</p>
+      <p>And the typed-extraction tools (Instructor, Outlines, Pydantic-AI, LangChain's structured output, TypeChat, BAML) own the <em>output</em> half of the problem, and do it well. But across all of them, only <a href="https://www.boundaryml.com/blog/schema-aligned-parsing">BAML</a> has a cross-language schema (and no native Java, Kotlin or C#). Repairs are either silent (BAML's SAP), bought with another LLM call (everyone's retry loops), or delegated to vendor-locked constrained decoding. <strong>No tool in the field produces a recovery report</strong> telling you what it fixed, <strong>no tool repairs XML</strong>, and none of them connect the prompt's schema to the rest of your application — the database column, the API field, the UI form that hold the <em>same</em> data.</p>
 
-      <p>That last gap is the one that matters most, because prompt drift is almost never a prompt-only event. The field got renamed <em>in the domain model</em>. The prompt was just the surface nobody checked.</p>
+      <p>That last gap matters most, because prompt drift is almost never a prompt-only event. The field was renamed <em>in the domain model</em>, and the prompt was the surface nobody checked.</p>
 
       <h2>What prompts-as-code looks like in practice</h2>
 
-      <p>This is the problem <a href="/">MetaObjects</a> was built around. It's an open-source (Apache 2.0) metadata standard: you declare your data model once, in plain YAML in your repo, and it generates idiomatic code in TypeScript, C#, Java, Kotlin, and Python — entities, schema, API routes, <em>and prompts</em>, all from the same model.</p>
+      <p><a href="/">MetaObjects</a> was built around this problem. It is an open-source (Apache 2.0) metadata standard: you declare your data model once, in plain YAML in your repo, and it generates idiomatic code in TypeScript, C#, Java, Kotlin, and Python — entities, schema, API routes, <em>and prompts</em>, all from the same model.</p>
 
-      <p>(It grew out of a mess of my own — a few thousand lines of <code>StringBuilder</code> driving the characters in an LLM game. For the origin story, and the <em>data + text + render</em> decomposition that became the fix, the longer essay is <a href="https://dougmealing.com/writing/the-prompt-is-code/">The prompt is code — and yours is drifting too</a>.)</p>
+      <p>(It grew out of a mess of my own: a few thousand lines of <code>StringBuilder</code> driving the characters in an LLM game. The longer essay, <a href="https://dougmealing.com/writing/the-prompt-is-code/">The prompt is code, and yours is drifting too</a>, covers the origin story and the <em>data + text + render</em> split that became the fix.)</p>
 
-      <p>A prompt declares its input as a typed payload — a value object whose members bind to the same entities that drive your database and API, so a prompt's shape is part of the model rather than a lookalike sitting beside it — and names its text by a logical reference, so the text itself stays a versioned file in your repo rather than a row in someone's cloud:</p>
+      <p>A prompt declares its input as a typed payload, a value object whose members bind to the same entities that drive your database and API, so the prompt's shape is part of the model rather than a lookalike beside it. It names its text by a logical reference, so the text stays a versioned file in your repo rather than a row in someone's cloud:</p>
 
       <pre class="example-code" data-snippet="showcase-prompt"></pre>
 
-      <p>Naming the members is not bureaucracy — it is the only thing that makes a prompt's cost legible. Fill a template from an untyped bag and the honest answer to &ldquo;what do we send this model?&rdquo; is <em>whatever the caller had lying around</em>. Someone passes the whole user object because it was in scope, thirty fields ride along on every call forever, and nothing anywhere records that it happened. When the payload is declared, <strong>adding a field to a prompt is a line in a pull request</strong> — with a name on it, in a review, next to the reason. Payload bloat stops being a mystery you diagnose from a bill and becomes a diff you either approve or don't.</p>
+      <p>Naming the members is what makes a prompt's cost visible. Fill a template from an untyped bag and the answer to &ldquo;what do we send this model?&rdquo; is <em>whatever the caller had lying around</em>. Someone passes the whole user object because it was in scope, thirty fields ride along on every call forever, and nothing records that it happened. When the payload is declared, <strong>adding a field to a prompt is a line in a pull request</strong>, with a name on it, in a review, next to the reason. Payload bloat shows up as a diff you approve or reject, not as a mystery you diagnose from a bill.</p>
 
-      <p>From that one declaration you get a generated, typed <code>render</code> function per language — deterministic and byte-identical across all five ports (there's a shared conformance corpus that proves it), so snapshot tests pass and your exact-prefix prompt cache stays warm. Nothing reformats your prompt behind your back.</p>
+      <p>From that one declaration you get a generated, typed <code>render</code> function per language, deterministic and byte-identical across all five ports (a shared conformance corpus checks it), so snapshot tests pass and your exact-prefix prompt cache stays warm. Nothing reformats your prompt behind your back.</p>
 
-      <p>That last one is worth spelling out, because it is the failure with no symptom. Provider prompt caching matches your prompt <em>from the first byte</em>, and the first byte that differs ends the match — everything after it is billed as new input, where a hit would have cost up to about a tenth as much. So a reordered key, a trailing space, a template helper that decides to pretty-print today does not throw, does not return a worse answer, and does not show up in a log or a test. <strong>It shows up on the invoice, four weeks later, as a number nobody can attribute to a change.</strong> Deterministic rendering is what makes that class of bug impossible rather than merely unlikely.</p>
+      <p>The cache is worth spelling out, because a broken one has no symptom. Provider prompt caching matches your prompt <em>from the first byte</em>, and the first byte that differs ends the match — everything after it is billed as new input, where a hit would have cost up to about a tenth as much. So a reordered key, a trailing space, or a template helper that starts pretty-printing does not throw, does not return a worse answer, and does not show up in a log or a test. <strong>It shows up on the invoice four weeks later, as a number nobody can attribute to a change.</strong> Deterministic rendering rules out that class of bug.</p>
 
-      <p>And because the payload is <em>declared</em>, the build can check it. Rename <code>Subscriber.name</code> and the payload above cannot be left behind — <code>extends: Subscriber.name</code> stops resolving, so the rename is <em>forced</em> into it. What is not forced is the template still writing the old variable, and that is exactly the surface nothing else was watching. <code>meta verify</code> says so and exits non-zero:</p>
+      <p>Because the payload is <em>declared</em>, the build can check it. Rename <code>Subscriber.name</code> and the payload above cannot be left behind: <code>extends: Subscriber.name</code> stops resolving, so the rename is <em>forced</em> into it. What is not forced is the template still writing the old variable, and nothing else was watching that. <code>meta verify</code> says so and exits non-zero:</p>
 
       <pre class="example-code" data-snippet="verify-transcript"></pre>
 
-      <p>That's the moment a prompt stops being a string and becomes code: <strong>the renamed field is a compile error now</strong>, not a quality regression you discover in three weeks.</p>
+      <p>At that point a prompt stops being a string and becomes code: <strong>the renamed field is a build error</strong>, not a quality regression you discover three weeks later.</p>
 
-      <p>The output side is declared the same way, and one declaration drives three generated artifacts: the output-format instructions injected into the prompt, a strict typed parser, and — the part I haven't seen anywhere else — a <strong>tolerant extractor</strong> for the output real models actually produce: prose wrappers, code fences, unclosed XML tags, off-vocabulary enum values. It returns best-effort typed data <strong>plus a structured recovery report</strong> of what was repaired and what was lost, and it never throws. JSON and XML both — XML matters because a missing close tag is locally repairable, while a missing JSON brace corrupts everything after it.</p>
+      <p>The output side is declared the same way, and one declaration drives three generated artifacts: the output-format instructions injected into the prompt, a strict typed parser, and a <strong>tolerant extractor</strong> for the output real models produce: prose wrappers, code fences, unclosed XML tags, off-vocabulary enum values. It returns best-effort typed data <strong>plus a structured recovery report</strong> of what was repaired and what was lost, and it never throws. It handles JSON and XML; XML matters because a missing close tag is locally repairable, while a missing JSON brace corrupts everything after it.</p>
 
-      <p>Even the <em>traces</em> are typed: LLM calls persist into your own database with the request and response as typed value objects — the same declared payload — instead of opaque JSON blobs. (And if you like your Langfuse dashboards, keep them: the recorder exports to Langfuse and OpenTelemetry while the typed copy lands in your DB.)</p>
+      <p>The <em>traces</em> are typed too: LLM calls persist into your own database with the request and response as typed value objects (the same declared payload) instead of opaque JSON blobs. (And if you like your Langfuse dashboards, keep them: the recorder exports to Langfuse and OpenTelemetry while the typed copy lands in your DB.)</p>
 
       <h2>You don't have to replace your stack to do this</h2>
 
-      <p>To be fair to the incumbents, and clear about boundaries:</p>
+      <p>You can adopt this alongside what you already run:</p>
 
       <ul>
-        <li><strong>Keep your observability platform.</strong> Dashboards, evals, A/B labels — the platforms are good at this. Typed prompts <em>under</em> them make their data better.</li>
-        <li><strong>Keep your LLM client.</strong> MetaObjects deliberately ships no vendor SDK — you bring the Vercel AI SDK, LiteLLM, Spring AI, or raw clients behind a one-method seam.</li>
-        <li><strong>Keep your validators.</strong> The generated code <em>is</em> Zod, Pydantic, EF Core — idiomatic in each language, running with no MetaObjects dependency.</li>
+        <li><strong>Keep your observability platform.</strong> The platforms are good at dashboards, evals and A/B labels, and typed prompts <em>under</em> them make their data better.</li>
+        <li><strong>Keep your LLM client.</strong> MetaObjects ships no vendor SDK. You bring the Vercel AI SDK, LiteLLM, Spring AI, or raw clients behind a one-method seam.</li>
+        <li><strong>Keep your validators.</strong> The generated code <em>is</em> Zod, Pydantic or EF Core, idiomatic in each language and running with no MetaObjects dependency.</li>
       </ul>
 
-      <p>The shift isn't about a tool. It's the same shift SQL and config made: the prompt's <em>inputs and outputs</em> join your type system, your build, and your version control — because once AI writes half the code, agreement between the pieces is the scarce thing, and "we'll notice in the dashboard" is not an agreement strategy.</p>
-
-      <p>OpenAI just told its customers the same thing. The only question left is whether your prompts find out about a renamed field at build time — or in production.</p>
+      <p>This is the same move SQL and configuration made: a prompt's <em>inputs and outputs</em> become part of your type system, your build and your version control. Once AI writes half the code, keeping the pieces in agreement is the hard part, and noticing problems in a dashboard after the fact doesn't do that. OpenAI is now telling its customers the same thing.</p>
 
       <div class="article-cta">
         <p><strong>MetaObjects is Apache-2.0 open source, installable today in five languages.</strong>
