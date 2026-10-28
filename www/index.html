@@ -57,7 +57,7 @@
         Coding agents get context — rules files, memories, MCP servers — and context is <strong>advisory</strong>: nothing fails when the code stops matching it. That gets worse when several apps share one data model. Your API, your LLM worker, your admin app and your prompts can each look right on their own and still disagree with each other, and a smarter agent working on one of them can't see the others. MetaObjects gives them one typed model — data, API contract, prompt payloads, and what the software is supposed to do. Each app generates its types, validators and routes from it, in its own language, with no proprietary runtime in the output. Each app's verify step fails CI when its generated code, a prompt, or a claimed capability no longer matches the model.
       </p>
       <p class="hero-verbs">
-        <strong>Generate, with generators you write.</strong> Every layer that repeats for each entity — the API client, the DTO mapping, the audit log, the admin screen, the docs — becomes a small generator in your repo, in your language and your house style. The generators MetaObjects ships (Drizzle, Spring, EF Core, FastAPI and more) are a head start: run one as shipped, or copy it into your repo and change it.
+        <strong>Write it once. Generate it for every entity.</strong> Every layer that repeats for each entity — the API client, the DTO mapping, the audit log, the admin screen, the docs — is written once, as a small generator in your repo, in your language and your house style. Every entity gets it, it can't drift from the model, and nobody, human or agent, hand-writes it again. The generators MetaObjects ships (Drizzle, Spring, EF Core, FastAPI and more) are a head start: run one as shipped, or copy it into your repo and change it.
         <br>
         <strong>Verify.</strong> The build fails when generated code drifts from the model and when a prompt's payload no longer matches what it's told — and it fails or warns when a feature someone marked done has nothing implementing it.
       </p>
@@ -136,7 +136,7 @@
 
     <!-- Write-your-own generators: the layers that repeat per entity are where drift lives -->
     <section class="drift" id="generators">
-      <h2 class="section-label">Write your own generators. The shipped ones are a head start.</h2>
+      <h2 class="section-label">Write each repeating layer once. The shipped generators are a head start.</h2>
       <p class="drift-intro">
         The checks above only protect code that is generated. Every layer you still write by hand for each entity — the API client, the DTO mapping, the audit log, the admin screen — is one more unchecked copy of the model, and it is where drift lives. So expect to write a generator for each layer that repeats per entity. Change the model, regenerate, and <code>verify --codegen</code> fails the build for anyone who forgot. Running a shipped generator as shipped is fine, and a head start; it just isn't the point.
       </p>
@@ -363,7 +363,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>One metadata model → native code in five languages, on each language's usual stack: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand edits to generated files are never silently overwritten; in TypeScript they are three-way merged on regeneration. The generators it ships are a head start, not the product: <a href="#generators">write your own</a> for anything your app repeats per entity, or copy a shipped one into your repo with <code>eject</code> and change it. What MetaObjects guarantees is the model, the loader, <code>migrate</code>, <code>verify</code> and prompt render.</p>
+          <p>One metadata model → native code in five languages, on each language's usual stack: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand edits to generated files are never silently overwritten; in TypeScript they are three-way merged on regeneration. The generators it ships are a head start, not the product: anything your app repeats per entity you <a href="#generators">write once, as a generator</a> in your repo, or start from a shipped one by copying it in with <code>eject</code> and changing it. What MetaObjects guarantees is the model, the loader, <code>migrate</code>, <code>verify</code> and prompt render.</p>
           <p class="pillar-maturity">All five ports; every generator's output is compiled, and the generated APIs are run, in CI. Eject in every port since 1.0.5: <code>meta eject</code>, <code>metaobjects eject</code>, <code>mvn metaobjects:eject</code>, <code>dotnet meta eject</code>. Opt-in since 1.0.4: nothing generates until you choose.</p>
         </article>
         <article class="pillar">
