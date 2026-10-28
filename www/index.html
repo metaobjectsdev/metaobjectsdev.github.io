@@ -103,7 +103,7 @@
         <tbody>
           <tr>
             <td>The shared model changes and one app or service is not regenerated</td>
-            <td>That app's verify exits 1 and lists the generated files that no longer match the model. It checks generated files; your hand-written code that calls them is caught by your compiler once you regenerate.</td>
+            <td>That app's verify exits 1 and lists the generated files that no longer match the model. It checks generated files; your hand-written code that calls them is caught by your compiler once you regenerate (Python: with mypy or pyright).</td>
             <td><span class="fit-ship">All five ports.</span> TS <code>meta verify --codegen</code> · Python <code>metaobjects verify</code> · Java and Kotlin <code>mvn metaobjects:verify</code> · C# <code>dotnet meta verify --codegen</code>. Each app runs its own check in its own CI; nothing links the apps for you.</td>
           </tr>
           <tr>
@@ -227,7 +227,7 @@
     <section class="drift" id="keep-your-orm">
       <h2 class="section-label">Using it with the ORM you have</h2>
       <p class="drift-intro">
-        You don't have to leave Prisma, Hibernate, EF Core or SQLAlchemy. Every port can generate just the types and validators (the API contract and the prompt payloads) and leave persistence to the ORM you already run. MetaObjects does not generate into your ORM's schema files; it sits beside them.
+        You don't have to leave Prisma, Hibernate, EF Core or SQLAlchemy. Every port can generate just the types and validators (the API contract and the prompt payloads) and leave persistence to the ORM you already run. MetaObjects does not generate into your ORM's schema files, and your ORM's schema file stays yours to write and maintain; MetaObjects sits beside it.
       </p>
       <table class="drift-table">
         <thead>
@@ -352,7 +352,10 @@
       <pre class="example-code"><code>Fetch https://metaobjects.dev/assess.md and run the MetaObjects
 Fit &amp; Migration Assessment against this repository.</code></pre>
       <p class="drift-intro">
-        Works in Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI, or any agent that can fetch a URL. No agent open right now? <a href="/assess.md">Read the assessment prompt</a>; it is one Markdown file, and pasting it into any chat works too. It runs in your agent, on your tokens, and results vary by model. Every claim cites a <code>file:line</code> or a commit so you can check it. Nothing is sent to us, and the report stays in your repo.
+        Works in Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI, or any agent that can fetch a URL. No agent open right now? <a href="/assess.md">Read the assessment prompt</a>; it is one Markdown file, and pasting it into any chat works too. It runs in your agent, on your tokens, and results vary by model. Every claim cites a <code>file:line</code> or a commit so you can check it. Nothing is sent to us. The quick pass answers in the conversation and writes nothing; the full assessment takes an hour or more and writes its report outside your repo.
+      </p>
+      <p class="drift-intro">
+        <strong>Read it first.</strong> <a href="/assess.md">/assess.md</a> is the whole prompt, in plain Markdown. It tells your agent to read your repo and report, and never to create, edit, install or commit anything in it. The same prompt, with its reference files, is in the repo <a href="https://github.com/metaobjectsdev/metaobjects/tree/v1.1.4/agent-context/skills/metaobjects-fit-assessment">at a release tag</a>.
       </p>
       <p class="drift-payoff">
         The assessment can tell you not to adopt. Each pillar gets its own verdict, and <em>NOT A FIT</em> is one of the options. It only promises what your language's port ships, and every report includes a "what you will NOT get" section. We ran it blind on a production codebase from before that codebase adopted MetaObjects. It found drift incidents, confirmed in git, that had already caused trouble: a constraint mismatch that was fixed only after it was violated in production, and a schema divergence that was still live when the assessment ran. Where it was wrong, it understated the problems rather than overstating them.
@@ -375,7 +378,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         </article>
         <article class="pillar">
           <h3>Drift detection</h3>
-          <p>Each port's <code>verify</code> compares the committed generated code with a fresh generation from the model and fails when they differ, so an app that wasn't regenerated after a model change fails its own build. Once you regenerate, your compiler catches the hand-written code that still uses an old name. <a href="#drift">The table at the top</a> lists every check and its command.</p>
+          <p>Each port's <code>verify</code> compares the committed generated code with a fresh generation from the model and fails when they differ, so an app that wasn't regenerated after a model change fails its own build. Once you regenerate, your compiler catches the hand-written code that still uses an old name (Python: with mypy or pyright). <a href="#drift">The table at the top</a> lists every check and its command.</p>
           <p class="pillar-maturity">All five ports for generated code and prompts. Live-database schema drift runs in the Node <code>meta</code> CLI, for every port's database (Postgres, SQLite, D1).</p>
         </article>
         <article class="pillar">
@@ -571,7 +574,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
             <td><strong>Schema-only IDLs</strong></td>
             <td><a href="https://www.openapis.org/">OpenAPI</a>, <a href="https://smithy.io">Smithy</a>, <a href="https://grpc.io">gRPC / protobuf</a></td>
             <td>Strong API-shape governance. Wide client/server tooling. Industry-standard.</td>
-            <td>Describes the <em>whole stack</em>, not just the API shape: persistence + prompt render + UI bindings + validation, all from one declaration. IDLs give you type stubs; MetaObjects gives you the table, the validator, the route, the prompt template, and the migration.</td>
+            <td>Describes the <em>whole stack</em>, not just the API shape: persistence + prompt render + UI bindings + validation, all from one declaration. IDLs generate clients, server stubs and model types from the API shape; MetaObjects also gives you the table, the validator, the route, the prompt template, and the migration.</td>
           </tr>
         </tbody>
       </table>
@@ -590,7 +593,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           </tr>
         </thead>
         <tbody>
-          <tr><td>Per-language codegen</td>            <td class="yes">5 languages</td>      <td class="yes">TS only</td>             <td class="yes">single-lang</td>      <td class="yes">type stubs only</td></tr>
+          <tr><td>Per-language codegen</td>            <td class="yes">5 languages</td>      <td class="yes">TS only</td>             <td class="yes">single-lang</td>      <td class="yes">clients, stubs, model types</td></tr>
           <tr><td>Cross-language source of truth</td>           <td class="yes">five ports, conformance-tested</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="partial">API shape only</td></tr>
           <tr><td>Schema migrations</td>                         <td class="yes">diff + emit + apply: Postgres, SQLite, D1 (Node CLI)</td>           <td class="yes">yes</td>                <td class="yes">yes</td>              <td class="no">no</td></tr>
           <tr><td>Typed validation at the wire boundary</td>     <td class="yes">Zod / Pydantic / Jakarta / DataAnnotations</td> <td class="partial">runtime only</td>   <td class="partial">annotations</td>  <td class="partial">schema-only</td></tr>
@@ -601,7 +604,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <tr><td>LLM tool-call envelopes (<code>template.toolcall</code>)</td> <td class="partial">declared vocabulary only; nothing consumes it yet</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
           <tr><td>Hand-edit-preserving regen</td>                <td class="yes">never silently overwritten; 3-way merge in TS</td>                    <td class="partial">user-edits adjacent</td> <td class="partial">scaffolding only</td> <td class="partial">codegen reruns</td></tr>
           <tr class="ai-row"><td>Machine-readable metadata (grep-friendly)</td> <td class="yes">YAML/JSON, named constants</td> <td class="partial">DSL or schema.prisma</td> <td class="no">annotations / decorators</td> <td class="yes">YAML/JSON</td></tr>
-          <tr class="ai-row"><td>Generated code is plain (no proxy/decorator magic)</td> <td class="yes">plain native code</td> <td class="yes">yes</td>         <td class="no">proxy/runtime magic</td><td class="yes">type stubs</td></tr>
+          <tr class="ai-row"><td>Generated code is plain (no proxy/decorator magic)</td> <td class="yes">plain native code</td> <td class="yes">yes</td>         <td class="no">proxy/runtime magic</td><td class="yes">yes</td></tr>
           <tr class="ai-row"><td>Deterministic regen (same in → same out)</td> <td class="yes">conformance-gated</td><td class="yes">yes</td>                <td class="yes">yes</td>              <td class="yes">yes</td></tr>
           <tr class="ai-row"><td>Small surface area for agent context window</td><td class="yes"><span data-count="baseTypes">14</span> base types + extensions</td> <td class="partial">single-lang ORM API</td> <td class="no">large framework surface</td><td class="yes">small spec</td></tr>
         </tbody>
