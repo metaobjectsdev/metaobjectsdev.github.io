@@ -60,6 +60,9 @@
       <p class="hero-lede">
         MetaObjects gives them one typed model covering the data, the API contract, the prompt payloads, and what the software is supposed to do. Each app generates its types, validators and routes from that model, in its own language, and the output depends on no proprietary runtime. Each app's verify step fails CI when its generated code, a prompt, or a claimed capability no longer matches the model.
       </p>
+      <p class="hero-lede">
+        <strong>Less code to write and review.</strong> You, or your coding agent, write one declaration in the model instead of the same thing once per layer: the types, validators, queries, routes and UI. The generators write the rest, so there is less code to write and review. In one app, 18 model objects become 129 generated files. In another, 13 become 117.
+      </p>
       <p class="hero-verbs">
         <strong>Write it once. Generate it for every entity.</strong> Any layer you repeat for every entity (API client, DTO mapping, audit log, admin screen, docs) becomes a small generator in your repo, in your language and style, so it can't drift from the model and nobody hand-writes it again. The shipped generators (Drizzle, Spring, EF Core, FastAPI and more) can be run as they are or copied in and changed.
         <br>
@@ -215,7 +218,7 @@
         </article>
         <article class="pillar">
           <h3>Probably not: one app, one language, no LLM</h3>
-          <p>If a single service owns its data and talks to no LLM, Prisma, Hibernate, EF Core or Django already give you one schema. The cross-app and prompt checks are the reason to add MetaObjects; without them the setup may not pay for itself.</p>
+          <p>If a single service owns its data and talks to no LLM, Prisma, Hibernate, EF Core or Django already give you one schema. The layers you repeat per entity are still generated for you, and the cross-app and prompt checks are what you would add MetaObjects for.</p>
         </article>
       </div>
       <p class="pillars-note">One model keeps your apps consistent at build time. It does not check wire compatibility during a rolling deploy or for outside API consumers, and <code>verify</code> does not stop a team that ignores the model and keeps its own DTO.</p>
