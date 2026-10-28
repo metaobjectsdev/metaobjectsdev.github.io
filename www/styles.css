@@ -701,7 +701,7 @@ h1, h2, h3 {
 .fit-some { font-weight: 600; color: #b45309; }
 .fit-not  { font-weight: 600; color: #b91c1c; }
 #fit .pillar h3 { font-size: 1.05rem; }
-#drift .drift-table td, #keep-your-orm .drift-table td { color: inherit; }
+#drift .drift-table td, #keep-your-orm .drift-table td, #generators .drift-table td { color: inherit; }
 
 /* Narrow screens: stack the three-column tables so the page never scrolls sideways. */
 @media (max-width: 800px) {
@@ -724,4 +724,10 @@ h1, h2, h3 {
 /* Wide reference tables scroll inside themselves rather than widening the page. */
 @media (max-width: 800px) {
   .impl-table, .compare-table, .capability-matrix { display: block; overflow-x: auto; max-width: 100%; }
+}
+
+#generators .generators-sub { font-size: 1.05rem; margin: 1.75rem 0 0.5rem; }
+#generators .example-code { margin: 1rem 0 1.5rem; overflow-x: auto; }
+@media (max-width: 800px) {
+  #generators .drift-table td:nth-child(2)::before { content: "How you start one"; }
 }

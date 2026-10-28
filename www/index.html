@@ -57,7 +57,7 @@
         Coding agents get context — rules files, memories, MCP servers — and context is <strong>advisory</strong>: nothing fails when the code stops matching it. That gets worse when several apps share one data model. Your API, your LLM worker, your admin app and your prompts can each look right on their own and still disagree with each other, and a smarter agent working on one of them can't see the others. MetaObjects gives them one typed model — data, API contract, prompt payloads, and what the software is supposed to do. Each app generates its types, validators and routes from it, in its own language, with no proprietary runtime in the output. Each app's verify step fails CI when its generated code, a prompt, or a claimed capability no longer matches the model.
       </p>
       <p class="hero-verbs">
-        <strong>Generate.</strong> The boring parts are derived from the model, in five languages — at build time as code you own, or at runtime from the live model.
+        <strong>Generate, with generators you write.</strong> Every layer that repeats for each entity — the API client, the DTO mapping, the audit log, the admin screen, the docs — becomes a small generator in your repo, in your language and your house style. The generators MetaObjects ships (Drizzle, Spring, EF Core, FastAPI and more) are a head start: run one as shipped, or copy it into your repo and change it.
         <br>
         <strong>Verify.</strong> The build fails when generated code drifts from the model and when a prompt's payload no longer matches what it's told — and it fails or warns when a feature someone marked done has nothing implementing it.
       </p>
@@ -134,6 +134,57 @@
       </p>
     </section>
 
+    <!-- Write-your-own generators: the layers that repeat per entity are where drift lives -->
+    <section class="drift" id="generators">
+      <h2 class="section-label">Write your own generators. The shipped ones are a head start.</h2>
+      <p class="drift-intro">
+        The checks above only protect code that is generated. Every layer you still write by hand for each entity — the API client, the DTO mapping, the audit log, the admin screen — is one more unchecked copy of the model, and it is where drift lives. So expect to write a generator for each layer that repeats per entity. Change the model, regenerate, and <code>verify --codegen</code> fails the build for anyone who forgot. Running a shipped generator as shipped is fine, and a head start; it just isn't the point.
+      </p>
+      <p class="drift-intro">
+        A generator is small: a name plus a function from the loaded model to a list of <code>{ path, content }</code> files. The runner writes them, and <code>verify --codegen</code> re-runs it and fails the build when the committed output is stale. This one, from <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/recipes/write-your-own-generator.md">the write-your-own-generator recipe</a>, writes one file per entity listing its fields, inherited ones included:
+      </p>
+      <pre class="example-code"><code><span class="keyword">import</span> { isAbstract, perEntity, <span class="keyword">type</span> Generator } <span class="keyword">from</span> <span class="string">"@metaobjectsdev/codegen-ts"</span>;
+
+<span class="keyword">export function</span> fieldListGenerator(): Generator {
+  <span class="keyword">return</span> {
+    name: <span class="string">"field-list"</span>,                          <span class="comment">// shows in diagnostics</span>
+    filter: (obj) =&gt; !isAbstract(obj),           <span class="comment">// ctx.entities has EVERY object, abstract ones too</span>
+    generate: perEntity((obj) =&gt; ({              <span class="comment">// perPackage / perModel for other scopes</span>
+      path: `field-list/${obj.name}.txt`,        <span class="comment">// relative to outDir</span>
+      content: obj.fields()                      <span class="comment">// fields() includes inherited fields</span>
+        .map((f) =&gt; `${f.name}: ${f.subType}${f.resolvedIsArray() ? "[]" : ""}${f.isRequired ? "" : "?"}`)
+        .join("\n") + "\n",
+    })),
+  };
+}</code></pre>
+      <table class="drift-table">
+        <thead>
+          <tr><th>Port</th><th>How you start one</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>TypeScript</td><td><code>meta generator new &lt;name&gt;</code> writes and wires a generator that already runs. A team can keep its house generators in one package and import it from every repo's config.</td></tr>
+          <tr><td>Python</td><td>A function returning a generator, named as a <code>module:symbol</code> entry in <code>metaobjects.config.yaml</code>.</td></tr>
+          <tr><td>Java, Kotlin</td><td>Extend <code>FileEmittingGenerator</code> and read the model through <code>ModelWalk</code>.</td></tr>
+          <tr><td>C#</td><td>An <code>IGenerator</code> class listed in <code>codegen/Generators.cs</code>.</td></tr>
+        </tbody>
+      </table>
+      <h3 class="generators-sub">What it costs, measured</h3>
+      <p class="drift-intro">
+        Three agent sessions each wrote a first generator from scratch, using only the public docs and packages: a typed fetch client for TypeScript (172 lines), an audit log for TypeScript (148 lines, plus 32 that declare its model markers), and a typed <code>httpx</code> client for Python (203 lines). Each session took 8 to 10 minutes of agent time end to end, setup included. Each generator passed <code>verify --codegen</code> on its first run, and each one failed the check after a model change that was not regenerated. Each had to read shipped generator source for details the docs don't state yet. TypeScript and Python were measured; Java, Kotlin and C# use the same shape and were not.
+      </p>
+      <p class="drift-intro">
+        These are our own measurements, so check them: <em>model Customer and Order, run the shipped entity and route generators, then write your own generator that emits a typed API client for those routes, and wire it so <code>verify --codegen</code> covers it.</em>
+      </p>
+      <h3 class="generators-sub">The fastest test of fit is one generator of your own</h3>
+      <p class="drift-intro">
+        Pick a layer you hand-write for every entity and write that one generator. Then rename a field in the model. If the generator plus its output is smaller than the copies it replaces, and the rename fails the build, that is your answer. If not, stop there.
+      </p>
+      <h3 class="generators-sub">What owning one means</h3>
+      <p class="drift-intro">
+        A generator you write has no upstream copy, so there is nothing to fall behind. A shipped generator you eject does: fixes to it no longer reach your copy, so run shipped ones as shipped until you need them to differ. Only TypeScript has a scaffold command. <code>meta gen</code> does not typecheck a generator, so run <code>tsc</code> on it in CI. A one-off layer that won't repeat can stay hand-written.
+      </p>
+    </section>
+
     <!-- Who it's for, and who it is not for yet -->
     <section class="pillars" id="fit">
       <h2 class="section-label">Who needs this — and who doesn't, yet.</h2>
@@ -164,6 +215,7 @@
         </article>
       </div>
       <p class="pillars-note">One model keeps your apps consistent at build time. It does not check wire compatibility during a rolling deploy or for outside API consumers, and <code>verify</code> does not stop a team that ignores the model and keeps its own DTO.</p>
+      <p class="pillars-note"><strong>If the tool falls short, you can fix it.</strong> Most changes a team needs are to generated output: your own generators are already yours, and <code>eject</code> copies any shipped one into your repo to change the same day. For the core — loader, <code>verify</code>, <code>migrate</code>, render — it is Apache 2.0 with all five ports in one public repo: patch a fork, pin to it, and drop the patch when upstream catches up. Every upstream release you then want is a merge you do.</p>
       <p class="pillars-note">MetaObjects has no independent adopters yet. Every project on this page is maintainer-owned, so the cheapest way to find out whether it fits yours is the <a href="#assess">read-only assessment</a> on your own repo.</p>
     </section>
 
@@ -311,7 +363,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>One metadata model → native code in five languages, on each language's usual stack: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand edits to generated files are never silently overwritten; in TypeScript they are three-way merged on regeneration. The generators are reference helpers, not the product: copy any of them into your repo with <code>eject</code> and the copy is yours to change. What MetaObjects guarantees is the model, the loader, <code>migrate</code>, <code>verify</code> and prompt render.</p>
+          <p>One metadata model → native code in five languages, on each language's usual stack: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand edits to generated files are never silently overwritten; in TypeScript they are three-way merged on regeneration. The generators it ships are a head start, not the product: <a href="#generators">write your own</a> for anything your app repeats per entity, or copy a shipped one into your repo with <code>eject</code> and change it. What MetaObjects guarantees is the model, the loader, <code>migrate</code>, <code>verify</code> and prompt render.</p>
           <p class="pillar-maturity">All five ports; every generator's output is compiled, and the generated APIs are run, in CI. Eject in every port since 1.0.5: <code>meta eject</code>, <code>metaobjects eject</code>, <code>mvn metaobjects:eject</code>, <code>dotnet meta eject</code>. Opt-in since 1.0.4: nothing generates until you choose.</p>
         </article>
         <article class="pillar">
