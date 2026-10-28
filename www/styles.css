@@ -723,7 +723,7 @@ h1, h2, h3 {
 
 /* Wide reference tables scroll inside themselves rather than widening the page. */
 @media (max-width: 800px) {
-  .impl-table, .compare-table, .capability-matrix { display: block; overflow-x: auto; max-width: 100%; }
+  .impl-table, .compare-table, .capability-matrix, .gs-table { display: block; overflow-x: auto; max-width: 100%; }
 }
 
 #generators .generators-sub { font-size: 1.05rem; margin: 1.75rem 0 0.5rem; }

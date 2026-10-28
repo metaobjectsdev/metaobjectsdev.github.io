@@ -100,13 +100,11 @@
       <p class="page-eyebrow">Capability requirements · vocabulary and the verify gate in all five ports</p>
       <h1>Check what your AI actually built.</h1>
       <p class="page-lede">
-        A test exercises code that exists. That is the whole reason a passing suite can sit on
-        top of a feature nobody finished: there is no test that fails because a column nobody
-        writes was never wired to anything, and no linter that flags the handler you meant to
-        add. The absence has no address — so give it one. A capability declared in MetaObjects
-        is a node in the same model as your entities, and its link to the code is
-        <strong>resolved, not trusted</strong>: name something that isn't there and the build
-        stops.
+        Tests only exercise code that exists. That's why a suite can pass on top of an
+        unfinished feature: no test fails because nobody wired up a column, and no linter flags
+        a handler you meant to add. MetaObjects lets you declare the capability in the same model
+        as your entities and name the field or route that implements it. <code>verify</code>
+        checks that the name exists; if it doesn't, the build stops.
       </p>
 
       <h2>The failure that comes after drift</h2>
@@ -139,14 +137,13 @@
       </div>
 
       <p>
-        Notice what all three have in common: nothing is <em>wrong</em>. No exception, no failing
+        In all three, nothing is <em>wrong</em>. No exception, no failing
         assertion, no type that stopped lining up — so every gate you own stays green and reports
-        that it checked. <strong>The three shapes are invisible to your test suite by
-        construction, not by oversight</strong>, and that is why the fix has to live somewhere
-        else: in the model, next to the entities, where a claim can be resolved instead of read.
+        that it checked. <strong>Your test suite can't see these three shapes</strong>, which is
+        why the fix has to live somewhere else: in the model, next to the entities, where a claim can be resolved instead of read.
       </p>
 
-      <h2>So give it one</h2>
+      <h2>Declaring a capability</h2>
       <p>
         A requirements document does not help — prose goes stale silently and nothing in your build
         has an opinion about it. Neither does a requirements tool, where the link from a claim to
@@ -154,7 +151,7 @@
       </p>
       <p>
         A capability declared in MetaObjects is a node in the same model as your entities, so its
-        link is <strong>resolved, not trusted</strong>:
+        link is checked by <code>verify</code>:
       </p>
 
       <pre class="example-code" data-snippet="showcase-requirement"></pre>
@@ -187,7 +184,7 @@
       </p>
 
       <blockquote>
-        Consistency is not completeness. Knowing where a capability is supposed to live is what
+        Knowing where a capability is supposed to live is what
         lets you ask the only question that finds these: what would I have to break to make this
         claim fail?
       </blockquote>
@@ -221,8 +218,7 @@
 
       <h2>What you get, and what you build</h2>
       <p>
-        Being exact about this matters, because the last part is the important one and it is not in
-        the box yet.
+        The last part is the important one, and it is not in the box yet.
       </p>
 
       <div class="split">
@@ -276,15 +272,15 @@
       <h2>Where it sits</h2>
       <ul>
         <li><strong>Codegen</strong> turns a model change into a compile error on the exact line
-          your own logic needs updating. Refactoring stops being a bug hunt.</li>
+          your own logic needs updating.</li>
         <li><strong><code>meta verify</code></strong> turns divergence between your code, prompts,
-          schema and the model into a failed build. Drift cannot merge.</li>
-        <li><strong>Capabilities</strong> put what you said the software does on that same spine —
+          schema and the model into a failed build.</li>
+        <li><strong>Capabilities</strong> put what you said the software does on that same model:
           resolved links, coverage reporting, and a generated check per claim.</li>
       </ul>
       <p>
-        The AI writes the code. The model keeps all of it honest — and now <em>honest</em> covers
-        whether the feature is actually there.
+        The same <code>verify</code> run that checks your code against the model also checks that
+        each declared capability points at something that exists.
       </p>
 
       <hr>

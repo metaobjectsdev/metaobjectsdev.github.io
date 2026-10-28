@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MetaObjects — One typed model for every app that shares your data. Your agent writes it, each app's code is generated from it, and each app's build is checked against it.</title>
-  <meta name="description" content="Coding agents get context — rules files, memories, MCP servers — and context is advisory: nothing fails when the code stops matching it.">
+  <title>MetaObjects: one typed model for every app that shares your data</title>
+  <meta name="description" content="Rules files, memories and MCP servers give a coding agent context, but nothing fails when the code stops matching that context.">
 
   <link rel="icon" href="/images/mo-logo-only.png" type="image/png">
 
@@ -14,8 +14,8 @@
 
   <link rel="stylesheet" href="/styles.css">
 
-  <meta property="og:title" content="One typed model for every app that shares your data. Your agent writes it, each app's code is generated from it, and each app's build is checked against it.">
-  <meta property="og:description" content="Coding agents get context — rules files, memories, MCP servers — and context is advisory: nothing fails when the code stops matching it.">
+  <meta property="og:title" content="One typed model for every app that shares your data">
+  <meta property="og:description" content="Rules files, memories and MCP servers give a coding agent context, but nothing fails when the code stops matching that context.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="MetaObjects">
   <meta property="og:url" content="https://metaobjects.dev/">
@@ -24,8 +24,8 @@
   <meta property="og:image:height" content="720">
   <meta property="og:image:alt" content="A terminal recording of meta verify failing the build after a field rename">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="One typed model for every app that shares your data. Your agent writes it, each app's code is generated from it, and each app's build is checked against it.">
-  <meta name="twitter:description" content="Coding agents get context — rules files, memories, MCP servers — and context is advisory: nothing fails when the code stops matching it.">
+  <meta name="twitter:title" content="One typed model for every app that shares your data">
+  <meta name="twitter:description" content="Rules files, memories and MCP servers give a coding agent context, but nothing fails when the code stops matching that context.">
   <meta name="twitter:image" content="https://metaobjects.dev/images/cli-drift-poster.png">
 
   <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt — AI assistant index">
@@ -52,22 +52,26 @@
     <!-- Hero -->
     <section class="hero">
       <p class="hero-eyebrow">Apache 2.0 · TypeScript · Java · Kotlin · C# · Python</p>
-      <h1>One typed model for every app that shares your data. Your agent writes it, each app's code is generated from it, and each app's build is checked against it.</h1>
+      <h1>One typed model for every app that shares your data</h1>
+      <p class="hero-lede">Your agent writes the model. Each app's code is generated from it, and each app's build is checked against it.</p>
       <p class="hero-lede">
-        Coding agents get context — rules files, memories, MCP servers — and context is <strong>advisory</strong>: nothing fails when the code stops matching it. That gets worse when several apps share one data model. Your API, your LLM worker, your admin app and your prompts can each look right on their own and still disagree with each other, and a smarter agent working on one of them can't see the others. MetaObjects gives them one typed model — data, API contract, prompt payloads, and what the software is supposed to do. Each app generates its types, validators and routes from it, in its own language, with no proprietary runtime in the output. Each app's verify step fails CI when its generated code, a prompt, or a claimed capability no longer matches the model.
+        Rules files, memories and MCP servers give a coding agent context, but nothing fails when the code stops matching it. That gets worse when several apps share one data model. Your API, your LLM worker, your admin app and your prompts can each look right on their own and still disagree, and even a smarter agent working in one of them can't see the others.
+      </p>
+      <p class="hero-lede">
+        MetaObjects gives them one typed model covering the data, the API contract, the prompt payloads, and what the software is supposed to do. Each app generates its types, validators and routes from that model, in its own language, and the output depends on no proprietary runtime. Each app's verify step fails CI when its generated code, a prompt, or a claimed capability no longer matches the model.
       </p>
       <p class="hero-verbs">
-        <strong>Write it once. Generate it for every entity.</strong> Every layer that repeats for each entity — the API client, the DTO mapping, the audit log, the admin screen, the docs — is written once, as a small generator in your repo, in your language and your house style. Every entity gets it, it can't drift from the model, and nobody, human or agent, hand-writes it again. The generators MetaObjects ships (Drizzle, Spring, EF Core, FastAPI and more) are a head start: run one as shipped, or copy it into your repo and change it.
+        <strong>Write it once. Generate it for every entity.</strong> Any layer you repeat for every entity (API client, DTO mapping, audit log, admin screen, docs) becomes a small generator in your repo, in your language and style, so it can't drift from the model and nobody hand-writes it again. The shipped generators (Drizzle, Spring, EF Core, FastAPI and more) can be run as they are or copied in and changed.
         <br>
-        <strong>Verify.</strong> The build fails when generated code drifts from the model and when a prompt's payload no longer matches what it's told — and it fails or warns when a feature someone marked done has nothing implementing it.
+        <strong>Verify.</strong> The build fails when generated code drifts from the model or a prompt template uses a field its payload no longer has. A feature marked done with nothing implementing it fails or warns.
       </p>
       <p class="hero-scope">
-        It protects what the model declares; your hand-written logic is still yours. You can keep your ORM. And if your app is single-language with no LLM calls, a good ORM is probably enough — <a href="#compare">the honest comparison</a> says so first.
+        It protects what the model declares; your hand-written logic is still yours. You can keep your ORM. And if your app is single-language with no LLM calls, a good ORM is probably enough, and <a href="#compare">the comparison below</a> says so up front.
       </p>
       <div class="hero-ctas">
-        <a href="#drift" class="btn btn-primary">See exactly what fails the build</a>
-        <a href="#fit" class="btn btn-secondary">Who it's for — and not for</a>
-        <a href="#assess" class="btn btn-secondary">Assess your repo — no install</a>
+        <a href="#drift" class="btn btn-primary">See what fails the build</a>
+        <a href="#fit" class="btn btn-secondary">Who it's for</a>
+        <a href="#assess" class="btn btn-secondary">Assess your repo (no install)</a>
         <a href="/getting-started.html" class="btn btn-secondary">Get started →</a>
       </div>
       <figure class="hero-demo">
@@ -82,9 +86,9 @@
       </figure>
     </section>
 
-    <!-- What fails the build, exactly: one row per check, with the command and the port scope -->
+    <!-- What fails the build: one row per check -->
     <section class="drift" id="drift">
-      <h2 class="section-label">Context is advisory. This is not: here is exactly what fails the build.</h2>
+      <h2 class="section-label">What fails the build</h2>
       <p class="drift-intro">
         A field renamed in one service misses the worker that reads the same table. A required field reaches the API but not the Python model that mirrors it. A prompt template still says <code>{{userName}}</code> after the payload moved to <code>user.name</code>. Each of these looks fine inside the one codebase an agent is editing. Here is what MetaObjects 1.1 checks, the command that runs the check, what happens when it fails, and where it does not reach.
       </p>
@@ -134,11 +138,11 @@
       </p>
     </section>
 
-    <!-- Write-your-own generators: the layers that repeat per entity are where drift lives -->
+    <!-- Write your own generators -->
     <section class="drift" id="generators">
-      <h2 class="section-label">Write each repeating layer once. The shipped generators are a head start.</h2>
+      <h2 class="section-label">Write your own generators</h2>
       <p class="drift-intro">
-        The checks above only protect code that is generated. Every layer you still write by hand for each entity — the API client, the DTO mapping, the audit log, the admin screen — is one more unchecked copy of the model, and it is where drift lives. So expect to write a generator for each layer that repeats per entity. Change the model, regenerate, and <code>verify --codegen</code> fails the build for anyone who forgot. Running a shipped generator as shipped is fine, and a head start; it just isn't the point.
+        The checks above only protect code that is generated. Every layer you still write by hand for each entity (the API client, the DTO mapping, the audit log, the admin screen) is one more unchecked copy of the model. So expect to write a generator for each layer that repeats per entity. Change the model, regenerate, and <code>verify --codegen</code> fails the build for anyone who forgot. Running a shipped generator as it is works too, and gives you a head start.
       </p>
       <p class="drift-intro">
         A generator is small: a name plus a function from the loaded model to a list of <code>{ path, content }</code> files. The runner writes them, and <code>verify --codegen</code> re-runs it and fails the build when the committed output is stale. This one, from <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/recipes/write-your-own-generator.md">the write-your-own-generator recipe</a>, writes one file per entity listing its fields, inherited ones included:
@@ -187,7 +191,7 @@
 
     <!-- Who it's for, and who it is not for yet -->
     <section class="pillars" id="fit">
-      <h2 class="section-label">Who needs this — and who doesn't, yet.</h2>
+      <h2 class="section-label">Who it's for, and who it isn't for yet</h2>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Several apps on one data model</h3>
@@ -215,15 +219,15 @@
         </article>
       </div>
       <p class="pillars-note">One model keeps your apps consistent at build time. It does not check wire compatibility during a rolling deploy or for outside API consumers, and <code>verify</code> does not stop a team that ignores the model and keeps its own DTO.</p>
-      <p class="pillars-note"><strong>If the tool falls short, you can fix it.</strong> Most changes a team needs are to generated output: your own generators are already yours, and <code>eject</code> copies any shipped one into your repo to change the same day. For the core — loader, <code>verify</code>, <code>migrate</code>, render — it is Apache 2.0 with all five ports in one public repo: patch a fork, pin to it, and drop the patch when upstream catches up. Every upstream release you then want is a merge you do.</p>
-      <p class="pillars-note">MetaObjects has no independent adopters yet. Every project on this page is maintainer-owned, so the cheapest way to find out whether it fits yours is the <a href="#assess">read-only assessment</a> on your own repo.</p>
+      <p class="pillars-note"><strong>If the tool falls short, you can fix it.</strong> Most changes a team needs are to generated output: your own generators are already yours, and <code>eject</code> copies any shipped one into your repo to change the same day. For the core (loader, <code>verify</code>, <code>migrate</code>, render) it is Apache 2.0 with all five ports in one public repo: patch a fork, pin to it, and drop the patch when upstream catches up. Every upstream release you then want is a merge you do.</p>
+      <p class="pillars-note">To find out whether it fits your project, run the <a href="#assess">read-only assessment</a> on your own repo.</p>
     </section>
 
-    <!-- Keep your ORM, per port; databases stated plainly -->
+    <!-- Using it with your ORM, per port -->
     <section class="drift" id="keep-your-orm">
-      <h2 class="section-label">Keep your ORM. Generate the contract around it.</h2>
+      <h2 class="section-label">Using it with the ORM you have</h2>
       <p class="drift-intro">
-        You don't have to leave Prisma, Hibernate, EF Core or SQLAlchemy. Every port can generate just the types and validators — the API contract and the prompt payloads — and leave persistence to the ORM you already run. MetaObjects does not generate into your ORM's schema files; it sits beside them.
+        You don't have to leave Prisma, Hibernate, EF Core or SQLAlchemy. Every port can generate just the types and validators (the API contract and the prompt payloads) and leave persistence to the ORM you already run. MetaObjects does not generate into your ORM's schema files; it sits beside them.
       </p>
       <table class="drift-table">
         <thead>
@@ -262,18 +266,18 @@
         </tbody>
       </table>
       <p class="drift-intro">
-        <strong>Databases, plainly.</strong> Generated code is tested against Postgres in every port, and against SQLite and MySQL for parts of it. <code>meta migrate</code> and the live-database check support Postgres, SQLite and Cloudflare D1; on MySQL you own the DDL. <strong>SQL Server and Oracle are not supported today</strong>: the C# <code>AppDbContext</code> generator emits Postgres column types, and the Java runtime's older Oracle and SQL Server drivers are untested. If you run on either, generate the contract types above and keep your own mapping.
+        <strong>Databases.</strong> Generated code is tested against Postgres in every port, and against SQLite and MySQL for parts of it. <code>meta migrate</code> and the live-database check support Postgres, SQLite and Cloudflare D1; on MySQL you own the DDL. <strong>SQL Server and Oracle are not supported today</strong>: the C# <code>AppDbContext</code> generator emits Postgres column types, and the Java runtime's older Oracle and SQL Server drivers are untested. If you run on either, generate the contract types above and keep your own mapping.
       </p>
     </section>
 
     <!-- Proof band -->
     <section class="proof">
-      <h2 class="section-label">Built on it. Read the code.</h2>
+      <h2 class="section-label">Projects built on it</h2>
       <div class="proof-grid">
         <article class="proof-card">
           <p class="proof-tag">Open source &middot; clone and run</p>
           <h3>Wizards of Odd</h3>
-          <p>A live AI wizard-council app built to be read: one metadata spine drives the
+          <p>A live AI wizard-council app built to be read: one model drives the
           Postgres schema, the API types, the LLM prompts and the SSE streaming protocol.
           Rename one field and all four fail in CI. Apache&nbsp;2.0.</p>
           <p class="proof-links">
@@ -287,7 +291,7 @@
           <p class="proof-tag">Python + TypeScript &middot; production</p>
           <h3>Draagon AI</h3>
           <p>From 17 runtime schema patches to zero. One ~7,000-line YAML
-          spine generates more than 20,000 lines of drift-checked Python and TypeScript &mdash; 44
+          model generates more than 20,000 lines of drift-checked Python and TypeScript &mdash; 44
           entities and more than 100 LLM prompts declared once, on the published packages.</p>
           <p class="proof-links">
             <a href="https://metaobjects.com/case-studies/draagon-ai/">Read the case study&nbsp;&rarr;</a>
@@ -296,20 +300,17 @@
         <article class="proof-card">
           <p class="proof-tag">The small-adoption case</p>
           <h3>Roxy</h3>
-          <p>Not every adoption is a rewrite. An existing Python voice assistant took exactly
-          two pillars &mdash; prompt templates checked against a declared payload, Postgres schema owned by
-          the CLI &mdash; in about seventy lines of metadata, and left the rest of its
-          codebase alone.</p>
+          <p>An existing Python voice assistant adopted two parts: prompt templates checked
+          against a declared payload, and its Postgres schema managed by the CLI. That took
+          about seventy lines of metadata, and the rest of the codebase was left alone.</p>
           <p class="proof-links">
             <a href="https://metaobjects.com/case-studies/roxy/">Read the case study&nbsp;&rarr;</a>
           </p>
         </article>
       </div>
       <p class="proof-caveat">
-        Every project here is maintainer-owned &mdash; MetaObjects has no independent adopters
-        yet, and saying otherwise would be the fastest way to lose the readers who check.
-        Wizards of Odd is Apache&nbsp;2.0 and clone-and-run, so you can verify these claims
-        instead of trusting them.
+        All three are the maintainer's own projects; nobody else has adopted MetaObjects yet.
+        Wizards of Odd is Apache&nbsp;2.0 and runs from a clone, so you can check these claims yourself.
         <a href="https://metaobjects.com/case-studies/">All case studies&nbsp;&rarr;</a>
       </p>
     </section>
@@ -327,8 +328,8 @@
                width="1280" height="720"
                aria-label="Introduction to MetaObjects: one model your database, API, UI, and AI all share."
                style="width:100%;max-width:860px;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.08);margin:1rem auto 0;display:block;">
-          <!-- mp4 served from metaobjects.com (Cloudflare): GitHub Pages' deploy
-               backend rejects the 17MB file (bisect-verified). Poster + captions
+          <!-- mp4 served from metaobjects.com (Cloudflare): the GitHub Pages deploy
+               backend rejects the 17MB file. Poster + captions
                stay same-origin so the <track> needs no CORS. -->
           <source src="https://metaobjects.com/video/introduction.mp4" type="video/mp4">
           <track kind="captions" src="/video/introduction.vtt" srclang="en" label="English">
@@ -340,36 +341,37 @@
       </figure>
     </section>
 
-    <!-- Fit assessment — prove it on your own repo, zero install -->
+    <!-- Fit assessment -->
     <section class="drift" id="assess">
-      <h2 class="section-label">Don't take the table's word for it. Ask your own git history.</h2>
+      <h2 class="section-label">Check your own repo first</h2>
       <p class="drift-intro">
-        MetaObjects ships a hosted <strong>fit &amp; migration assessment</strong>: one Markdown prompt your coding agent runs against your existing repo. <strong>Read-only, propose-only</strong> — it installs nothing, edits nothing, needs no database connection and no signup. Your agent reads the code, the migrations, and the commit log, then writes a decision-grade report whose centerpiece is a <strong>drift ledger built from your own history</strong>: the shapes you declare twice, where the copies disagree <em>today</em>, the past fixes that patched one copy and missed the other — and, per finding, the <code>verify</code> gate that would have made it a build failure instead of an incident.
+        The fit and migration assessment is one Markdown prompt that your coding agent runs against your repo. It is read-only and only proposes changes: it installs nothing, edits nothing, and needs no database connection or signup. The agent reads your code, migrations and commit log and writes a report. The main part is a list of the drift in your own history: shapes you declare in more than one place, where those copies disagree today, and past fixes that patched one copy and missed the other. For each one, it names the <code>verify</code> check that would have failed the build instead.
       </p>
-      <p class="example-section-label">With your repo open in your agent, send one message — read-only · no install · no signup</p>
+>
+      <p class="example-section-label">With your repo open in your agent, send one message (read-only, no install, no signup)</p>
       <pre class="example-code"><code>Fetch https://metaobjects.dev/assess.md and run the MetaObjects
 Fit &amp; Migration Assessment against this repository.</code></pre>
       <p class="drift-intro">
-        Works in Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI — any agent that can fetch a URL. No agent open right now? <a href="/assess.md">Read the assessment prompt</a> — it's one Markdown file; pasting it into any chat works too. The catch, stated plainly: it runs in your agent on your tokens, findings vary by model, and every claim is cited to a <code>file:line</code> or a commit precisely so you can check it. Nothing is sent to us; the report stays in your repo.
+        Works in Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI, or any agent that can fetch a URL. No agent open right now? <a href="/assess.md">Read the assessment prompt</a>; it is one Markdown file, and pasting it into any chat works too. It runs in your agent, on your tokens, and results vary by model. Every claim cites a <code>file:line</code> or a commit so you can check it. Nothing is sent to us, and the report stays in your repo.
       </p>
       <p class="drift-payoff">
-        <strong>It's built to say no.</strong> Per-pillar verdicts include <em>NOT A FIT</em>, every promise is capped to what your language's port actually ships, and a "what you will NOT get" section is mandatory. In a blinded retro-test on a real pre-adoption production codebase, the assessment found specific, git-verified drift incidents that had already bitten — a constraint mismatch repaired only after a production violation, a schema divergence still live at assessment time — and its errors ran conservative, not inflated.
+        The assessment can tell you not to adopt. Each pillar gets its own verdict, and <em>NOT A FIT</em> is one of the options. It only promises what your language's port ships, and every report includes a "what you will NOT get" section. We ran it blind on a production codebase from before that codebase adopted MetaObjects. It found drift incidents, confirmed in git, that had already caused trouble: a constraint mismatch that was fixed only after it was violated in production, and a schema divergence that was still live when the assessment ran. Where it was wrong, it understated the problems rather than overstating them.
       </p>
     </section>
 
-    <!-- Six pillars — each labelled with what ships, where, at what stability (FR-042 §4) -->
+    
     <section class="pillars">
-      <h2 class="section-label">What is underneath the two verbs.</h2>
+      <h2 class="section-label">What it includes</h2>
       <div class="pillars-grid">
         <article class="pillar">
           <h3>Codegen</h3>
-          <p>One metadata model → native code in five languages, on each language's usual stack: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand edits to generated files are never silently overwritten; in TypeScript they are three-way merged on regeneration. The generators it ships are a head start, not the product: anything your app repeats per entity you <a href="#generators">write once, as a generator</a> in your repo, or start from a shipped one by copying it in with <code>eject</code> and changing it. What MetaObjects guarantees is the model, the loader, <code>migrate</code>, <code>verify</code> and prompt render.</p>
+          <p>One metadata model → native code in five languages, on each language's usual stack: <strong>Drizzle + Zod + Fastify/Hono</strong> (TS), <strong>Spring REST + DTO + repositories</strong> (Java), <strong>Exposed + KotlinPoet + Spring</strong> (Kotlin), <strong>EF Core + ASP.NET</strong> (C#), <strong>Pydantic + FastAPI</strong> (Python). Hand edits to generated files are never silently overwritten; in TypeScript they are three-way merged on regeneration. The shipped generators are starting points. Anything your app repeats per entity, you <a href="#generators">write once as a generator</a> in your repo, or you can copy a shipped one in with <code>eject</code> and change it. What MetaObjects guarantees is the model, the loader, <code>migrate</code>, <code>verify</code> and prompt render.</p>
           <p class="pillar-maturity">All five ports; every generator's output is compiled, and the generated APIs are run, in CI. Eject in every port since 1.0.5: <code>meta eject</code>, <code>metaobjects eject</code>, <code>mvn metaobjects:eject</code>, <code>dotnet meta eject</code>. Opt-in since 1.0.4: nothing generates until you choose.</p>
         </article>
         <article class="pillar">
           <h3>Runtime metadata</h3>
-          <p>Load metadata at runtime and drive behavior dynamically — CRUD, validation, relationships, dynamic admin UIs. (Typed tool payloads are declared today; MCP tool exposure is on the roadmap.)</p>
-          <p class="pillar-maturity">TypeScript, Java, Kotlin, Python. C#: roadmap — its EF Core output is generated code, not a metadata-driven runtime.</p>
+          <p>Load metadata at runtime and drive behavior dynamically: CRUD, validation, relationships, dynamic admin UIs. (Typed tool payloads are declared today; MCP tool exposure is on the roadmap.)</p>
+          <p class="pillar-maturity">TypeScript, Java, Kotlin, Python. C#: roadmap. Its EF Core output is generated code, not a metadata-driven runtime.</p>
         </article>
         <article class="pillar">
           <h3>Drift detection</h3>
@@ -378,17 +380,13 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         </article>
         <article class="pillar">
           <h3>Prompt construction</h3>
-          <p>The prompt is code too — not a string scattered across services. Declare a typed payload as a projection, keep the text external and provider-resolved, render deterministically: snapshot-testable, cache-stable (no stray whitespace silently breaking exact-prefix prompt-cache hits), drift-checked at build time so a renamed field can't quietly degrade a prompt. Plus typed parsers for the LLM's response, on prompts that declare one — Zod / Pydantic / Jackson / kotlinx.serialization / System.Text.Json across the ports.</p>
+          <p>Declare a prompt's payload as a typed projection of the model. The prompt text lives in a file, resolved per provider. Rendering is deterministic, so you can snapshot-test it and stray whitespace can't break exact-prefix prompt-cache hits. <code>verify</code> checks it at build time, so a renamed field can't quietly degrade a prompt. Prompts that declare a response also get a typed parser: Zod, Pydantic, Jackson, kotlinx.serialization or System.Text.Json, depending on the port.</p>
           <p class="pillar-maturity">Render, payload types, <code>verify</code> and parsers in all five ports. MCP exposure of declared prompts: roadmap.</p>
-          <p class="pillar-read"><a href="/articles/prompts-are-code.html">Read: Prompts are code now — even OpenAI says so&nbsp;→</a></p>
+          <p class="pillar-read"><a href="/articles/prompts-are-code.html">Read: Prompts are code now: even OpenAI says so&nbsp;→</a></p>
         </article>
         <article class="pillar">
           <h3>Requirements and testing</h3>
-          <p>A capability is a node in the same model as your entities, so
-          <code>implementedBy</code> is <strong>resolved, not trusted</strong> — a claim whose
-          implementation vanished fails the build, and one naming nothing is a warning.
-          <code>verify</code> reports the ledger on every run. It proves the links resolve,
-          not that the implementation is correct.</p>
+          <p>A capability is a node in the same model as your entities. <code>verify</code> checks that <code>implementedBy</code> names a field or route that exists. If it was removed, the build fails; if a claim names nothing, you get a warning. <code>verify</code> reports the ledger on every run. It proves the links resolve, not that the implementation is correct.</p>
           <p class="pillar-maturity">Since 1.1.0 the requirement gate runs in every port's <code>verify</code>, and every port ships a <code>requirement-tests</code> generator; the authoring lint is TypeScript-only (<a href="https://github.com/metaobjectsdev/metaobjects/blob/main/docs/features/requirements.md">docs</a>). Dogfooded on maintainer-owned projects, no outside adopter yet.</p>
           <p class="pillar-read"><a href="/requirements.html">Read: capability requirements&nbsp;→</a></p>
         </article>
@@ -398,21 +396,21 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
           <p class="pillar-maturity">Since 1.0.4 the library models load in all five ports; the <code>ai</code> trace helper generates in TypeScript, Java and Python. <code>ai</code> (LLM-call tracing): stable. <code>iam</code> (users, groups, roles, grants): preview.</p>
         </article>
       </div>
-      <p class="pillars-note"><strong>Sharing a model across your own projects.</strong> One project publishes part of its model — a common <code>Customer</code>, an audited base, a set of enums — and another declares it as a dependency, syncs a committed, hash-locked snapshot, and builds on it with <code>extends</code> and references. When the publisher's model moves, <code>meta verify --deps</code> says so instead of two copies drifting apart. <span class="pillar-scope">Today the TypeScript toolchain publishes and TypeScript and Python projects consume, over a <code>path</code> dependency (a sibling checkout or submodule). Java, Kotlin and C# arrive in Phase 2. The <code>meta deps</code> commands and <code>verify --deps</code> run in the Node <code>meta</code> CLI.</span></p>
+      <p class="pillars-note"><strong>Sharing a model across your own projects.</strong> One project publishes part of its model (a common <code>Customer</code>, an audited base, a set of enums) and another declares it as a dependency, syncs a committed, hash-locked snapshot, and builds on it with <code>extends</code> and references. When the publisher's model moves, <code>meta verify --deps</code> says so instead of two copies drifting apart. <span class="pillar-scope">Today the TypeScript toolchain publishes and TypeScript and Python projects consume, over a <code>path</code> dependency (a sibling checkout or submodule). Java, Kotlin and C# arrive in Phase 2. The <code>meta deps</code> commands and <code>verify --deps</code> run in the Node <code>meta</code> CLI.</span></p>
     </section>
 
 
-    <!-- The failure after drift — capability coverage. Full page: /requirements.html -->
+    <!-- Capability coverage. Full page: /requirements.html -->
     <section class="drift" id="requirements">
-      <h2 class="section-label">The failure after drift: the feature your agent said it built.</h2>
+      <h2 class="section-label">Checking that declared features exist</h2>
       <p class="drift-intro">
-        Drift is your code disagreeing with your model, and <code>meta verify</code> already makes that a build error. There is a second failure it cannot see: your code agrees with your model perfectly, and the model describes a capability your software does not have. The columns exist, the types line up, the tests pass — and no code path ever writes the value. Nothing is broken, so nothing fails.
+        Drift is your code disagreeing with your model, and <code>meta verify</code> already makes that a build error. There is a second failure it cannot see: your code agrees with your model perfectly, and the model describes a capability your software does not have. The columns exist, the types match and the tests pass, but no code ever writes the value, so nothing errors and no check fails.
       </p>
       <p class="drift-intro">
-        This is for teams that have to prove what their software implements: regulated, audited, or built to a contract. It is a smaller audience than the checks above, which is why it sits below them.
+        This is for teams that have to prove what their software implements: regulated, audited, or built to a contract.
       </p>
       <p class="drift-intro">
-        Declared across three shipping products, that check found a bot that could not be retired, a season that could not be run privately, private tables silently running at the database default, and an interrupted-work recovery path that was never built — in a codebase with <strong>1,280 tests passing and zero failures</strong>. A capability declared in MetaObjects is a node in the same model as your entities, so its link to the field that implements it is resolved rather than trusted.
+        Declared across three shipping products, that check found a bot that could not be retired, a season that could not be run privately, private tables silently running at the database default, and an interrupted-work recovery path that was never built, in a codebase with <strong>1,280 tests passing and zero failures</strong>. A capability declared in MetaObjects is a node in the same model as your entities, and <code>verify</code> checks that the field or route it names exists.
       </p>
       <p class="drift-payoff">
         <a href="/requirements.html">How capability requirements work →</a>
@@ -421,7 +419,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
 
     <!-- Implementations matrix -->
     <section class="implementations">
-      <h2 class="section-label">Five ports. All installable today.</h2>
+      <h2 class="section-label">Packages by language</h2>
       <table class="impl-table">
         <thead>
           <tr>
@@ -459,13 +457,13 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         </tbody>
       </table>
       <p class="impl-note">
-        <span data-count="corpora">21</span> shared conformance corpora at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures"><code>fixtures/</code></a> — metamodel (<span data-count="fixtures">313</span> fixtures), render, verify, extract, persistence (24 query scenarios against Testcontainers Postgres), API contract (cross-port, reference <em>and</em> generated lanes), YAML and more — validate every implementation against the same expectations. All ports implement <code>metamodelVersion</code> <code data-registry="metamodel">0.13</code> — the metadata contract, versioned separately from the package lines.
+        <span data-count="corpora">21</span> shared conformance corpora at <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures"><code>fixtures/</code></a> (metamodel with <span data-count="fixtures">313</span> fixtures, render, verify, extract, persistence with 24 query scenarios against Testcontainers Postgres, API contract in cross-port reference <em>and</em> generated lanes, YAML and more) validate every implementation against the same expectations. All ports implement <code>metamodelVersion</code> <code data-registry="metamodel">0.13</code>, the metadata contract, versioned separately from the package lines.
       </p>
     </section>
 
     <!-- Canonical example: one schema → five languages -->
     <section class="example" id="example">
-      <h2 class="section-label">From one schema, five languages.</h2>
+      <h2 class="section-label">One model, five languages of output</h2>
       <p class="example-intro">A typed entity in metadata, side-by-side with what every port actually generates. Each output uses that language's usual stack — Drizzle + Zod for TypeScript, Spring REST + DTO records for Java, Exposed + KotlinPoet data classes for Kotlin, EF Core + ASP.NET classes for C#, Pydantic + FastAPI for Python. Same metadata, five outputs, and shared conformance corpora that hold every port to the same reading of the model.</p>
 
       <p class="example-section-label">The source — the <code>Subscriber</code> entity, from <code>metaobjects/meta.subscriber.yaml</code> in package <code>acme</code></p>
@@ -504,8 +502,8 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
 
     <!-- The metamodel goes deep: field-children, validators, views, currency, projections -->
     <section class="example" id="deep">
-      <h2 class="section-label">The metamodel goes deep.</h2>
-      <p class="example-intro">Fields aren't just columns. They carry <strong>validators</strong>, <strong>views</strong>, and <strong>currency formatting</strong> as child metadata. Entities derive read-only <strong>projections</strong> — passthrough fields and aggregates over relationships — that generate as database <em>views</em>, not tables. Everything below is real <code>meta gen</code> output, conformance-gated, not hand-wired annotations.</p>
+      <h2 class="section-label">Validators, views and projections</h2>
+      <p class="example-intro">Fields aren't just columns. They carry <strong>validators</strong>, <strong>views</strong>, and <strong>currency formatting</strong> as child metadata. Entities derive read-only <strong>projections</strong> (passthrough fields and aggregates over relationships) that generate as database <em>views</em>, not tables. Everything below is real <code>meta gen</code> output, conformance-gated.</p>
 
       <p class="example-section-label">The source — <code>Author</code>, whose fields carry validators as child metadata (from <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/examples/advanced-modeling/metaobjects/meta.catalog.yaml"><code>examples/advanced-modeling</code></a>, package <code>acme::learn</code>)</p>
       <pre class="example-code" data-snippet="deep-model"></pre>
@@ -519,14 +517,14 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
       <p class="example-section-label">Projection → a read-only database view, not a table — <code>ProgramSummary</code> passes through <code>Author.name</code> and aggregates over its lessons and purchases <code>(generated/ProgramSummary.ts)</code></p>
       <pre class="example-code" data-snippet="deep-projection"></pre>
 
-      <p class="example-note">Run it yourself: every metadata and generated-code block on this page is cut from <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/examples">a committed example</a> that loads and generates a full typed stack with zero errors and zero warnings, and the cuts are checked against the real generated files on every release — so a block here cannot drift from what the tool emits. Every construct it uses (projections, origins, currency views, field-level validators) is <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">conformance-gated across all five ports</a>.</p>
+      <p class="example-note">Run it yourself: every metadata and generated-code block on this page is cut from <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/examples">a committed example</a> that loads and generates a full typed stack with zero errors and zero warnings, and the cuts are checked against the real generated files on every release, so a block here cannot drift from what the tool emits. Every construct it uses (projections, origins, currency views, field-level validators) is <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/fixtures/conformance">conformance-gated across all five ports</a>.</p>
     </section>
 
     <!-- Compare: per-language alternatives -->
     <section class="compare" id="compare">
-      <h2 class="section-label">How MetaObjects compares.</h2>
+      <h2 class="section-label">How it compares</h2>
       <p class="compare-intro">
-        For a single-language project that doesn't talk to LLMs at scale, the popular per-language ORMs are excellent and likely enough. MetaObjects adds value when (a) your codebase is touched by AI agents at volume, (b) you ship in more than one language, (c) several apps or services share one data model, or (d) your prompts are filled from that data. Honest comparison, by language:
+        For a single-language project that doesn't talk to LLMs at scale, the popular per-language ORMs are excellent and likely enough. MetaObjects adds value when (a) your codebase is touched by AI agents at volume, (b) you ship in more than one language, (c) several apps or services share one data model, or (d) your prompts are filled from that data. By language:
       </p>
 
       <table class="compare-table">
@@ -578,8 +576,8 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
         </tbody>
       </table>
 
-      <h3 class="compare-subhead">Capability matrix — including AI-agent suitability.</h3>
-      <p class="compare-intro">Where it matters: the right-hand four columns are the AI-coding-agent dimensions. They were the design driver, not an afterthought.</p>
+      <h3 class="compare-subhead">Capability matrix, including AI-agent suitability</h3>
+      <p class="compare-intro">The last four rows are about how easily an AI coding agent can work with each tool. MetaObjects was designed around them from the start.</p>
 
       <table class="capability-matrix">
         <thead>
@@ -610,16 +608,16 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
       </table>
 
       <p class="compare-note">
-        <strong>The honest read:</strong> for a 5k-line TS app with no LLM integration, Drizzle is probably enough. Where MetaObjects earns its setup is several apps or services sharing one model — especially in more than one language, or with prompts filled from that data — because that is the drift no single-codebase tool, and no single smarter agent, can see. For a multi-language team in one repo (TS + Python, TS + Java, or all five), no other system in this matrix generates and checks every app from one model.
+        For a 5k-line TS app with no LLM integration, Drizzle is probably enough. Where MetaObjects earns its setup is several apps or services sharing one model, especially in more than one language or with prompts filled from that data, because that is the drift no single-codebase tool, and no single smarter agent, can see. For a multi-language team in one repo (TS + Python, TS + Java, or all five), no other system in this matrix generates and checks every app from one model.
       </p>
     </section>
 
     <!-- For AI agents -->
     <section class="ai" id="ai">
       <div class="ai-inner">
-        <h2 class="section-label section-label-on-dark">Built so AI agents work at the metadata layer.</h2>
+        <h2 class="section-label section-label-on-dark">For AI agents</h2>
         <p class="ai-lede">
-          Every contract is grep-friendly (named constants, never magic strings). Generated code is plain per-language code, not framework magic. An <code>llms.txt</code> index ships at the root so any agent fluent in the convention can index the full standard in seconds. The substrate is designed so <strong>Claude Code, Cursor, GitHub Copilot, and Windsurf</strong> edit metadata files — and the codegen handles every language behind them.
+          Every contract is grep-friendly (named constants, never magic strings). Generated code is plain code in each language. <code>/llms.txt</code> at the site root indexes the docs in the <code>llms.txt</code> format. The intent is that your agent (<strong>Claude Code, Cursor, GitHub Copilot, Windsurf</strong>) edits the model files and the generators write the code in each language.
         </p>
         <ul class="ai-links">
           <li><a href="/llms.txt"><code>/llms.txt</code></a> — short index following the Answer.AI <code>llms.txt</code> convention</li>
@@ -627,7 +625,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <li><a href="https://github.com/metaobjectsdev/metaobjects/blob/main/CLAUDE.md"><code>CLAUDE.md</code> in the repo</a> — agent instructions for working in the metaobjects codebase itself</li>
         </ul>
         <p class="ai-future">
-          <strong>Why Claude Code in particular.</strong> Anthropic's official CLI was the day-zero driver for the standard's design choices. The metamodel vocabulary is small enough to fit in a context window; the conformance contract is enforced by a build gate rather than discovered as runtime drift; and the generated code is plain code an agent can read without a framework's internals in its head. A first-party MCP server exposing the spec, conformance fixtures, and codegen tools as agent-callable functions is on the <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">roadmap</a>.
+          <strong>Why Claude Code in particular.</strong> MetaObjects was designed around Claude Code from the start. The model vocabulary fits in a context window, conformance is checked by the build rather than found at runtime, and an agent can read the generated code without knowing a framework's internals. A first-party MCP server exposing the spec, conformance fixtures, and codegen tools as agent-callable functions is on the <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/spec/roadmap.md">roadmap</a>.
         </p>
       </div>
     </section>
@@ -678,11 +676,11 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
       </div>
     </section>
 
-    <!-- Origin band — closing trust capstone -->
+    <!-- Origin band -->
     <section class="origin">
-      <h2 class="section-label">25 years private. Now open.</h2>
+      <h2 class="section-label">Where it came from</h2>
       <p class="origin-lede">
-        MetaObjects isn't new. Built in 2001 and run privately for 25 years — shipping secure messaging, payments, online gaming, and pharmaceutical-regulatory systems, with one approach patented in the US. Set aside in 2022; now open-sourced and rebuilt AI-first, for the first time. The same spine that kept those systems coherent is the one that now keeps AI-generated code from drifting.
+        First built in 2001 and used privately for 25 years on secure messaging, payments, online gaming and pharmaceutical regulatory systems; one approach from it is patented in the US. It was set aside in 2022 and is now open source for the first time, rebuilt for AI coding agents. The model that kept those systems consistent now does the same for AI-written code.
       </p>
       <a href="/story.html" class="btn btn-secondary">Read the story →</a>
     </section>

@@ -47,11 +47,11 @@
     <section class="hero">
       <p class="hero-eyebrow">Getting started · build it with Claude Code, or by hand</p>
       <h1>One typed model → idiomatic code, in your language.</h1>
-      <p class="hero-lede">Scaffold once, then <strong>tell Claude Code what you want</strong> — <em>"build the REST API
+      <p class="hero-lede">Scaffold once, then <strong>tell Claude Code what you want</strong>: <em>"build the REST API
         for tasks,"</em> <em>"add a priority field and update everything."</em> Because <code>meta&nbsp;init</code> installs
-        the MetaObjects skills, it knows the model is the source of truth: it edits the model, picks the generators the
-        job needs, and <strong>generates the code</strong> — it never hand-writes the boilerplate. Every command and
-        output below is real <span class="real">verified</span>, run against <code>@metaobjectsdev/cli@1.1.4</code>.</p>
+        the MetaObjects skills, it knows the model is the source of truth. It edits the model, picks the generators the
+        job needs, and <strong>generates the code</strong>; it never hand-writes the boilerplate. Every command and
+        output below was run and checked against <code>@metaobjectsdev/cli@1.1.4</code>.</p>
     </section>
 
     <section>
@@ -108,7 +108,7 @@ npx meta init</pre>
 
     <section>
       <h2 class="section-label">2 · Then just tell it what you want</h2>
-      <p class="gs-note">This is the part that feels like magic. You describe outcomes; Claude Code knows the
+      <p class="gs-note">You describe outcomes; Claude Code knows the
         MetaObjects way — <strong>change the model, generate the code</strong> — because the skills it loaded say so.
         You never ask it to hand-write a route or a table.</p>
       <div class="gs-steps">
@@ -220,8 +220,8 @@ The code this generator emits imports its HTTP adapter from codegen/runtime/, no
 Install what the ejected generators and their output need:
 <span class="c">  # … the packages below</span>
 These generators read config: apiPrefix, collectionNameOverrides, dbImport, dialect, extStyle, outputLayout, …</pre>
-      <p class="gs-note">Those five files are the point: they're plain TypeScript in your repo, and <strong>yours to
-        edit</strong>. <code>meta gen</code> runs those local copies — not the ones inside the package — so changing
+      <p class="gs-note">Those five files are plain TypeScript in your repo, and <strong>yours to
+        edit</strong>. <code>meta gen</code> runs those local copies, not the ones inside the package, so changing
         the shape of the generated code is an ordinary edit to a file you own. Ejecting <code>routes</code> also copies
         the HTTP adapter the routes call (mount helpers, filter parser, error envelopes, pagination) into
         <code>codegen/runtime/</code>, so that code is yours too. Install what they all import:</p>
@@ -367,7 +367,7 @@ $ curl -X POST localhost:3000/tasks -H <span class="s">'content-type: applicatio
     </section>
 
     <section>
-      <h2 class="section-label">9 · Keep it honest</h2>
+      <h2 class="section-label">9 · Keep it in sync</h2>
       <p class="gs-note">As the model evolves, <code>meta verify</code> fails the build the moment generated code, the
         database schema, or a prompt template drifts from it:</p>
       <pre class="gs-code">npx meta verify                         <span class="c"># the prompt-template gate (the default when no gate is named)</span>
