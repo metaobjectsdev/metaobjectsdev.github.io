@@ -55,10 +55,10 @@
       <h1>One typed model for every app that shares your data</h1>
       <p class="hero-lede">Your agent writes the model. Each app's code is generated from it, and each app's build is checked against it.</p>
       <p class="hero-lede">
-        Rules files, memories and MCP servers give a coding agent context, but nothing fails when the code stops matching it. It gets worse when several apps share one data model: your API, your LLM worker, your admin app and your prompts can each look right alone and still disagree, and an agent working in one can't see the others.
+        OpenAPI and TypeSpec keep an API contract honest. They don't reach the database schema behind it, or the prompts your LLM features fill from the same data, and rules files and Markdown specs only tell an agent what should be true: nothing fails when the code stops matching them. So one field change still touches the migration, the API types in each language and the prompt inputs, and a coding agent working in one of them can't see the others.
       </p>
       <p class="hero-lede">
-        MetaObjects gives them one typed model covering the data, the API contract, the prompt payloads, and what the software is supposed to do. Each app generates its types, validators and routes from that model, in its own language, and the output depends on no proprietary runtime. Each app's <code>verify</code> step fails CI when its generated code, a prompt or a claimed capability no longer matches the model.
+        MetaObjects puts them in one typed model: the data, the API contract, the prompt payloads, and the features the software is supposed to have. Each app generates its types, validators and routes from it, in its own language, and the output depends on no proprietary runtime; the same model drives migrations and the live-database check. Each app's <code>verify</code> step fails CI when its generated code, the database, a prompt template or a declared feature no longer matches. If partners call your API, keep OpenAPI and <code>oasdiff</code> at that edge: MetaObjects does not export OpenAPI yet, and it does not compare a change with your last release.
       </p>
       <p class="hero-lede">
         <strong>Less code to write and review.</strong> You, or your coding agent, write one declaration in the model instead of the same thing once per layer: the types, validators, queries, routes and UI. The generators write the rest. In one app, 18 model objects become 129 generated files. In another, 13 become 117.
@@ -222,6 +222,33 @@
       </div>
       <p class="pillars-note">One model keeps your apps consistent at build time. It does not check wire compatibility during a rolling deploy or for outside API consumers, and <code>verify</code> does not stop a team that ignores the model and keeps its own DTO.</p>
       <p class="pillars-note"><strong>If the tool falls short, you can fix it.</strong> Most changes a team needs are to generated output: your own generators are already yours, and <code>eject</code> copies any shipped one into your repo to change the same day. For the core (loader, <code>verify</code>, <code>migrate</code>, render) it is Apache 2.0 with all five ports in one public repo: patch a fork, pin to it, and drop the patch when upstream catches up. Every upstream release you then want is a merge you do.</p>
+    </section>
+
+    <!-- For readers who already use Markdown specs -->
+    <section class="compare" id="spec-driven">
+      <h2 class="section-label">If you already work spec-driven</h2>
+      <p class="compare-intro">Spec Kit, Kiro and OpenSpec get a feature started well: a spec, a plan and a task list in Markdown, then the agent writes the code. After the first iteration nobody updates the Markdown, each service re-derives the same types slightly differently, and nothing fails when the code and the spec drift apart. A Markdown spec is read by the agent. It is not checked by the build.</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Markdown specs (Spec Kit, Kiro, OpenSpec)</th>
+            <th>The MetaObjects model</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>What it holds</td><td>Intent, design, plan and tasks, in prose</td><td>Entities, API types, prompt payloads and declared features, as typed metadata</td></tr>
+          <tr><td>Who reads it</td><td>Your agent, when it starts a task</td><td>The generators on every build, and your agent</td></tr>
+          <tr><td>When the code drifts from it</td><td>You find out in review, or in production</td><td><code>verify</code> exits 1 and names the file, template or feature</td></tr>
+          <tr><td>Reviewing a change</td><td>Pages of generated Markdown</td><td>A short model diff; the generated code is checked by <code>verify</code> rather than read line by line</td></tr>
+          <tr><td>Same input twice</td><td>The agent may write different code</td><td>The same generated code, held to it by the cross-language conformance tests</td></tr>
+        </tbody>
+      </table>
+
+      <p class="compare-note">
+        They work together: a feature spec names model entities instead of copying their fields, and the agent changes the model first, then regenerates. What the check proves is that the code matches the model, not that the feature behaves correctly, so you still need tests for behaviour.
+      </p>
     </section>
 
     <!-- Using it with your ORM, per port -->
