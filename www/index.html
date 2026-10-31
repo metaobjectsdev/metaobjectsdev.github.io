@@ -598,7 +598,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <tr><td>Runtime metadata (drive behavior dynamically)</td> <td class="yes">TS / Java / Kotlin / Python</td>                <td class="no">no</td>                  <td class="partial">reflection</td>   <td class="no">no</td></tr>
           <tr><td>Drift detection (build-time)</td>              <td class="yes"><code>verify</code> in every port</td>      <td class="partial">migration diff</td> <td class="partial">migration diff</td><td class="partial">regenerate + <code>git diff</code>, which you script</td></tr>
           <tr><td>Breaking-change check against the last release</td> <td class="no">no</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes (<code>oasdiff</code>, <code>buf breaking</code>)</td></tr>
-          <tr><td>Publishes an OpenAPI / JSON Schema document</td> <td class="no">not yet (planned for 1.3); write a generator meanwhile</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes</td></tr>
+          <tr><td>Publishes an OpenAPI / JSON Schema document</td> <td class="no">not yet (planned for 1.2.1); write a generator meanwhile</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes</td></tr>
           <tr><td>Typed prompt construction + render</td>        <td class="yes">5 ports, conformance-gated</td>    <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
           <tr><td>Typed parser for the LLM's response</td> <td class="yes">5 ports (Zod / Pydantic / Jackson / kotlinx / STJ)</td> <td class="no">no</td> <td class="no">no</td> <td class="no">no</td></tr>
           <tr><td>LLM tool-call envelopes (<code>template.toolcall</code>)</td> <td class="partial">declared vocabulary only; nothing consumes it yet</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
@@ -632,7 +632,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <tr><td>Database schema</td><td>A separate tool and source: Atlas, Alembic, Prisma, drizzle-kit</td><td>The same model: <code>meta migrate</code> and <code>verify --db</code> (Postgres, SQLite, D1), or a generated <code>schema.prisma</code></td></tr>
           <tr><td>Prompt templates filled from the data</td><td>Not covered; a <code>StrictUndefined</code> render test you write</td><td><code>verify</code> fails on a template variable the payload lacks (Mustache in every port, Jinja in Python and TypeScript)</td></tr>
           <tr><td>Declared features exist in the code</td><td>Not covered</td><td>Requirement links that must resolve to real fields and routes</td></tr>
-          <tr><td>Publish an OpenAPI document</td><td>Yes</td><td>Not yet. Planned for 1.3; until then <code>meta generator new openapi</code> scaffolds a generator you finish.</td></tr>
+          <tr><td>Publish an OpenAPI document</td><td>Yes</td><td>Not yet. Planned for 1.2.1; until then <code>meta generator new openapi</code> scaffolds a generator you finish.</td></tr>
         </tbody>
       </table>
 
