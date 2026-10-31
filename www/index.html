@@ -92,7 +92,7 @@
     <section class="drift" id="drift">
       <h2 class="section-label">What fails the build</h2>
       <p class="drift-intro">
-        A field renamed in one service misses the worker that reads the same table. A required field reaches the API but not the Python model that mirrors it. A prompt template still says <code>{{userName}}</code> after the payload moved to <code>user.name</code>. Each of these looks fine inside the one codebase an agent is editing. Here is what MetaObjects 1.1 checks, the command that runs the check, what happens when it fails, and where it does not reach.
+        A field renamed in one service misses the worker that reads the same table. A required field reaches the API but not the Python model that mirrors it. A prompt template still says <code>{{userName}}</code> after the payload moved to <code>user.name</code>. Each of these looks fine inside the one codebase an agent is editing. Here is what MetaObjects 1.2 checks, the command that runs the check, what happens when it fails, and where it does not reach.
       </p>
       <table class="drift-table">
         <thead>
@@ -110,18 +110,18 @@
           </tr>
           <tr>
             <td>A prompt or output template (email, export, docs) uses a field its typed payload doesn't carry — or the payload field was renamed</td>
-            <td><code>ERR_VAR_NOT_ON_PAYLOAD</code>, exit 1, with the template file and line. A missing template file fails too. A payload field the template never uses is not flagged. Templates are Mustache, logic-less: no expressions or filters, so a computed value belongs in the payload.</td>
-            <td><span class="fit-ship">All five ports.</span> TS and C# run it by default; Python <code>--templates</code>; Java and Kotlin <code>-Dmeta.verify.mode=templates</code>.</td>
+            <td><code>ERR_VAR_NOT_ON_PAYLOAD</code>, exit 1, with the template file and line. A missing template file fails too. A payload field the template never uses is not flagged. Templates are Mustache in every port, or Jinja in Python and TypeScript: the check walks the parsed Jinja template, and a reference it cannot settle without running the template fails with <code>ERR_TEMPLATE_NOT_STATIC</code> instead of passing.</td>
+            <td><span class="fit-ship">All five ports for Mustache;</span> Jinja in Python and TypeScript (Java, Kotlin and C# refuse a Jinja body by name). A bare <code>verify</code> runs it in every port once a template root is configured.</td>
           </tr>
           <tr>
             <td>The live database no longer matches the model — a column renamed, missing or extra</td>
-            <td><code>meta verify --db &lt;url&gt;</code> exits 1 and lists the column differences.</td>
+            <td><code>meta verify --db &lt;url&gt;</code> exits 1 and lists the column differences. On Postgres it applies the model's schema to a throwaway database and compares the two catalogs, so columns, types, defaults, CHECKs, indexes and view bodies are compared in Postgres's own spelling.</td>
             <td><span class="fit-some">The Node <code>meta</code> CLI</span>, for any port's database: Postgres, SQLite, Cloudflare D1. Not MySQL, SQL Server or Oracle.</td>
           </tr>
           <tr>
             <td>The model lives in another repo and its publisher changed it</td>
             <td><code>meta verify --deps</code> exits 1 with <code>ERR_DEPENDENCY_UPSTREAM_DRIFT</code>. Opt-in; it needs the publisher's checkout path.</td>
-            <td><span class="fit-some">TypeScript</span> publishes and checks; Python can consume the snapshot but not run the check. <span class="fit-not">Java, Kotlin, C#: not yet.</span></td>
+            <td><span class="fit-some">TypeScript</span> publishes. Python, Java, Kotlin and C# load the committed, hash-locked snapshot and refuse a stale one (Java, Kotlin and C# since 1.2). Syncing the snapshot and the upstream check run in the Node <code>meta</code> CLI.</td>
           </tr>
           <tr>
             <td>Someone hand-edits a generated file, then the model changes</td>
@@ -136,7 +136,7 @@
         </tbody>
       </table>
       <p class="drift-payoff">
-        One thing to set up deliberately: in TypeScript a bare <code>meta verify</code> runs the prompt and requirement checks only. Name <code>--codegen</code> (and <code>--db</code> or <code>--deps</code> if you use them) in CI. The ports differ in their defaults, so the commands above are the ones to copy.
+        Since 1.2 a bare <code>verify</code> runs the same three checks in every port: generated code, templates and the requirement links. The database and cross-repo checks stay opt-in, so name <code>--db</code> and <code>--deps</code> in CI if you use them.
       </p>
     </section>
 
@@ -201,15 +201,15 @@
         </article>
         <article class="pillar">
           <h3>Prompts and output templates filled from your data</h3>
-          <p>A prompt or output template (email, export, docs) is a Mustache template, logic-less, plus a payload. When the payload is a type generated from the model, a renamed field fails the build instead of quietly sending the LLM an empty slot. Render, payload types and the drift check ship in all five ports, and so do typed response parsers for prompts that declare a response. If your prompts are Jinja or carry logic, expect to move that logic into the payload.</p>
+          <p>A prompt or output template (email, export, docs) is a template, Mustache or (in Python and TypeScript) Jinja, plus a payload. When the payload is a type generated from the model, a renamed field fails the build instead of quietly sending the LLM an empty slot. Render, payload types and the drift check ship in all five ports, and so do typed response parsers for prompts that declare a response. Jinja templates stay Jinja in Python and TypeScript; Java, Kotlin and C# render Mustache only.</p>
         </article>
         <article class="pillar">
           <h3>Code that agents write</h3>
           <p>The checks above run in CI whether or not the agent remembered what the other services assume, and the model is small YAML or JSON an agent can read and edit.</p>
         </article>
         <article class="pillar">
-          <h3>Not yet: separate repos on the JVM or .NET</h3>
-          <p>Sharing one model across repos with an upstream check works when the consumer is TypeScript (Python can consume, not check). A Kotlin, Java or C# service in its own repo can only vendor a copy of the model today, with nothing telling it the original moved. Keep those services in one repo with the model, or wait for Phase 2.</p>
+          <h3>Partly: separate repos on the JVM or .NET</h3>
+          <p>Since 1.2 a Java, Kotlin or C# service in its own repo can build from a shared model: it loads a committed, hash-locked snapshot and refuses a stale one. Fetching that snapshot and checking whether the publisher moved still run in the Node <code>meta</code> CLI, and publishing a model as a Maven or NuGet package is not built yet.</p>
         </article>
         <article class="pillar">
           <h3>Not for: SQL Server or Oracle schema management</h3>
@@ -228,7 +228,7 @@
     <section class="drift" id="keep-your-orm">
       <h2 class="section-label">Using it with the ORM you have</h2>
       <p class="drift-intro">
-        You don't have to leave Prisma, Hibernate, EF Core or SQLAlchemy. Every port can generate just the types and validators (the API contract and the prompt payloads) and leave persistence to the ORM you already run. MetaObjects does not generate into your ORM's schema files, and your ORM's schema file stays yours to write and maintain; MetaObjects sits beside it.
+        You don't have to leave Prisma, Hibernate, EF Core or SQLAlchemy. Every port can generate just the types and validators (the API contract and the prompt payloads) and leave persistence to the ORM you already run. One exception: in TypeScript, MetaObjects can write your <code>schema.prisma</code> from the model, and <code>verify</code> fails when someone edits it by hand or it falls behind. Otherwise it does not generate into your ORM's schema files; they stay yours, and MetaObjects sits beside them.
       </p>
       <table class="drift-table">
         <thead>
@@ -241,8 +241,8 @@
         <tbody>
           <tr>
             <td><strong>TypeScript</strong> — Prisma, Drizzle, TypeORM, Kysely</td>
-            <td>TypeScript types and Zod schemas, with no Drizzle import</td>
-            <td>Add an output target with <code>runtime: false</code>, or model the shape without a <code>source.rdb</code> table.</td>
+            <td>TypeScript types and Zod schemas, with no Drizzle import; with Prisma, the <code>schema.prisma</code> as well</td>
+            <td>Add an output target with <code>runtime: false</code>, or model the shape without a <code>source.rdb</code> table. For Prisma, set <code>orm: "prisma"</code> and add the <code>prisma-schema</code> generator.</td>
           </tr>
           <tr>
             <td><strong>Java</strong> — Hibernate/JPA, jOOQ, JDBC</td>
@@ -372,7 +372,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         <li><strong>Prompt construction.</strong> A typed payload, prompt text in a file resolved per provider, and deterministic rendering that you can snapshot-test and that keeps exact-prefix prompt-cache hits. Prompts that declare a response get a typed parser. All of it ships in all five ports; MCP exposure is on the roadmap. <a href="/articles/prompts-are-code.html">Read: Prompts are code now, and OpenAI says so</a>.</li>
         <li><strong>Requirements and testing.</strong> A capability is a node in the model, and <code>verify</code> checks that what it names exists. Since 1.1.0 the gate runs in every port's <code>verify</code> and every port ships a <code>requirement-tests</code> generator; the authoring lint is TypeScript-only. <a href="#requirements">Checking that declared features exist</a>, and <a href="/requirements.html">how capability requirements work</a>.</li>
         <li><strong>Libraries.</strong> Design you won't differentiate on, such as <code>"libraries": ["iam"]</code>, declared once and opted into by name. Since 1.0.4 the library models load in all five ports, and <code>meta eject</code> copies one into your repo to own. <code>ai</code> (LLM-call tracing, generated in TypeScript, Java and Python) is stable; <code>iam</code> (users, groups, roles, grants) is a preview.</li>
-        <li><strong>Sharing a model across your own projects.</strong> One project publishes part of its model and another consumes a hash-locked snapshot; <code>meta verify --deps</code> says when the publisher's model moves. The TypeScript toolchain publishes, and TypeScript and Python projects consume, over a <code>path</code> dependency. Java, Kotlin and C# arrive in Phase 2.</li>
+        <li><strong>Sharing a model across your own projects.</strong> One project publishes part of its model and another consumes a hash-locked snapshot; <code>meta verify --deps</code> says when the publisher's model moves. The TypeScript toolchain publishes, over a folder path or an npm or Python package; TypeScript, Python, Java, Kotlin and C# projects consume. Maven and NuGet packaging is a later phase.</li>
       </ul>
     </section>
 
@@ -515,7 +515,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
             <td><strong>TypeScript</strong></td>
             <td><a href="https://prisma.io">Prisma</a>, <a href="https://orm.drizzle.team">Drizzle</a>, <a href="https://typeorm.io">TypeORM</a>, <a href="https://kysely.dev">Kysely</a></td>
             <td>Mature schema → migration loops. Excellent type-safe SQL ergonomics (Drizzle, Kysely). Mature ecosystem.</td>
-            <td>Drizzle + Zod output, or Zod types alone beside Prisma. Plus four other languages from the same source, typed prompt rendering, output parsers and <code>meta verify</code> drift gates.</td>
+            <td>Drizzle + Zod output, or Zod types plus a generated <code>schema.prisma</code> for Prisma. Plus four other languages from the same source, typed prompt rendering, output parsers and <code>meta verify</code> drift gates.</td>
           </tr>
           <tr>
             <td><strong>Java</strong></td>
@@ -542,10 +542,10 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
             <td>Pydantic schemas + FastAPI routers from the same metamodel that drives every other port. They sit beside SQLAlchemy or Django ORM, with the same verify gates as every other port.</td>
           </tr>
           <tr>
-            <td><strong>Schema-only IDLs</strong></td>
-            <td><a href="https://www.openapis.org/">OpenAPI</a>, <a href="https://smithy.io">Smithy</a>, <a href="https://grpc.io">gRPC / protobuf</a></td>
-            <td>Strong API-shape governance. Wide client/server tooling. Industry-standard.</td>
-            <td>Describes the whole stack (persistence, prompt render, UI bindings and validation) from one declaration. IDLs generate clients, server stubs and model types from the API shape; MetaObjects also gives you the table, the validator, the route, the prompt template, and the migration.</td>
+            <td><strong>Schema-first API tools</strong></td>
+            <td><a href="https://www.openapis.org/">OpenAPI</a>, <a href="https://typespec.io">TypeSpec</a>, <a href="https://smithy.io">Smithy</a>, <a href="https://grpc.io">Protobuf</a> + <a href="https://buf.build">Buf</a></td>
+            <td>The standard for public and partner APIs. Breaking-change checks against the last release (<code>oasdiff</code>, <code>buf breaking</code>). Clients, SDKs, docs, gateways and MCP servers generated from the spec.</td>
+            <td>The database schema and the prompt payloads from the same model as the API types, checked by one <code>verify</code>. It does not export OpenAPI yet and does not compare a change with what you last released, so keep those tools at a public API boundary.</td>
           </tr>
         </tbody>
       </table>
@@ -560,7 +560,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
             <th>MetaObjects</th>
             <th>Prisma / Drizzle</th>
             <th>JPA / EF Core / SQLAlchemy</th>
-            <th>OpenAPI / Smithy</th>
+            <th>OpenAPI / TypeSpec / Smithy</th>
           </tr>
         </thead>
         <tbody>
@@ -569,7 +569,9 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <tr><td>Schema migrations</td>                         <td class="yes">diff + emit + apply: Postgres, SQLite, D1 (Node CLI)</td>           <td class="yes">yes</td>                <td class="yes">yes</td>              <td class="no">no</td></tr>
           <tr><td>Typed validation at the wire boundary</td>     <td class="yes">Zod / Pydantic / Jakarta / DataAnnotations</td> <td class="partial">runtime only</td>   <td class="partial">annotations</td>  <td class="partial">schema-only</td></tr>
           <tr><td>Runtime metadata (drive behavior dynamically)</td> <td class="yes">TS / Java / Kotlin / Python</td>                <td class="no">no</td>                  <td class="partial">reflection</td>   <td class="no">no</td></tr>
-          <tr><td>Drift detection (build-time)</td>              <td class="yes"><code>verify</code> in every port</td>      <td class="partial">migration diff</td> <td class="partial">migration diff</td><td class="no">no</td></tr>
+          <tr><td>Drift detection (build-time)</td>              <td class="yes"><code>verify</code> in every port</td>      <td class="partial">migration diff</td> <td class="partial">migration diff</td><td class="partial">regenerate + <code>git diff</code>, which you script</td></tr>
+          <tr><td>Breaking-change check against the last release</td> <td class="no">no</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes (<code>oasdiff</code>, <code>buf breaking</code>)</td></tr>
+          <tr><td>Publishes an OpenAPI / JSON Schema document</td> <td class="no">not yet (planned for 1.3); write a generator meanwhile</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes</td></tr>
           <tr><td>Typed prompt construction + render</td>        <td class="yes">5 ports, conformance-gated</td>    <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
           <tr><td>Typed parser for the LLM's response</td> <td class="yes">5 ports (Zod / Pydantic / Jackson / kotlinx / STJ)</td> <td class="no">no</td> <td class="no">no</td> <td class="no">no</td></tr>
           <tr><td>LLM tool-call envelopes (<code>template.toolcall</code>)</td> <td class="partial">declared vocabulary only; nothing consumes it yet</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
@@ -582,7 +584,33 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
       </table>
 
       <p class="compare-note">
-        For a 5k-line TS app with no LLM integration, Drizzle is probably enough. Where MetaObjects earns its setup is several apps or services sharing one model, especially in more than one language or with prompts filled from that data, because that is the drift no single-codebase tool, and no single smarter agent, can see. For a multi-language team in one repo (TS + Python, TS + Java, or all five), no other system in this matrix generates and checks every app from one model.
+        For a 5k-line TS app with no LLM integration, Drizzle is probably enough. Where MetaObjects earns its setup is several apps or services sharing one model, especially in more than one language or with prompts filled from that data, because that is the drift no single-codebase tool, and no single smarter agent, can see. For a multi-language team in one repo (TS + Python, TS + Java, or all five), no other system in this matrix generates and checks the tables, the API types and the prompts from one model. TypeSpec comes closest, and only for the API layer.
+      </p>
+
+      <h3 class="compare-subhead">If you already use OpenAPI or TypeSpec</h3>
+      <p class="compare-intro">A schema-first API already gives you much of this: TypeSpec or OpenAPI as the source, a generated TypeScript client and Pydantic models, a step in CI that regenerates and runs <code>git diff --exit-code</code>, and <code>oasdiff</code> or <code>buf breaking</code> against the last release. If your problem is a public or partner API, keep that. Those tools are standard and mature, and they check compatibility across versions, which MetaObjects does not.</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Concern</th>
+            <th>OpenAPI or TypeSpec, plus a diff in CI</th>
+            <th>MetaObjects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>API types in each language</td><td>Generated from the spec (openapi-typescript, datamodel-code-generator and others)</td><td>Generated from the model, in five languages</td></tr>
+          <tr><td>Generated code is out of date</td><td>A regenerate-and-diff step you write</td><td>Built into <code>verify</code> in every port</td></tr>
+          <tr><td>A change breaks existing clients</td><td><code>oasdiff</code> / <code>buf breaking</code></td><td>Not checked. Keep <code>oasdiff</code> on a published spec.</td></tr>
+          <tr><td>Database schema</td><td>A separate tool and source: Atlas, Alembic, Prisma, drizzle-kit</td><td>The same model: <code>meta migrate</code> and <code>verify --db</code> (Postgres, SQLite, D1), or a generated <code>schema.prisma</code></td></tr>
+          <tr><td>Prompt templates filled from the data</td><td>Not covered; a <code>StrictUndefined</code> render test you write</td><td><code>verify</code> fails on a template variable the payload lacks (Mustache in every port, Jinja in Python and TypeScript)</td></tr>
+          <tr><td>Declared features exist in the code</td><td>Not covered</td><td>Requirement links that must resolve to real fields and routes</td></tr>
+          <tr><td>Publish an OpenAPI document</td><td>Yes</td><td>Not yet. Planned for 1.3; until then <code>meta generator new openapi</code> scaffolds a generator you finish.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="compare-note">
+        If the API contract is the only thing that drifts, use the IDL. If the database, the API types in two or more languages and the prompts drift from each other, that is three pipelines that don't know about each other, and MetaObjects replaces them with one model and one check. A team with partners on its API may want both, and today that means keeping the OpenAPI spec in step with a generator you write.
       </p>
     </section>
 
@@ -659,7 +687,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
       <ul class="includes-list">
         <li><strong>Own a port.</strong> Each port has its own code and docs, and a shared conformance suite fails when a port disagrees with the others. A port can have its own maintainer who never needs to read the other four.</li>
         <li><strong>Own a generator family.</strong> The shipped generators for each stack (FastAPI, Spring, EF Core, React) are small and ejectable. Owning one means its issues, its review and its release notes are yours.</li>
-        <li><strong>Fix what readers hit.</strong> The gaps on this page are filed issues: <a href="https://github.com/metaobjectsdev/metaobjects/issues/480">SQL Server</a>, <a href="https://github.com/metaobjectsdev/metaobjects/issues/481">Oracle</a>, <a href="https://github.com/metaobjectsdev/metaobjects/issues/479">Prisma</a>, <a href="https://github.com/metaobjectsdev/metaobjects/issues/482">cross-repo sharing for the JVM and .NET</a> and <a href="https://github.com/metaobjectsdev/metaobjects/issues/483">Jinja templates</a>.</li>
+        <li><strong>Fix what readers hit.</strong> The gaps on this page are filed issues: <a href="https://github.com/metaobjectsdev/metaobjects/issues/480">SQL Server</a>, <a href="https://github.com/metaobjectsdev/metaobjects/issues/481">Oracle</a>, <a href="https://github.com/metaobjectsdev/metaobjects/issues/482">Maven and NuGet packaging of shared models</a> and <a href="https://github.com/metaobjectsdev/metaobjects/issues/8">a JSON Schema and OpenAPI emitter</a>.</li>
       </ul>
       <p class="drift-intro">
         <strong>What a co-maintainer gets.</strong> Credit by name in <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/MAINTAINERS.md">MAINTAINERS.md</a> and in the release notes. Review and merge rights on the part you own after a run of merged pull requests, and publish rights for a port you own. A vote on the model format and on design decisions. A co-maintainer who owns a port gets first call on paid work in that port. The rules are in <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/GOVERNANCE.md">GOVERNANCE.md</a> and <a href="https://github.com/metaobjectsdev/metaobjects/blob/main/MAINTAINERS.md">MAINTAINERS.md</a>.
