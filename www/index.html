@@ -58,7 +58,7 @@
         OpenAPI and TypeSpec keep an API contract honest. They don't reach the database schema behind it, or the prompts your LLM features fill from the same data, and rules files and Markdown specs only tell an agent what should be true: nothing fails when the code stops matching them. So one field change still touches the migration, the API types in each language and the prompt inputs, and a coding agent working in one of them can't see the others.
       </p>
       <p class="hero-lede">
-        MetaObjects puts them in one typed model: the data, the API contract, the prompt payloads, and the features the software is supposed to have. Each app generates its types, validators and routes from it, in its own language, and the output depends on no proprietary runtime; the same model drives migrations and the live-database check. Each app's <code>verify</code> step fails CI when its generated code, a prompt template or a declared feature no longer matches, and the Node <code>meta verify --db</code> does the same for the database in any language. If partners call your API, keep OpenAPI and <code>oasdiff</code> at that edge: MetaObjects does not export OpenAPI yet, and it does not compare a change with your last release.
+        MetaObjects puts them in one typed model: the data, the API contract, the prompt payloads, and the features the software is supposed to have. Each app generates its types, validators and routes from it, in its own language, and in TypeScript the routes, forms and hooks import <code>@metaobjectsdev</code> packages, all Apache&nbsp;2.0; the same model drives migrations and the live-database check. Each app's <code>verify</code> step fails CI when its generated code, a prompt template or a declared feature no longer matches, and the Node <code>meta verify --db</code> does the same for the database in any language. If partners call your API, keep OpenAPI and <code>oasdiff</code> at that edge: MetaObjects does not export OpenAPI yet, and it does not compare a change with your last release.
       </p>
       <p class="hero-lede">
         <strong>Less code to write and review.</strong> You, or your coding agent, write one declaration in the model instead of the same thing once per layer: the types, validators, queries, routes and UI. The generators write the rest. In one app, 18 model objects become 129 generated files. In another, 13 become 117.
@@ -306,8 +306,8 @@
           <p class="proof-tag">Open source &middot; clone and run</p>
           <h3>Wizards of Odd</h3>
           <p>A live AI wizard-council app built to be read: one model drives the
-          Postgres schema, the API types, the LLM prompts and the SSE streaming protocol.
-          Rename one field and all four fail in CI. Apache&nbsp;2.0.</p>
+          D1 schema, the API types, the LLM prompts and the SSE streaming protocol.
+          Rename one field and CI fails. Apache&nbsp;2.0.</p>
           <p class="proof-links">
             <a href="https://metaobjects.com/case-studies/wizardsofodd/">Read the case study&nbsp;&rarr;</a>
             <a href="https://wizardsofodd.com">wizardsofodd.com</a>
