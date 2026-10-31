@@ -58,7 +58,7 @@
         OpenAPI and TypeSpec keep an API contract honest. They don't reach the database schema behind it, or the prompts your LLM features fill from the same data, and rules files and Markdown specs only tell an agent what should be true: nothing fails when the code stops matching them. So one field change still touches the migration, the API types in each language and the prompt inputs, and a coding agent working in one of them can't see the others.
       </p>
       <p class="hero-lede">
-        MetaObjects puts them in one typed model: the data, the API contract, the prompt payloads, and the features the software is supposed to have. Each app generates its types, validators and routes from it, in its own language, and the output depends on no proprietary runtime; the same model drives migrations and the live-database check. Each app's <code>verify</code> step fails CI when its generated code, the database, a prompt template or a declared feature no longer matches. If partners call your API, keep OpenAPI and <code>oasdiff</code> at that edge: MetaObjects does not export OpenAPI yet, and it does not compare a change with your last release.
+        MetaObjects puts them in one typed model: the data, the API contract, the prompt payloads, and the features the software is supposed to have. Each app generates its types, validators and routes from it, in its own language, and the output depends on no proprietary runtime; the same model drives migrations and the live-database check. Each app's <code>verify</code> step fails CI when its generated code, a prompt template or a declared feature no longer matches, and the Node <code>meta verify --db</code> does the same for the database in any language. If partners call your API, keep OpenAPI and <code>oasdiff</code> at that edge: MetaObjects does not export OpenAPI yet, and it does not compare a change with your last release.
       </p>
       <p class="hero-lede">
         <strong>Less code to write and review.</strong> You, or your coding agent, write one declaration in the model instead of the same thing once per layer: the types, validators, queries, routes and UI. The generators write the rest. In one app, 18 model objects become 129 generated files. In another, 13 become 117.
@@ -242,7 +242,7 @@
           <tr><td>Who reads it</td><td>Your agent, when it starts a task</td><td>The generators on every build, and your agent</td></tr>
           <tr><td>When the code drifts from it</td><td>You find out in review, or in production</td><td><code>verify</code> exits 1 and names the file, template or feature</td></tr>
           <tr><td>Reviewing a change</td><td>Pages of generated Markdown</td><td>A short model diff; the generated code is checked by <code>verify</code> rather than read line by line</td></tr>
-          <tr><td>Same input twice</td><td>The agent may write different code</td><td>The same generated code, held to it by the cross-language conformance tests</td></tr>
+          <tr><td>Same input twice</td><td>The agent may write different code</td><td>Each port is held to the same expected results on shared inputs by the shared conformance fixtures</td></tr>
         </tbody>
       </table>
 
