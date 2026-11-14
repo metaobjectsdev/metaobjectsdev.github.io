@@ -382,7 +382,7 @@ Fit &amp; Migration Assessment against this repository.</code></pre>
         Works in Claude Code, Cursor, Windsurf, GitHub Copilot, Gemini CLI, or any agent that can fetch a URL; pasting the prompt into any chat works too. It runs on your tokens, and results vary by model. Every claim cites a <code>file:line</code> or a commit so you can check it. Nothing is sent to us. The quick pass answers in the conversation and writes nothing; the full assessment takes an hour or more and writes its report outside your repo.
       </p>
       <p class="drift-intro">
-        <strong>Read it first.</strong> <a href="/assess.md">/assess.md</a> is the whole prompt, in plain Markdown. It is read-only: it tells your agent to read your repo and report, and never to create, edit, install or commit anything in it. The same prompt, with its reference files, is in the repo <a href="https://github.com/metaobjectsdev/metaobjects/tree/v1.1.4/agent-context/skills/metaobjects-fit-assessment">at a release tag</a>.
+        <strong>Read it first.</strong> <a href="/assess.md">/assess.md</a> is the whole prompt, in plain Markdown. It is read-only: it tells your agent to read your repo and report, and never to create, edit, install or commit anything in it. The same prompt, with its reference files, is <a href="https://github.com/metaobjectsdev/metaobjects/tree/main/agent-context/skills/metaobjects-fit-assessment">in the repo</a>.
       </p>
       <p class="drift-payoff">
         The assessment can tell you not to adopt. Each pillar gets its own verdict, and <em>NOT A FIT</em> is one of the options. It only promises what your language's port ships, and every report includes a "what you will NOT get" section. We ran it blind on a production codebase from before that codebase adopted MetaObjects. It found drift incidents, confirmed in git, that had already caused trouble: a constraint mismatch that was fixed only after it was violated in production, and a schema divergence that was still live when the assessment ran. Where it was wrong, it understated the problems rather than overstating them.
@@ -598,7 +598,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <tr><td>Runtime metadata (drive behavior dynamically)</td> <td class="yes">TS / Java / Kotlin / Python</td>                <td class="no">no</td>                  <td class="partial">reflection</td>   <td class="no">no</td></tr>
           <tr><td>Drift detection (build-time)</td>              <td class="yes"><code>verify</code> in every port</td>      <td class="partial">migration diff</td> <td class="partial">migration diff</td><td class="partial">regenerate + <code>git diff</code>, which you script</td></tr>
           <tr><td>Breaking-change check against the last release</td> <td class="no">no</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes (<code>oasdiff</code>, <code>buf breaking</code>)</td></tr>
-          <tr><td>Publishes an OpenAPI / JSON Schema document</td> <td class="no">not yet (planned for 1.2.1); write a generator meanwhile</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes</td></tr>
+          <tr><td>Publishes an OpenAPI / JSON Schema document</td> <td class="no">not yet released (on main); write a generator meanwhile</td> <td>&mdash;</td> <td>&mdash;</td> <td class="yes">yes</td></tr>
           <tr><td>Typed prompt construction + render</td>        <td class="yes">5 ports, conformance-gated</td>    <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
           <tr><td>Typed parser for the LLM's response</td> <td class="yes">5 ports (Zod / Pydantic / Jackson / kotlinx / STJ)</td> <td class="no">no</td> <td class="no">no</td> <td class="no">no</td></tr>
           <tr><td>LLM tool-call envelopes (<code>template.toolcall</code>)</td> <td class="partial">declared vocabulary only; nothing consumes it yet</td>     <td class="no">no</td>                  <td class="no">no</td>                <td class="no">no</td></tr>
@@ -632,7 +632,7 @@ $ meta migrate --from-db --db file:dev.sqlite --dialect sqlite --slug init --app
           <tr><td>Database schema</td><td>A separate tool and source: Atlas, Alembic, Prisma, drizzle-kit</td><td>The same model: <code>meta migrate</code> and <code>verify --db</code> (Postgres, SQLite, D1), or a generated <code>schema.prisma</code></td></tr>
           <tr><td>Prompt templates filled from the data</td><td>Not covered; a <code>StrictUndefined</code> render test you write</td><td><code>verify</code> fails on a template variable the payload lacks (Mustache in every port, Jinja in Python and TypeScript)</td></tr>
           <tr><td>Declared features exist in the code</td><td>Not covered</td><td>Requirement links that must resolve to real fields and routes</td></tr>
-          <tr><td>Publish an OpenAPI document</td><td>Yes</td><td>Not yet. Planned for 1.2.1; until then <code>meta generator new openapi</code> scaffolds a generator you finish.</td></tr>
+          <tr><td>Publish an OpenAPI document</td><td>Yes</td><td>Not yet released (it is on main); until then <code>meta generator new openapi</code> scaffolds a generator you finish.</td></tr>
         </tbody>
       </table>
 
